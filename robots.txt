@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://konazin.github.io/sitemap.xml

@@ -1,1223 +1,153 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Miguel Sousa — Backend & Security</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #0a0c0f;
-    --surface: #111418;
-    --surface2: #181c23;
-    --surface3: #1e2330;
-    --border: rgba(255,255,255,0.07);
-    --border2: rgba(255,255,255,0.12);
-    --text: #e8ecf0;
-    --muted: #6b7585;
-    --muted2: #4a5568;
-    --accent: #00e5a0;
-    --accent2: #0af;
-    --accent3: #ff4f6a;
-    --accent4: #a78bfa;
-    --mono: 'JetBrains Mono', monospace;
-    --display: 'Syne', sans-serif;
-    --glow: 0 0 30px rgba(0,229,160,0.12);
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 14px;
-    line-height: 1.7;
-    overflow-x: hidden;
-  }
-
-  ::selection { background: var(--accent); color: #000; }
-
-  /* GRID */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(0,229,160,0.018) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,229,160,0.018) 1px, transparent 1px);
-    background-size: 44px 44px;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* Scanline overlay */
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0,0,0,0.03) 2px,
-      rgba(0,0,0,0.03) 4px
-    );
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* NAV */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    background: rgba(10,12,15,0.9);
-    backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--border);
-    padding: 0 2.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 56px;
-  }
-
-  .nav-logo {
-    font-family: var(--display);
-    font-weight: 800;
-    font-size: 17px;
-    color: var(--accent);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 2.5rem;
-    list-style: none;
-  }
-
-  .nav-links a {
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    transition: color 0.2s;
-    position: relative;
-  }
-
-  .nav-links a::after {
-    content: '';
-    position: absolute;
-    bottom: -4px; left: 0; right: 0;
-    height: 1px;
-    background: var(--accent);
-    transform: scaleX(0);
-    transition: transform 0.25s;
-    transform-origin: left;
-  }
-
-  .nav-links a:hover { color: var(--accent); }
-  .nav-links a:hover::after { transform: scaleX(1); }
-
-  /* HERO */
-  .hero {
-    position: relative;
-    z-index: 1;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    padding: 5rem 2.5rem 4rem;
-    max-width: 1160px;
-    margin: 0 auto;
-  }
-
-  .hero-content { max-width: 720px; }
-
-  .hero-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--accent);
-    border: 1px solid rgba(0,229,160,0.25);
-    background: rgba(0,229,160,0.04);
-    padding: 7px 16px;
-    border-radius: 2px;
-    margin-bottom: 2rem;
-  }
-
-  .hero-tag .dot {
-    width: 7px; height: 7px;
-    background: var(--accent);
-    border-radius: 50%;
-    animation: pulse 2s ease-in-out infinite;
-    box-shadow: 0 0 8px var(--accent);
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(0.7); }
-  }
-
-  .hero h1 {
-    font-family: var(--display);
-    font-size: clamp(44px, 8vw, 88px);
-    font-weight: 800;
-    line-height: 0.95;
-    letter-spacing: -3px;
-    color: var(--text);
-    margin-bottom: 0.6rem;
-  }
-
-  .hero h1 .name-accent { color: var(--accent); }
-
-  .hero-alias {
-    font-family: var(--mono);
-    font-size: 13px;
-    color: var(--muted);
-    margin-bottom: 1.75rem;
-    letter-spacing: 0.05em;
-  }
-
-  .hero-alias .alias-hl { color: var(--accent2); }
-  .hero-alias .alias-sep { color: var(--muted2); margin: 0 8px; }
-
-  .hero-desc {
-    font-size: 15px;
-    color: #8a96a8;
-    max-width: 540px;
-    line-height: 1.85;
-    margin-bottom: 2.5rem;
-  }
-
-  .hero-desc strong { color: var(--text); font-weight: 500; }
-
-  .hero-cta {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 24px;
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    text-decoration: none;
-    border-radius: 2px;
-    transition: all 0.2s;
-    cursor: pointer;
-    border: none;
-  }
-
-  .btn-primary {
-    background: var(--accent);
-    color: #000;
-    font-weight: 700;
-    box-shadow: 0 0 20px rgba(0,229,160,0.2);
-  }
-
-  .btn-primary:hover {
-    background: #00c98a;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 24px rgba(0,229,160,0.35);
-  }
-
-  .btn-ghost {
-    background: transparent;
-    color: var(--text);
-    border: 1px solid var(--border2);
-  }
-
-  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
-
-  /* STATS */
-  .stats-bar {
-    position: relative;
-    z-index: 1;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-    padding: 2rem 2.5rem;
-  }
-
-  .stats-inner {
-    max-width: 1160px;
-    margin: 0 auto;
-    display: flex;
-    gap: 4rem;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-
-  .stat { display: flex; flex-direction: column; gap: 4px; }
-
-  .stat-val {
-    font-family: var(--display);
-    font-size: 30px;
-    font-weight: 800;
-    color: var(--accent);
-    letter-spacing: -1px;
-  }
-
-  .stat-label {
-    font-size: 10px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-  }
-
-  .stats-divider {
-    width: 1px;
-    height: 40px;
-    background: var(--border2);
-  }
-
-  /* SECTIONS */
-  section {
-    position: relative;
-    z-index: 1;
-    padding: 5.5rem 2.5rem;
-    max-width: 1160px;
-    margin: 0 auto;
-  }
-
-  .section-header {
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-    margin-bottom: 3rem;
-  }
-
-  .section-num {
-    font-size: 10px;
-    color: var(--accent);
-    letter-spacing: 0.2em;
-    font-weight: 500;
-    opacity: 0.7;
-  }
-
-  .section-title {
-    font-family: var(--display);
-    font-size: 30px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    white-space: nowrap;
-  }
-
-  .section-line {
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-
-  /* TERMINAL */
-  .terminal {
-    background: #06090c;
-    border: 1px solid var(--border2);
-    border-radius: 8px;
-    overflow: hidden;
-    font-family: var(--mono);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5), var(--glow);
-  }
-
-  .terminal-bar {
-    background: var(--surface);
-    padding: 10px 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
-
-  .terminal-title {
-    font-size: 11px;
-    color: var(--muted2);
-    margin-left: 6px;
-    letter-spacing: 0.05em;
-  }
-
-  .terminal-body {
-    padding: 1.75rem;
-    font-size: 13px;
-    line-height: 2;
-    color: #7c8fa8;
-  }
-
-  .t-green { color: var(--accent); }
-  .t-blue { color: var(--accent2); }
-  .t-red { color: var(--accent3); }
-  .t-purple { color: var(--accent4); }
-  .t-dim { color: #2a3445; }
-  .t-white { color: var(--text); }
-  .t-muted { color: var(--muted); }
-
-  @keyframes blink { 50% { opacity: 0; } }
-
-  /* STACK */
-  .stack-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    overflow: hidden;
-    border-radius: 4px;
-  }
-
-  .stack-item {
-    background: var(--surface);
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    transition: background 0.2s;
-    position: relative;
-    overflow: hidden;
-    cursor: default;
-  }
-
-  .stack-item:hover { background: var(--surface2); }
-
-  .stack-item::after {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    transform: scaleX(0);
-    transition: transform 0.3s ease;
-    transform-origin: left;
-  }
-
-  .stack-item:hover::after { transform: scaleX(1); }
-
-  .stack-icon {
-    width: 34px; height: 34px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 17px;
-    background: rgba(0,229,160,0.06);
-    border: 1px solid rgba(0,229,160,0.15);
-  }
-
-  .stack-name { font-family: var(--display); font-size: 14px; font-weight: 700; }
-  .stack-desc { font-size: 11px; color: var(--muted); line-height: 1.5; }
-
-  /* PROJECTS */
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .project-card {
-    border: 1px solid var(--border);
-    background: var(--surface);
-    padding: 2rem;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    border-radius: 4px;
-    text-decoration: none;
-    color: inherit;
-  }
-
-  .project-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent), transparent);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.35s;
-  }
-
-  .project-card:hover {
-    border-color: rgba(0,229,160,0.25);
-    transform: translateY(-4px);
-    box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,229,160,0.08);
-  }
-
-  .project-card:hover::before { transform: scaleX(1); }
-
-  .project-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-
-  .project-icon {
-    font-size: 22px;
-    width: 42px; height: 42px;
-    border-radius: 8px;
-    background: rgba(0,229,160,0.07);
-    border: 1px solid rgba(0,229,160,0.15);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .project-arrow {
-    color: var(--muted2);
-    font-size: 16px;
-    transition: color 0.2s, transform 0.2s;
-  }
-
-  .project-card:hover .project-arrow {
-    color: var(--accent);
-    transform: translate(2px, -2px);
-  }
-
-  .project-name {
-    font-family: var(--display);
-    font-size: 17px;
-    font-weight: 700;
-    color: var(--text);
-    margin-top: 0.75rem;
-  }
-
-  .project-desc {
-    font-size: 12px;
-    color: var(--muted);
-    line-height: 1.7;
-    flex: 1;
-  }
-
-  .project-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border);
-  }
-
-  .project-tags {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-
-  .tag {
-    font-size: 10px;
-    padding: 3px 9px;
-    border-radius: 2px;
-    letter-spacing: 0.06em;
-    border: 1px solid rgba(0,229,160,0.18);
-    color: var(--accent);
-    background: rgba(0,229,160,0.04);
-  }
-
-  .tag.blue { border-color: rgba(0,170,255,0.2); color: var(--accent2); background: rgba(0,170,255,0.04); }
-  .tag.red { border-color: rgba(255,79,106,0.2); color: var(--accent3); background: rgba(255,79,106,0.04); }
-  .tag.purple { border-color: rgba(167,139,250,0.2); color: var(--accent4); background: rgba(167,139,250,0.04); }
-
-  .project-lang {
-    font-size: 10px;
-    color: var(--muted2);
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-
-  .lang-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-  }
-
-  /* FOCUS */
-  .focus-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .focus-card {
-    border: 1px solid var(--border);
-    background: var(--surface);
-    padding: 2rem;
-    position: relative;
-    transition: border-color 0.25s, transform 0.25s;
-    overflow: hidden;
-    border-radius: 4px;
-  }
-
-  .focus-card::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at top right, rgba(0,229,160,0.04), transparent 60%);
-    opacity: 0;
-    transition: opacity 0.3s;
-    pointer-events: none;
-  }
-
-  .focus-card:hover {
-    border-color: rgba(0,229,160,0.25);
-    transform: translateY(-3px);
-  }
-
-  .focus-card:hover::after { opacity: 1; }
-
-  .focus-num {
-    font-family: var(--display);
-    font-size: 52px;
-    font-weight: 800;
-    color: rgba(0,229,160,0.06);
-    line-height: 1;
-    margin-bottom: 1rem;
-    letter-spacing: -3px;
-  }
-
-  .focus-title {
-    font-family: var(--display);
-    font-size: 17px;
-    font-weight: 700;
-    margin-bottom: 0.75rem;
-  }
-
-  .focus-desc { font-size: 12px; color: var(--muted); line-height: 1.75; }
-
-  .focus-tag {
-    display: inline-block;
-    margin-top: 1.25rem;
-    font-size: 10px;
-    padding: 4px 10px;
-    border: 1px solid rgba(0,229,160,0.2);
-    color: var(--accent);
-    letter-spacing: 0.1em;
-    border-radius: 2px;
-  }
-
-  /* PHILOSOPHY */
-  .philosophy {
-    text-align: center;
-    padding: 7rem 2rem;
-    max-width: 800px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-  }
-
-  .philosophy blockquote {
-    font-family: var(--display);
-    font-size: clamp(26px, 5vw, 48px);
-    font-weight: 800;
-    line-height: 1.2;
-    letter-spacing: -1.5px;
-    color: var(--text);
-  }
-
-  .philosophy blockquote .w1 { color: var(--accent); }
-  .philosophy blockquote .w2 { color: var(--accent3); }
-  .philosophy blockquote .w3 { color: var(--accent2); }
-  .philosophy blockquote .w4 { color: var(--text); }
-
-  .philosophy-attr {
-    margin-top: 1.5rem;
-    font-size: 11px;
-    color: var(--muted2);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-  }
-
-  /* CONNECT */
-  .connect-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-    gap: 1rem;
-  }
-
-  .connect-card {
-    border: 1px solid var(--border);
-    background: var(--surface);
-    padding: 1.5rem 1.75rem;
-    text-decoration: none;
-    color: var(--text);
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    transition: all 0.2s;
-    border-radius: 4px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .connect-card::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 2px;
-    background: var(--accent);
-    transform: scaleY(0);
-    transition: transform 0.25s;
-    transform-origin: bottom;
-  }
-
-  .connect-card:hover {
-    border-color: rgba(0,229,160,0.2);
-    background: var(--surface2);
-    transform: translateX(4px);
-  }
-
-  .connect-card:hover::before { transform: scaleY(1); }
-
-  .connect-icon {
-    width: 42px; height: 42px;
-    border-radius: 8px;
-    background: rgba(0,229,160,0.06);
-    border: 1px solid rgba(0,229,160,0.12);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    flex-shrink: 0;
-    transition: background 0.2s;
-  }
-
-  .connect-card:hover .connect-icon {
-    background: rgba(0,229,160,0.1);
-    border-color: rgba(0,229,160,0.3);
-  }
-
-  .connect-label { font-size: 13px; font-weight: 500; }
-  .connect-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
-
-  /* FOOTER */
-  footer {
-    position: relative;
-    z-index: 1;
-    border-top: 1px solid var(--border);
-    padding: 2.5rem;
-    text-align: center;
-    color: var(--muted2);
-    font-size: 11px;
-    letter-spacing: 0.05em;
-  }
-
-  footer span { color: var(--accent); }
-
-  /* SCROLL REVEAL */
-  .reveal {
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.65s cubic-bezier(.22,1,.36,1), transform 0.65s cubic-bezier(.22,1,.36,1);
-  }
-
-  .reveal.visible { opacity: 1; transform: none; }
-
-  .reveal-delay-1 { transition-delay: 0.1s; }
-  .reveal-delay-2 { transition-delay: 0.2s; }
-  .reveal-delay-3 { transition-delay: 0.3s; }
-
-  /* SEPARATOR */
-  .section-sep {
-    position: relative;
-    z-index: 1;
-    max-width: 1160px;
-    margin: 0 auto;
-    padding: 0 2.5rem;
-  }
-
-  .section-sep hr {
-    border: none;
-    border-top: 1px solid var(--border);
-  }
-
-  @media (max-width: 640px) {
-    .nav-links { display: none; }
-    .hero h1 { font-size: 52px; letter-spacing: -2px; }
-    .stats-inner { gap: 2rem; }
-    .stats-divider { display: none; }
-    section { padding: 4rem 1.5rem; }
-  }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090c10">
+  <meta name="description" content="Portfólio de Miguel Sousa, desenvolvedor de software com foco em backend, QA, segurança e Linux.">
+  <meta name="author" content="Miguel Sousa">
+  <meta property="og:title" content="Miguel Sousa — Software Developer">
+  <meta property="og:description" content="Backend, QA, segurança e ferramentas construídas para problemas reais.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://konazin.github.io/">
+  <title>Miguel Sousa — Software Developer</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
+  <div class="grid-bg" aria-hidden="true"></div>
 
-<nav>
-  <div class="nav-logo">KONA</div>
-  <ul class="nav-links">
-    <li><a href="#about">About</a></li>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#stack">Stack</a></li>
-    <li><a href="#focus">Focus</a></li>
-    <li><a href="#connect">Connect</a></li>
-  </ul>
-</nav>
-
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-content">
-    <div class="hero-tag">
-      <span class="dot"></span>
-      Backend Intern · Systems & Security
-    </div>
-    <h1>
-      Miguel<br>
-      <span class="name-accent">Sousa</span>
-    </h1>
-    <div class="hero-alias">
-      <span class="alias-hl">@Konazin</span>
-      <span class="alias-sep">//</span>
-      Backend Developer
-      <span class="alias-sep">·</span>
-      Security Research & Tooling
-      <span class="alias-sep">·</span>
-      IMD/UFRN
-    </div>
-    <p class="hero-desc">
-      IT student at <strong>IMD/UFRN</strong> currently interning, crafting
-      <strong>backend systems</strong> and <strong>security tooling</strong>.
-      I write code that works under pressure, understand how it breaks,
-      and make sure others can't.
-    </p>
-    <div class="hero-cta">
-      <a href="https://github.com/Konazin" class="btn btn-primary" target="_blank">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-        GitHub
-      </a>
-      <a href="mailto:m4caun4@gmail.com" class="btn btn-ghost">
-        Contact →
-      </a>
-    </div>
-  </div>
-</div>
-
-<!-- STATS -->
-<div class="stats-bar">
-  <div class="stats-inner">
-    <div class="stat">
-      <span class="stat-val">3+</span>
-      <span class="stat-label">Years coding</span>
-    </div>
-    <div class="stats-divider"></div>
-    <div class="stat">
-      <span class="stat-val">5</span>
-      <span class="stat-label">Core languages</span>
-    </div>
-    <div class="stats-divider"></div>
-    <div class="stat">
-      <span class="stat-val">IMD</span>
-      <span class="stat-label">UFRN · Natal, BR</span>
-    </div>
-    <div class="stats-divider"></div>
-    <div class="stat">
-      <span class="stat-val">1</span>
-      <span class="stat-label">Security project active</span>
-    </div>
-    <div class="stats-divider"></div>
-    <div class="stat">
-      <span class="stat-val" style="color: var(--accent3)">■</span>
-      <span class="stat-label">Interning now</span>
-    </div>
-  </div>
-</div>
-
-<!-- ABOUT -->
-<section id="about" class="reveal">
-  <div class="section-header">
-    <span class="section-num">01 /</span>
-    <h2 class="section-title">Whoami</h2>
-    <div class="section-line"></div>
-  </div>
-
-  <div class="terminal">
-    <div class="terminal-bar">
-      <div class="terminal-dot" style="background:#ff5f57"></div>
-      <div class="terminal-dot" style="background:#febc2e"></div>
-      <div class="terminal-dot" style="background:#28c840"></div>
-      <span class="terminal-title">konazin@imd — bash — 80×24</span>
-    </div>
-    <div class="terminal-body">
-      <p><span class="t-green">konazin</span><span class="t-dim">@imd</span><span class="t-white">:</span><span class="t-blue">~</span><span class="t-white">$</span> <span class="t-muted">cat</span> about.txt</p>
-      <br>
-      <p><span class="t-white">Name     :</span> Miguel Sousa</p>
-      <p><span class="t-white">Alias    :</span> <span class="t-green">Kona / Konazin</span></p>
-      <p><span class="t-white">Role     :</span> Backend Intern + Cybersecurity Enthusiast</p>
-      <p><span class="t-white">School   :</span> <span class="t-blue">IMD / UFRN</span> — Information Technology, Natal/RN</p>
-      <p><span class="t-white">OS       :</span> Linux <span class="t-muted">(btw)</span></p>
-      <p><span class="t-white">Status   :</span> <span class="t-green">■ BUSY</span> — interning, building, learning, breaking things</p>
-      <br>
-      <p><span class="t-green">konazin</span><span class="t-dim">@imd</span><span class="t-white">:</span><span class="t-blue">~</span><span class="t-white">$</span> <span class="t-muted">cat</span> projects.txt</p>
-      <br>
-      <p><span class="t-purple">ZeroSpecter</span>     <span class="t-muted">→</span> <span class="t-white">Offensive & defensive security tooling suite</span></p>
-      <p><span class="t-blue">Backend APIs</span>    <span class="t-muted">→</span> <span class="t-white">REST services, data pipelines & microservices</span></p>
-      <p><span class="t-green">Systems/C</span>       <span class="t-muted">→</span> <span class="t-white">Low-level programming, OS internals</span></p>
-      <p><span class="t-red">Sec Research</span>    <span class="t-muted">→</span> <span class="t-white">Network analysis, CTFs, vulnerability research</span></p>
-      <br>
-      <p><span class="t-green">konazin</span><span class="t-dim">@imd</span><span class="t-white">:</span><span class="t-blue">~</span><span class="t-white">$</span> <span style="animation: blink 1s step-end infinite; display:inline-block">▌</span></p>
-    </div>
-  </div>
-</section>
-
-<style>@keyframes blink { 50% { opacity: 0 } }</style>
-
-<!-- PROJECTS -->
-<div class="section-sep"><hr></div>
-<section id="projects" class="reveal">
-  <div class="section-header">
-    <span class="section-num">02 /</span>
-    <h2 class="section-title">Projects</h2>
-    <div class="section-line"></div>
-  </div>
-
-  <div class="projects-grid">
-
-    <!-- ZeroShield -->
-    <a href="https://github.com/Konazin/ZeroShield" target="_blank" class="project-card">
-      <div class="project-header">
-        <div class="project-icon">🛡️</div>
-        <span class="project-arrow">↗</span>
+  <header class="header">
+    <nav class="container nav" aria-label="Navegação principal">
+      <a class="logo" href="#top"><span>&gt;_</span> KONAZIN</a>
+      <div class="nav-links">
+        <a href="#sobre">Sobre</a>
+        <a href="#projetos">Projetos</a>
+        <a href="#experiencia">Experiência</a>
+        <a href="#contato">Contato</a>
       </div>
+      <a class="github-link" href="https://github.com/Konazin" target="_blank" rel="noreferrer">GitHub ↗</a>
+    </nav>
+  </header>
 
-      <div class="project-name">ZeroShield</div>
-
-      <div class="project-desc">
-        Modular security suite focused on file analysis, DNS protection,
-        website verification and network monitoring.
-        Built around independent modules and scalable tooling architecture.
-      </div>
-
-      <div class="project-footer">
-        <div class="project-tags">
-          <span class="tag red">Security</span>
-          <span class="tag">Networking</span>
-          <span class="tag">Analysis</span>
-        </div>
-
-        <div class="project-lang">
-          <span class="lang-dot" style="background:#3572A5"></span>
-          Python
+  <main id="top">
+    <section class="container hero">
+      <div class="hero-copy reveal">
+        <p class="status"><i></i> disponível para projetos e oportunidades</p>
+        <p class="eyebrow">Miguel Sousa / Kona</p>
+        <h1>Software bem construído.<br><span>Sem teatro.</span></h1>
+        <p class="intro">Desenvolvedor de software com experiência prática em backend, QA, segurança e produtos full-stack. Trabalho transformando requisitos confusos em sistemas funcionais, testáveis e menos propensos a virar incêndio em produção.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#projetos">Ver projetos</a>
+          <a class="button secondary" href="mailto:m4caun4@gmail.com">Entrar em contato</a>
         </div>
       </div>
-    </a>
 
-    <!-- ZeroSpecterC -->
-    <a href="https://github.com/Konazin/ZeroSpecterC" target="_blank" class="project-card">
-      <div class="project-header">
-        <div class="project-icon">⚡</div>
-        <span class="project-arrow">↗</span>
-      </div>
-
-      <div class="project-name">ZeroSpecterC</div>
-
-      <div class="project-desc">
-        Low-level systems programming experiments focused on memory control,
-        terminal environments and Linux-oriented performance tooling.
-      </div>
-
-      <div class="project-footer">
-        <div class="project-tags">
-          <span class="tag purple">Low-level</span>
-          <span class="tag">Linux</span>
-          <span class="tag">Systems</span>
-        </div>
-
-        <div class="project-lang">
-          <span class="lang-dot" style="background:#555555"></span>
-          C
+      <div class="terminal reveal" aria-label="Resumo profissional">
+        <div class="terminal-bar"><span></span><span></span><span></span><small>kona@linux:~</small></div>
+        <div class="terminal-body">
+          <p><b>$</b> whoami</p>
+          <p class="output">Miguel Sousa, também conhecido como Kona.</p>
+          <p><b>$</b> cat focus.txt</p>
+          <p class="output">Backend · QA · Segurança · Linux</p>
+          <p><b>$</b> cat stack.txt</p>
+          <p class="output">Java / Spring Boot<br>Python / FastAPI<br>TypeScript / Node.js<br>Vue / React<br>PostgreSQL / SQLite</p>
+          <p><b>$</b> echo $STATUS</p>
+          <p class="output accent">building, testing, fixing.</p>
         </div>
       </div>
-    </a>
+    </section>
 
-    <!-- ZeroSpecter -->
-    <a href="https://github.com/Konazin/Zer0Specter" target="_blank" class="project-card">
-      <div class="project-header">
-        <div class="project-icon">👁️</div>
-        <span class="project-arrow">↗</span>
+    <section class="strip">
+      <div class="container strip-inner">
+        <span>Software Engineering</span><span>Quality Assurance</span><span>Cybersecurity</span><span>Linux</span><span>Automation</span>
       </div>
+    </section>
 
-      <div class="project-name">ZeroSpecter</div>
-
-      <div class="project-desc">
-        Offensive security tooling for reconnaissance,
-        ZIP analysis and networking experimentation.
-        Built as a practical cybersecurity learning project.
-      </div>
-
-      <div class="project-footer">
-        <div class="project-tags">
-          <span class="tag red">Security</span>
-          <span class="tag">Recon</span>
-          <span class="tag">Networking</span>
-        </div>
-
-        <div class="project-lang">
-          <span class="lang-dot" style="background:#3572A5"></span>
-          Python
+    <section class="container section" id="sobre">
+      <div class="section-title reveal"><span>01</span><h2>Sobre</h2></div>
+      <div class="about-grid reveal">
+        <p class="about-lead">Construo aplicações, ferramentas e automações com atenção especial à arquitetura, comportamento real do usuário e pontos de falha.</p>
+        <div class="about-text">
+          <p>Atuo entre desenvolvimento e qualidade. Isso significa que não considero uma funcionalidade pronta só porque compilou e apareceu bonita numa apresentação. Analiso fluxos, permissões, estados de erro, integração com APIs, persistência e manutenção.</p>
+          <p>Tenho experiência com sistemas web, APIs REST, automação, ferramentas de segurança, aplicações desktop e ambientes Linux. Atualmente também aprofundo Java com Spring Boot e engenharia de software.</p>
         </div>
       </div>
-    </a>
+    </section>
 
-    <!-- AgnesIA -->
-    <a href="https://github.com/Konazin/AgnesIA" target="_blank" class="project-card">
-      <div class="project-header">
-        <div class="project-icon">🧠</div>
-        <span class="project-arrow">↗</span>
+    <section class="container section" id="projetos">
+      <div class="section-title reveal"><span>02</span><h2>Projetos selecionados</h2></div>
+      <div class="projects reveal">
+        <a class="project" href="https://github.com/Konazin/ZeroInsight" target="_blank" rel="noreferrer">
+          <div><small>01 / PRODUTO DE IA</small><h3>ZeroInsight</h3><p>Plataforma para geração de conteúdo com IA, BrandProfiles, múltiplos providers, backend FastAPI, frontend React e empacotamento desktop.</p></div>
+          <div class="project-meta"><span>Python</span><span>FastAPI</span><span>React</span><span>Electron</span></div>
+          <b>↗</b>
+        </a>
+        <a class="project" href="https://github.com/Konazin/QA-lovable-tester" target="_blank" rel="noreferrer">
+          <div><small>02 / QA E SEGURANÇA</small><h3>QA Platform</h3><p>Plataforma para casos de teste, execuções, bugs e análises automatizadas de segurança, acessibilidade, responsividade e performance.</p></div>
+          <div class="project-meta"><span>React</span><span>TypeScript</span><span>QA</span><span>WCAG</span></div>
+          <b>↗</b>
+        </a>
+        <a class="project" href="https://github.com/Konazin/Mechanic-Site" target="_blank" rel="noreferrer">
+          <div><small>03 / FULL STACK</small><h3>Mechanic Site</h3><p>Sistema de agendamento para oficina com autenticação, calendário, validação, API Express e persistência relacional.</p></div>
+          <div class="project-meta"><span>React</span><span>Express</span><span>PostgreSQL</span><span>JWT</span></div>
+          <b>↗</b>
+        </a>
+        <a class="project" href="https://github.com/Konazin/ZeroCoding" target="_blank" rel="noreferrer">
+          <div><small>04 / FERRAMENTA</small><h3>ZeroCoding</h3><p>Assistente de programação no terminal com TUI, sessões, contexto explícito, skills e suporte a Ollama e APIs compatíveis.</p></div>
+          <div class="project-meta"><span>Python</span><span>Ollama</span><span>TUI</span><span>LLM</span></div>
+          <b>↗</b>
+        </a>
+        <a class="project" href="https://github.com/Konazin/Zer0Specter" target="_blank" rel="noreferrer">
+          <div><small>05 / SEGURANÇA</small><h3>ZeroSpecter</h3><p>Toolkit modular para avaliações autorizadas, com scanner de portas, análise de rede, utilitários ZIP e experimentos de segurança.</p></div>
+          <div class="project-meta"><span>Python</span><span>Networking</span><span>Linux</span><span>Pentest</span></div>
+          <b>↗</b>
+        </a>
       </div>
+      <a class="all-projects reveal" href="https://github.com/Konazin?tab=repositories" target="_blank" rel="noreferrer">Ver todos os repositórios no GitHub ↗</a>
+    </section>
 
-      <div class="project-name">AgnesIA</div>
-
-      <div class="project-desc">
-        Experimental conversational AI assistant focused on
-        interaction systems, custom personality architecture
-        and local AI experimentation.
+    <section class="container section" id="experiencia">
+      <div class="section-title reveal"><span>03</span><h2>Experiência</h2></div>
+      <div class="timeline reveal">
+        <article>
+          <div class="date">2026 — atual</div>
+          <div><small>REQUISITE RPV</small><h3>QA e Engenharia de Software</h3><p>Análise de fluxos críticos, documentação de defeitos e requisitos, validação de entregas, apoio a redesigns e desenvolvimento de protótipos e sistemas internos.</p></div>
+        </article>
+        <article>
+          <div class="date">2026</div>
+          <div><small>TRABALHO INDEPENDENTE</small><h3>Avaliação de Segurança Web</h3><p>Testes autorizados de autenticação, autorização, endpoints e exposição de dados, com relatório técnico, evidências, impacto e recomendações de correção.</p></div>
+        </article>
+        <article>
+          <div class="date">Formação</div>
+          <div><small>IMD / UFRN</small><h3>Informática para Internet</h3><p>Desenvolvimento web e mobile, bancos de dados, APIs, programação e fundamentos de engenharia de software aplicados em projetos práticos.</p></div>
+        </article>
       </div>
+    </section>
 
-      <div class="project-footer">
-        <div class="project-tags">
-          <span class="tag blue">AI</span>
-          <span class="tag">LLMs</span>
-          <span class="tag">Python</span>
-        </div>
-
-        <div class="project-lang">
-          <span class="lang-dot" style="background:#3572A5"></span>
-          Python
-        </div>
+    <section class="container section" id="stack">
+      <div class="section-title reveal"><span>04</span><h2>Stack</h2></div>
+      <div class="stack-grid reveal">
+        <article><small>BACKEND</small><p>Java, Spring Boot, Python, FastAPI, Node.js, Express, APIs REST, JWT</p></article>
+        <article><small>FRONTEND</small><p>TypeScript, JavaScript, Vue, React, Vite, Tailwind CSS, HTML e CSS</p></article>
+        <article><small>DADOS</small><p>PostgreSQL, SQLite, MySQL, Sequelize, Knex e modelagem relacional</p></article>
+        <article><small>QUALIDADE E SEGURANÇA</small><p>Testes funcionais, API testing, Playwright, Burp Suite, Nmap, Linux e relatórios técnicos</p></article>
       </div>
-    </a>
+    </section>
 
-    <!-- QA -->
-    <a href="https://github.com/Konazin/QA-lovable-tester" target="_blank" class="project-card">
-      <div class="project-header">
-        <div class="project-icon">🧪</div>
-        <span class="project-arrow">↗</span>
+    <section class="contact" id="contato">
+      <div class="container contact-inner reveal">
+        <p>Tem um sistema para construir, corrigir ou testar?</p>
+        <h2>Vamos falar sobre o problema real.</h2>
+        <div><a class="button primary" href="mailto:m4caun4@gmail.com">m4caun4@gmail.com</a><a class="button secondary" href="https://github.com/Konazin" target="_blank" rel="noreferrer">GitHub ↗</a></div>
       </div>
+    </section>
+  </main>
 
-      <div class="project-name">QA-lovable-tester</div>
-
-      <div class="project-desc">
-        Testing and QA-focused tooling built with TypeScript
-        and modern automation workflows.
-      </div>
-
-      <div class="project-footer">
-        <div class="project-tags">
-          <span class="tag blue">QA</span>
-          <span class="tag">Automation</span>
-          <span class="tag">Testing</span>
-        </div>
-
-        <div class="project-lang">
-          <span class="lang-dot" style="background:#3178c6"></span>
-          TypeScript
-        </div>
-      </div>
-    </a>
-
-    <!-- vscode -->
-    <a href="https://github.com/Konazin/vscode-lusa" target="_blank" class="project-card">
-      <div class="project-header">
-        <div class="project-icon">🧩</div>
-        <span class="project-arrow">↗</span>
-      </div>
-
-      <div class="project-name">vscode-lusa</div>
-
-      <div class="project-desc">
-        Visual Studio Code extension built for the
-        Lusalang ecosystem and developer workflow integration.
-      </div>
-
-      <div class="project-footer">
-        <div class="project-tags">
-          <span class="tag">VSCode</span>
-          <span class="tag">Extension</span>
-          <span class="tag">Tooling</span>
-        </div>
-
-        <div class="project-lang">
-          <span class="lang-dot" style="background:#f1e05a"></span>
-          JavaScript
-        </div>
-      </div>
-    </a>
-
-  </div>
-</section>
-
-<!-- STACK -->
-<div class="section-sep"><hr></div>
-<section id="stack" class="reveal">
-  <div class="section-header">
-    <span class="section-num">03 /</span>
-    <h2 class="section-title">Tech Stack</h2>
-    <div class="section-line"></div>
-  </div>
-
-  <div class="stack-grid">
-    <div class="stack-item">
-      <div class="stack-icon">🐍</div>
-      <div class="stack-name">Python</div>
-      <div class="stack-desc">Scripting, automation, security tools & backend services</div>
-    </div>
-    <div class="stack-item">
-      <div class="stack-icon">⚡</div>
-      <div class="stack-name">C</div>
-      <div class="stack-desc">Systems programming, memory management, performance-critical code</div>
-    </div>
-    <div class="stack-item">
-      <div class="stack-icon">☕</div>
-      <div class="stack-name">Java</div>
-      <div class="stack-desc">OOP, backend services & academic projects at IMD/UFRN</div>
-    </div>
-    <div class="stack-item">
-      <div class="stack-icon">🌐</div>
-      <div class="stack-name">JavaScript</div>
-      <div class="stack-desc">Web tooling, Node.js backends & automation scripts</div>
-    </div>
-    <div class="stack-item">
-      <div class="stack-icon">💻</div>
-      <div class="stack-name">Bash</div>
-      <div class="stack-desc">Shell scripting, system automation & DevOps workflows</div>
-    </div>
-    <div class="stack-item">
-      <div class="stack-icon">🐧</div>
-      <div class="stack-name">Linux</div>
-      <div class="stack-desc">Primary OS — administration, hardening & security audits</div>
-    </div>
-    <div class="stack-item">
-      <div class="stack-icon">🐳</div>
-      <div class="stack-name">Docker</div>
-      <div class="stack-desc">Containerization, isolated environments & deployment</div>
-    </div>
-    <div class="stack-item">
-      <div class="stack-icon">🗄️</div>
-      <div class="stack-name">MySQL</div>
-      <div class="stack-desc">Relational databases, query optimization & data modeling</div>
-    </div>
-    <div class="stack-item">
-      <div class="stack-icon">🔀</div>
-      <div class="stack-name">Git</div>
-      <div class="stack-desc">Version control, collaboration & project management</div>
-    </div>
-  </div>
-</section>
-
-<!-- FOCUS -->
-<div class="section-sep"><hr></div>
-<section id="focus" class="reveal">
-  <div class="section-header">
-    <span class="section-num">04 /</span>
-    <h2 class="section-title">Current Focus</h2>
-    <div class="section-line"></div>
-  </div>
-
-  <div class="focus-grid">
-    <div class="focus-card">
-      <div class="focus-num">01</div>
-      <div class="focus-title">Backend Engineering</div>
-      <div class="focus-desc">Building real-world backend projects in my internship and personally — APIs, microservices, data pipelines. Focused on performance and maintainability.</div>
-      <span class="focus-tag">Python · Node.js · MySQL</span>
-    </div>
-    <div class="focus-card">
-      <div class="focus-num">02</div>
-      <div class="focus-title">Security Tools</div>
-      <div class="focus-desc">Active development on <strong style="color:var(--text)">ZeroSpecter</strong> — a personal security tooling project. Exploring offensive and defensive security methodologies and CTF challenges.</div>
-      <span class="focus-tag">ZeroSpecter · Pentesting · CTF</span>
-    </div>
-    <div class="focus-card">
-      <div class="focus-num">03</div>
-      <div class="focus-title">Systems & Performance</div>
-      <div class="focus-desc">Low-level programming, OS internals and performance analysis. Writing code that squeezes every cycle out of the machine.</div>
-      <span class="focus-tag">C · Linux · Assembly</span>
-    </div>
-    <div class="focus-card">
-      <div class="focus-num">04</div>
-      <div class="focus-title">Networking</div>
-      <div class="focus-desc">Deep diving into network protocols, packet analysis and infrastructure security. Understanding the stack from bits to applications.</div>
-      <span class="focus-tag">TCP/IP · Wireshark · Nmap</span>
-    </div>
-  </div>
-</section>
-
-<!-- PHILOSOPHY -->
-<div class="philosophy reveal">
-  <blockquote>
-    <span class="w1">Build.</span> <span class="w2">Break.</span> <span class="w3">Understand.</span> <span class="w4">Secure.</span>
-  </blockquote>
-  <p class="philosophy-attr">— Miguel Sousa / Konazin</p>
-</div>
-
-<!-- CONNECT -->
-<div class="section-sep"><hr></div>
-<section id="connect" class="reveal">
-  <div class="section-header">
-    <span class="section-num">05 /</span>
-    <h2 class="section-title">Connect</h2>
-    <div class="section-line"></div>
-  </div>
-
-  <div class="connect-grid">
-    <a href="https://github.com/Konazin" target="_blank" class="connect-card">
-      <div class="connect-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-      </div>
-      <div>
-        <div class="connect-label">GitHub</div>
-        <div class="connect-sub">@Konazin</div>
-      </div>
-    </a>
-    <a href="mailto:m4caun4@gmail.com" class="connect-card">
-      <div class="connect-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-      </div>
-      <div>
-        <div class="connect-label">Email</div>
-        <div class="connect-sub">m4caun4@gmail.com</div>
-      </div>
-    </a>
-    <a href="https://konazin.github.io/" target="_blank" class="connect-card">
-      <div class="connect-icon">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-      </div>
-      <div>
-        <div class="connect-label">Portfolio</div>
-        <div class="connect-sub">konazin.github.io</div>
-      </div>
-    </a>
-  </div>
-</section>
-
-<footer>
-  <p>Built with raw HTML · No frameworks · Just craft — <span>@Konazin</span> · 2026</p>
-</footer>
-
-<script>
-const obs = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      obs.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.08 });
-
-document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
-</script>
+  <footer class="container footer"><span>© 2026 Miguel Sousa / Kona</span><span>HTML, CSS e JavaScript. Sem uma fábrica de dependências para renderizar texto.</span></footer>
+  <script src="./app.js"></script>
 </body>
 </html>
