@@ -1,31 +1,31 @@
 const copy = {
   "pt-BR": {
     navLabel: "Navegação principal", navAbout: "Sobre", navProjects: "Projetos", navFocus: "Foco", navContact: "Contato", languageLabel: "Mudar idioma para inglês",
-    heroEyebrow: "DESENVOLVIMENTO DE SOFTWARE · IA APLICADA", heroLineOne: "Software.", heroLineTwo: "IA integrada.", heroDescription: "Construo ferramentas e sistemas enquanto exploro como modelos de linguagem funcionam — do uso de modelos locais aos componentes que os fazem aprender.", heroProjects: "Conheça os projetos", heroLinkedin: "LinkedIn", heroFootnote: "Engenharia de software, sistemas locais e curiosidade por IA.",
-    sceneLabel: "Camadas de um experimento de IA local", sceneLocal: "MODELOS LOCAIS", sceneSystems: "SISTEMAS", sceneCurrent: "PESQUISA ATUAL", sceneProjectType: "LABORATÓRIO DE LLM", sceneConfig: "Configuração", sceneNorm: "Normalização", sceneNext: "Próximo passo", sceneStatus: "ESTUDAR · IMPLEMENTAR · VALIDAR", sceneNote: "Aprender construindo",
-    areasLabel: "Áreas de interesse", areaSoftware: "ENGENHARIA DE SOFTWARE", areaAi: "IA E MODELOS LOCAIS", areaSystems: "SISTEMAS CONFIÁVEIS",
-    aboutLabel: "PERFIL", aboutHeading: "Gosto de entender o que existe por baixo da interface.", aboutParagraphOne: "Sou Kona, desenvolvedor de software e estudante de tecnologia. Trabalho em aplicações e ferramentas com atenção à arquitetura, aos fluxos reais e ao que acontece quando algo falha.", aboutParagraphTwo: "Nos meus projetos, conecto engenharia de software a IA de forma prática: uso modelos locais, construo ferramentas para desenvolvedores e estudo os fundamentos de modelos de linguagem implementando seus componentes.", aboutGithub: "Explore meu trabalho no GitHub",
-    projectsLabel: "PROJETOS SELECIONADOS", projectsHeading: "Ideias que viram sistemas.", projectsIntro: "Experimentos pessoais e software construído para aprender, resolver e melhorar.",
-    asterKind: "PESQUISA PESSOAL", asterDescription: "Um laboratório para estudar modelos de linguagem por dentro, implementando os blocos fundamentais de um LLM compacto em Python e PyTorch.", asterStatus: "EM DESENVOLVIMENTO",
-    zeroCodingKind: "CÓDIGO ABERTO", zeroCodingDescription: "Assistente de programação no terminal que conecta Ollama e provedores compatíveis a sessões, contexto de projeto e skills ativadas pelo usuário.", viewRepository: "Ver repositório",
-    fenrirKind: "SISTEMAS · LINUX", fenrirDescription: "Daemon para Linux que observa pressão de memória e coordena sessões com políticas graduais, simulação por padrão e recuperação reversível.",
-    caseKind: "ESTUDO DE CASO ANÔNIMO", caseTitle: "Automação de conteúdo com IA", caseDescription: "Fluxo que transforma um briefing em roteiros e peças visuais para comunicação no setor jurídico. O exemplo é descrito sem nomes, marcas ou materiais de clientes.", caseTagOne: "IA generativa", caseTagTwo: "Automação", caseTagThree: "Produto", casePrivacy: "DETALHES PRESERVADOS",
-    focusLabel: "NO QUE ESTOU APROFUNDANDO", focusHeading: "Software que integra IA precisa de fundamentos dos dois lados.", focusOneTitle: "Engenharia de software", focusOneDescription: "Interfaces claras, componentes coesos, persistência local e comportamento previsível.", focusTwoTitle: "Modelos de linguagem", focusTwoDescription: "Tokenização, configuração, normalização e os componentes que formam modelos compactos.", focusThreeTitle: "IA integrada ao fluxo", focusThreeDescription: "Provedores locais e compatíveis, contexto explícito e ferramentas que mantêm a pessoa no controle.",
-    contactLabel: "CONTATO", contactHeading: "Vamos construir algo útil.", contactDescription: "Se você trabalha com software, IA ou sistemas e quer trocar ideias, me encontre por aqui:", footerNote: "Feito para a web aberta."
+    heroEyebrow: "SOFTWARE · IA APLICADA", heroLineOne: "Software.", heroLineTwo: "IA em uso.", heroDescription: "Construo software que aproxima modelos de IA de fluxos de trabalho reais, com atenção a contexto, controle e comportamento previsível.", heroProjects: "Ver projetos", heroLinkedin: "LinkedIn", heroFootnote: "Ferramentas para desenvolvimento, modelos locais e sistemas confiáveis.",
+    sceneLabel: "Camadas de um fluxo com assistente de programação", sceneLocal: "MODELO LOCAL", sceneSystems: "CONTEXTO DE PROJETO", sceneCurrent: "ASSISTENTE DE CÓDIGO", sceneProjectType: "FLUXO LOCAL", sceneConfig: "Projeto", sceneNorm: "Sessão", sceneNext: "Provedor", sceneStatus: "CONTEXTO · MODELO · FERRAMENTAS", sceneNote: "da intenção ao código",
+    areasLabel: "Áreas de trabalho", areaSoftware: "FERRAMENTAS DE DESENVOLVIMENTO", areaAi: "MODELOS LOCAIS E IA", areaSystems: "SISTEMAS LINUX",
+    aboutLabel: "Perfil", aboutHeading: "Gosto de entender o que existe por baixo da interface.", aboutParagraphOne: "Sou Kona, desenvolvedor de software e estudante de tecnologia. Trabalho em aplicações e ferramentas com atenção à arquitetura, aos fluxos reais e ao que acontece quando algo falha.", aboutParagraphTwo: "Meu trabalho passa por assistentes de programação com modelos locais, sistemas Linux e aplicações que precisam continuar úteis mesmo sem conexão.", aboutGithub: "Explore meu trabalho no GitHub",
+    projectsLabel: "Projetos selecionados", projectsHeading: "Trabalho com forma e função.", projectsIntro: "Projetos escolhidos pelo que demonstram, com links para o código público quando disponível.",
+    zeroCodingKind: "ASSISTENTE DE CÓDIGO · OPEN SOURCE", zeroCodingDescription: "Assistente de programação no terminal que conecta Ollama e provedores compatíveis a sessões, contexto de projeto e skills escolhidas pela pessoa.",
+    fenrirKind: "SISTEMAS · LINUX", fenrirDescription: "Daemon para Linux que observa pressão de memória e coordena sessões com políticas graduais, modo de simulação inicial e recuperação reversível.",
+    trainingKind: "APP · OFFLINE-FIRST", trainingDescription: "Aplicativo mobile de treino com dados locais, sessões recuperáveis e exportação e restauração de backups.",
+    caseKind: "CASO ANÔNIMO", caseTitle: "Fluxo de conteúdo com IA", caseDescription: "Automação que transforma um briefing em conteúdo e peças visuais para revisão. O exemplo não inclui nomes, marcas, imagens ou dados identificáveis.", caseTagOne: "IA generativa", caseTagTwo: "Automação", casePrivacy: "MATERIAIS OMITIDOS", viewRepository: "Ver repositório",
+    focusLabel: "Áreas de interesse", focusHeading: "Software útil depende de bons fundamentos.", focusOneTitle: "Ferramentas para quem programa", focusOneDescription: "Interfaces de terminal, contexto explícito e integrações com modelos locais.", focusTwoTitle: "Sistemas Linux", focusTwoDescription: "Observabilidade, políticas seguras e recuperação previsível.", focusThreeTitle: "Aplicações locais", focusThreeDescription: "Persistência clara e fluxos que seguem úteis sem depender de conexão.",
+    contactLabel: "Contato", contactHeading: "Vamos construir algo útil.", contactDescription: "Se você trabalha com software, IA ou sistemas e quer trocar ideias, me encontre por aqui:", footerNote: "Feito para a web aberta."
   },
-  "en": {
+  en: {
     navLabel: "Main navigation", navAbout: "About", navProjects: "Projects", navFocus: "Focus", navContact: "Contact", languageLabel: "Mudar idioma para português",
-    heroEyebrow: "SOFTWARE DEVELOPMENT · APPLIED AI", heroLineOne: "Software.", heroLineTwo: "AI in practice.", heroDescription: "I build tools and systems while exploring how language models work — from using local models to implementing the components that help them learn.", heroProjects: "Explore selected work", heroLinkedin: "LinkedIn", heroFootnote: "Software engineering, local systems, and curiosity about AI.",
-    sceneLabel: "Layers of a local AI experiment", sceneLocal: "LOCAL MODELS", sceneSystems: "SYSTEMS", sceneCurrent: "CURRENT RESEARCH", sceneProjectType: "LLM LAB", sceneConfig: "Configuration", sceneNorm: "Normalization", sceneNext: "Next step", sceneStatus: "STUDY · BUILD · VERIFY", sceneNote: "Learn by building",
-    areasLabel: "Areas of interest", areaSoftware: "SOFTWARE ENGINEERING", areaAi: "AI & LOCAL MODELS", areaSystems: "RELIABLE SYSTEMS",
-    aboutLabel: "PROFILE", aboutHeading: "I like understanding what sits beneath the interface.", aboutParagraphOne: "I’m Kona, a software developer and technology student. I build applications and tools with attention to architecture, real user flows, and what happens when something fails.", aboutParagraphTwo: "My projects connect software engineering with practical AI: I use local models, build tools for developers, and study language model fundamentals by implementing their components.", aboutGithub: "Explore my work on GitHub",
-    projectsLabel: "SELECTED PROJECTS", projectsHeading: "Ideas turned into systems.", projectsIntro: "Personal experiments and software built to learn, solve problems, and improve.",
-    asterKind: "PERSONAL RESEARCH", asterDescription: "A lab for studying language models from the inside by implementing the core building blocks of a compact LLM in Python and PyTorch.", asterStatus: "IN DEVELOPMENT",
-    zeroCodingKind: "OPEN SOURCE", zeroCodingDescription: "A terminal coding assistant that connects Ollama and compatible providers with sessions, project context, and user-selected skills.", viewRepository: "View repository",
-    fenrirKind: "SYSTEMS · LINUX", fenrirDescription: "A Linux daemon that monitors memory pressure and coordinates sessions with gradual policies, simulation by default, and reversible recovery.",
-    caseKind: "ANONYMIZED CASE STUDY", caseTitle: "AI content automation", caseDescription: "A workflow that turns a brief into scripts and visual assets for communications in the legal sector. The example omits names, brands, and client materials.", caseTagOne: "Generative AI", caseTagTwo: "Automation", caseTagThree: "Product", casePrivacy: "DETAILS PROTECTED",
-    focusLabel: "AREAS I’M EXPLORING", focusHeading: "Software that integrates AI needs solid foundations on both sides.", focusOneTitle: "Software engineering", focusOneDescription: "Clear interfaces, cohesive components, local persistence, and predictable behavior.", focusTwoTitle: "Language models", focusTwoDescription: "Tokenization, configuration, normalization, and the components behind compact models.", focusThreeTitle: "AI in the workflow", focusThreeDescription: "Local and compatible providers, explicit context, and tools that keep people in control.",
-    contactLabel: "CONTACT", contactHeading: "Let’s build something useful.", contactDescription: "If you work with software, AI, or systems and want to connect, find me here:", footerNote: "Made for the open web."
+    heroEyebrow: "SOFTWARE · APPLIED AI", heroLineOne: "Software.", heroLineTwo: "AI at work.", heroDescription: "I build software that brings AI models into real workflows, with attention to context, control, and predictable behavior.", heroProjects: "View projects", heroLinkedin: "LinkedIn", heroFootnote: "Developer tools, local models, and dependable systems.",
+    sceneLabel: "Layers of a coding assistant workflow", sceneLocal: "LOCAL MODEL", sceneSystems: "PROJECT CONTEXT", sceneCurrent: "CODING ASSISTANT", sceneProjectType: "LOCAL WORKFLOW", sceneConfig: "Project", sceneNorm: "Session", sceneNext: "Provider", sceneStatus: "CONTEXT · MODEL · TOOLS", sceneNote: "from intent to code",
+    areasLabel: "Areas of work", areaSoftware: "DEVELOPER TOOLS", areaAi: "LOCAL MODELS AND AI", areaSystems: "LINUX SYSTEMS",
+    aboutLabel: "Profile", aboutHeading: "I like understanding what sits beneath the interface.", aboutParagraphOne: "I’m Kona, a software developer and technology student. I build applications and tools with attention to architecture, real user flows, and what happens when something fails.", aboutParagraphTwo: "My work spans coding assistants with local models, Linux systems, and applications that need to stay useful without a network connection.", aboutGithub: "Explore my work on GitHub",
+    projectsLabel: "Selected projects", projectsHeading: "Work with form and function.", projectsIntro: "Projects selected for what they demonstrate, with links to public source code where available.",
+    zeroCodingKind: "CODING ASSISTANT · OPEN SOURCE", zeroCodingDescription: "A terminal coding assistant that connects Ollama and compatible providers with sessions, project context, and user-selected skills.",
+    fenrirKind: "SYSTEMS · LINUX", fenrirDescription: "A Linux daemon that observes memory pressure and coordinates sessions with gradual policies, simulation by default, and reversible recovery.",
+    trainingKind: "APP · OFFLINE-FIRST", trainingDescription: "A mobile training app with local data, recoverable sessions, and backup export and restore.",
+    caseKind: "ANONYMIZED CASE", caseTitle: "AI content workflow", caseDescription: "An automation that turns a brief into content and visual assets for review. The example includes no names, brands, images, or identifying data.", caseTagOne: "Generative AI", caseTagTwo: "Automation", casePrivacy: "MATERIALS OMITTED", viewRepository: "View repository",
+    focusLabel: "Areas of interest", focusHeading: "Useful software depends on solid foundations.", focusOneTitle: "Tools for developers", focusOneDescription: "Terminal interfaces, explicit context, and integrations with local models.", focusTwoTitle: "Linux systems", focusTwoDescription: "Observability, safe policies, and predictable recovery.", focusThreeTitle: "Local applications", focusThreeDescription: "Clear persistence and workflows that remain useful without a connection.",
+    contactLabel: "Contact", contactHeading: "Let’s build something useful.", contactDescription: "If you work with software, AI, or systems and want to connect, find me here:", footerNote: "Made for the open web."
   }
 };
 
@@ -42,45 +42,25 @@ function setLanguage(language) {
     if (value) element.textContent = value;
   });
   document.querySelectorAll("[data-i18n-aria]").forEach((element) => {
-    const value = translations[ element.dataset.i18nAria ];
+    const value = translations[element.dataset.i18nAria];
     if (value) element.setAttribute("aria-label", value);
   });
   document.title = language === "en" ? "Miguel Sousa (Kona) — Software & AI" : "Miguel Sousa (Kona) — Software & IA";
   document.querySelector('meta[name="description"]').content = language === "en"
-    ? "Miguel Sousa (Kona) — software development, local model tools, and AI experiments."
-    : "Miguel Sousa (Kona) — desenvolvimento de software, ferramentas para modelos locais e experimentos com IA.";
+    ? "Miguel Sousa (Kona) — software development, AI tooling, and dependable systems."
+    : "Miguel Sousa (Kona) — desenvolvimento de software, ferramentas de IA e sistemas confiáveis.";
   document.querySelector('meta[property="og:title"]').content = document.title;
   document.querySelector('meta[property="og:description"]').content = language === "en"
-    ? "Software, local models, and systems built for real problems."
-    : "Software, modelos locais e sistemas construídos para problemas reais.";
+    ? "Developer tools, local models, and systems built for real workflows."
+    : "Ferramentas de desenvolvimento, modelos locais e sistemas para fluxos reais.";
   languageButton.textContent = language === "en" ? "PT" : "EN";
   languageButton.setAttribute("aria-pressed", String(language === "en"));
 }
 
+setLanguage(root.lang);
 languageButton.addEventListener("click", () => setLanguage(root.lang === "pt-BR" ? "en" : "pt-BR"));
 
-if (!reducedMotion.matches && finePointer.matches) {
-  document.querySelectorAll("[data-tilt]").forEach((element) => {
-    element.addEventListener("pointermove", (event) => {
-      const bounds = element.getBoundingClientRect();
-      const x = (event.clientX - bounds.left) / bounds.width - 0.5;
-      const y = (event.clientY - bounds.top) / bounds.height - 0.5;
-      if (element.classList.contains("hero-scene")) {
-        element.style.setProperty("--rx", `${-y * 3}deg`);
-        element.style.setProperty("--ry", `${x * 5}deg`);
-      } else {
-        element.style.setProperty("--cx", `${-y * 2.5}deg`);
-        element.style.setProperty("--cy", `${x * 3.5}deg`);
-      }
-    });
-    element.addEventListener("pointerleave", () => {
-      element.style.removeProperty("--rx");
-      element.style.removeProperty("--ry");
-      element.style.removeProperty("--cx");
-      element.style.removeProperty("--cy");
-    });
-  });
-
+if (!reducedMotion.matches) {
   const layers = [...document.querySelectorAll("[data-parallax]")];
   let frame = 0;
   const updateParallax = () => {
@@ -89,12 +69,31 @@ if (!reducedMotion.matches && finePointer.matches) {
       const bounds = layer.getBoundingClientRect();
       const factor = Number(layer.dataset.parallax);
       const offset = (bounds.top + bounds.height / 2 - viewport / 2) * factor;
-      layer.style.setProperty("--parallax-y", `${Math.max(-28, Math.min(28, offset))}px`);
+      layer.style.setProperty("--parallax-y", `${Math.max(-22, Math.min(22, offset))}px`);
     });
     frame = 0;
   };
   window.addEventListener("scroll", () => {
     if (!frame) frame = window.requestAnimationFrame(updateParallax);
   }, { passive: true });
+  window.addEventListener("resize", () => {
+    if (!frame) frame = window.requestAnimationFrame(updateParallax);
+  }, { passive: true });
   updateParallax();
+
+  if (finePointer.matches) {
+    document.querySelectorAll("[data-tilt]").forEach((element) => {
+      element.addEventListener("pointermove", (event) => {
+        const bounds = element.getBoundingClientRect();
+        const x = (event.clientX - bounds.left) / bounds.width - 0.5;
+        const y = (event.clientY - bounds.top) / bounds.height - 0.5;
+        element.style.setProperty("--rx", `${-y * 2.2}deg`);
+        element.style.setProperty("--ry", `${x * 3.2}deg`);
+      });
+      element.addEventListener("pointerleave", () => {
+        element.style.removeProperty("--rx");
+        element.style.removeProperty("--ry");
+      });
+    });
+  }
 }
