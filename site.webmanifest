@@ -1,10 +1,10 @@
 {
-  "name": "Miguel Sousa — Portfolio",
-  "short_name": "Konazin",
+  "name": "Miguel Sousa (Kona) — Software & IA",
+  "short_name": "Kona",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#080b10",
-  "theme_color": "#080b10",
+  "background_color": "#0b0d11",
+  "theme_color": "#0b0d11",
   "icons": [
     {
       "src": "./favicon.svg",

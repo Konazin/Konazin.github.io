@@ -16,17 +16,18 @@ fi
 
 FILES=(
   index.html styles.css app.js favicon.svg site.webmanifest
-  404.html robots.txt sitemap.xml README.md PORTFOLIO_NOTES.md .nojekyll
+  404.html robots.txt sitemap.xml README.md .nojekyll deploy.sh
 )
 
 git add "${FILES[@]}"
+git add -u -- PORTFOLIO_NOTES.md
 
 if git diff --cached --quiet; then
   echo "Nenhuma alteração para publicar."
   exit 0
 fi
 
-git commit -m "redesign portfolio with updated projects and experience"
+git commit -m "refresh bilingual software and AI portfolio"
 git push origin HEAD:main
 
 echo "Publicado. O GitHub Pages normalmente atualiza em alguns minutos:"
