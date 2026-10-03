@@ -1,9 +1,5 @@
 # Konazin.github.io
 
-Portfolio pessoal bilíngue de Miguel Sousa (Kona), feito em HTML, CSS e JavaScript sem dependências externas.
+Portfólio bilíngue de Miguel Sousa (Kona), publicado em [konazin.github.io](https://konazin.github.io/).
 
-O site usa apenas arquivos estáticos e é publicado pelo GitHub Pages em `https://konazin.github.io/`.
-
-## Publicar
-
-Na branch `main`, publique a raiz do repositório em **Settings → Pages → Deploy from a branch**. O repositório já usa a configuração do GitHub Pages.
+A versão atual é construída de `v2/` e publicada automaticamente pelo GitHub Actions em todo push para `main`. Para rodar localmente, consulte [v2/README.md](v2/README.md).
