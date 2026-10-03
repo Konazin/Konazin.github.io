@@ -65,3 +65,30 @@ body{min-width:0}
   .project-note{font-size:.47rem;margin-top:.5rem}
   .system-heading{top:17vh;left:5vw;font-size:12vw}
 }
+
+/* Priority: make the opening hierarchy readable and keep static mode usable. */
+.hero-type{z-index:4;inset:14vh auto auto 4vw;width:min(76vw,960px)}
+.hero-signature{margin-left:3vw}
+.hero-type h1{font-size:clamp(3.6rem,6.4vw,8rem);line-height:.86;white-space:normal;text-shadow:0 3px 18px #0c100e;text-wrap:balance}
+.hero-type h1 span:last-child{text-align:left}
+.hero-front{pointer-events:auto}
+.hero-project-cta{display:inline-flex;align-items:center;min-height:44px;margin-top:.9rem;padding:.55rem .8rem;border:1px solid var(--green);color:var(--green)!important;font:700 .66rem var(--mono);letter-spacing:.05em}
+.hero-project-cta:hover{background:var(--green);color:var(--black)!important}
+.scene-fallback svg{width:min(100%,1200px);height:min(74svh,620px)}
+.no-js .scene,.reduced-motion .scene{z-index:0}
+.no-js .scene-fallback[hidden],.reduced-motion .scene-fallback[hidden]{display:flex}
+.no-js .hero-type,.reduced-motion .hero-type{z-index:1;width:auto}
+.no-js .hero-type h1,.reduced-motion .hero-type h1{max-width:100%;font-size:clamp(2rem,6vw,5.4rem);line-height:.96;letter-spacing:-.055em;white-space:normal;overflow-wrap:anywhere;text-wrap:balance}
+.no-js .hero-type h1 span:last-child,.reduced-motion .hero-type h1 span:last-child{text-align:left}
+.no-js .hero-front,.reduced-motion .hero-front{z-index:2}
+.no-js .system-heading,.reduced-motion .system-heading,.no-js .system-sequence,.reduced-motion .system-sequence{display:none}
+@media(max-width:900px){.hero-type{top:18vh;width:min(78vw,700px)}.hero-type h1{font-size:7.4vw}}
+@media(max-width:700px){.hero-type{left:4vw;right:4vw;width:auto}.hero-type h1{font-size:clamp(2.65rem,10.5vw,4.15rem)}}
+.experience:not([data-phase=hero]):not([data-phase=system]) .chapter-jump{inset:10svh auto auto 3vw}
+.project-detail[id],#projetos{scroll-margin-top:5rem}
+.wordmark{display:flex;align-items:center;gap:.35rem;width:auto;height:62px;line-height:1;flex:none}
+.wordmark img{width:44px;height:44px}
+.wordmark-label{margin:0;color:var(--green);font:700 .7rem var(--mono);letter-spacing:.14em}
+@media(max-width:700px){.wordmark{height:46px}.wordmark img{width:38px;height:38px}}
+@media(max-width:390px){.wordmark-label{display:none}}
+@media(max-width:700px){.no-js .scene-fallback svg,.reduced-motion .scene-fallback svg{width:min(56vw,260px);height:auto}}
