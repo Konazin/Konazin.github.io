@@ -101,9 +101,9 @@ if (renderer) {
   const laptop = createLaptop(); scene.add(laptop.root);
   refreshScreen = () => laptop.setScreen(phase==='hero'?'boot':phase==='system'?'overview':phase, 0, language);
   const keys = [
-    {p:0, pos:[0,5.1,16], at:[0,1.55,0], root:[0,-.15,0], yaw:-.18, scale:1.05, fov:43},
-    {p:.18, pos:[0,5.1,16], at:[0,1.55,0], root:[-2.8,-.15,0], yaw:.04, scale:1.05, fov:43},
-    {p:.30, pos:[0,5.1,16], at:[0,1.55,0], root:[-2.8,-.15,0], yaw:-.08, scale:1.05, fov:43},
+    {p:0, pos:[0,5.1,16], at:[0,1.55,0], root:[2.4,-.15,0], yaw:-.18, scale:1.05, fov:43},
+    {p:.18, pos:[0,5.1,16], at:[0,1.55,0], root:[-3.35,-.15,0], yaw:.04, scale:1.05, fov:43},
+    {p:.30, pos:[0,5.1,16], at:[0,1.55,0], root:[-3.35,-.15,0], yaw:-.08, scale:1.05, fov:43},
     {p:.46, pos:[0,5.1,16], at:[0,1.55,0], root:[2.8,-.15,0], yaw:.12, scale:1.05, fov:43},
     {p:.62, pos:[0,5.1,16], at:[0,1.55,0], root:[2.8,-.15,0], yaw:-.12, scale:1.05, fov:43},
     {p:.68, pos:[0,5.1,16], at:[0,1.55,0], root:[2.8,-.15,0], yaw:0, scale:1.05, fov:43},
@@ -126,7 +126,7 @@ if (renderer) {
     const cp = [0,0,0], ct = [0,0,0], rp = [0,0,0]; vec(cp,a.pos,b.pos,t); vec(ct,a.at,b.at,t); vec(rp,a.root,b.root,t);
     camera.position.set(cp[0],mobile.matches?5.4:cp[1],mobile.matches?13.5:cp[2]); target.set(ct[0],mobile.matches?.4:ct[1],ct[2]); camera.lookAt(target);
     camera.fov = lerp(a.fov,b.fov,t) + (mobile.matches ? 13 : 0); camera.updateProjectionMatrix();
-    laptop.root.position.set(mobile.matches?0:rp[0],mobile.matches?rp[1]+2.4:rp[1],rp[2]); laptop.root.rotation.y=lerp(a.yaw,b.yaw,t); laptop.root.scale.setScalar(lerp(a.scale,b.scale,t)*(mobile.matches?.72:1));
+    laptop.root.position.set(mobile.matches?0:rp[0],mobile.matches?rp[1]+2.4:rp[1],rp[2]); laptop.root.rotation.y=lerp(a.yaw,b.yaw,t); laptop.root.scale.setScalar(lerp(a.scale,b.scale,t)*(mobile.matches?.72:lerp(1.25,1.08,smooth(p/.18))));
     const open = smooth((p-.09)/.11);
     const interior = windowed(p,.18,.24,.74,.80);
     laptop.deck.position.set(0,.65*open+1.65*interior,.24*open); laptop.bottom.position.set(0,-.12*open,.02*open);
