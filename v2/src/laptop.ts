@@ -9,9 +9,13 @@ const keycap = material('#353a33', .5, .28);
 const keyLegend = new THREE.MeshBasicMaterial({ color: '#a4aa97' });
 const board = material('#23372d', .63, .22);
 const boardEdge = material('#405442', .48, .31);
+const dimmBoard = material('#5f8058', .5, .28);
+const dimmChip = material('#b5c99b', .4, .24);
+const ssdBoard = material('#426849', .46, .32);
 const chip = material('#101410', .42, .3);
 const packageMat = material('#263128', .46, .3);
 const metal = material('#969b8d', .27, .74);
+const cpuHeatSpreader = material('#c8cec2', .24, .55);
 const copper = material('#b28a54', .3, .72);
 const solder = material('#d0ad67', .31, .7);
 const green = new THREE.MeshStandardMaterial({ color: '#c4ee48', emissive: '#526e18', emissiveIntensity: .55, roughness: .42 });
@@ -42,7 +46,7 @@ export type LaptopParts = {
   root: THREE.Group; physical: THREE.Group; lid: THREE.Group; deck: THREE.Group; bottom: THREE.Group;
   battery: THREE.Group; motherboard: THREE.Group; cpu: THREE.Group; ram: THREE.Group; ssd: THREE.Group; cooling: THREE.Group;
   cpuTraces: THREE.Group; memoryTraffic: THREE.Group; storageRecords: THREE.Group;
-  setScreen: (mode: 'boot' | 'cpu' | 'ram' | 'ssd' | 'display', pressure?: number, language?: 'pt' | 'en') => void;
+  setScreen: (mode: 'boot' | 'cpu' | 'ram' | 'ssd' | 'overview', pressure?: number, language?: 'pt' | 'en') => void;
 };
 
 export function createLaptop(): LaptopParts {
@@ -112,13 +116,13 @@ export function createLaptop(): LaptopParts {
   const screen = new THREE.Mesh(new THREE.PlaneGeometry(4.88, 2.74), new THREE.MeshBasicMaterial({ map: screenTexture, toneMapped: false }));
   screen.name = 'project-specific live display'; screen.position.set(0, 1.72, .141); lid.add(screen);
   let lastScreen = '';
-  function setScreen(mode: 'boot' | 'cpu' | 'ram' | 'ssd' | 'display', pressure = 0, language: 'pt' | 'en' = 'pt') {
+  function setScreen(mode: 'boot' | 'cpu' | 'ram' | 'ssd' | 'overview', pressure = 0, language: 'pt' | 'en' = 'pt') {
     const signature = `${mode}:${Math.round(pressure * 8)}:${language}`; if (signature === lastScreen) return; lastScreen = signature;
     const g = screenContext, w = 1024, h = 576, lime = '#bfeb55', dim = '#61705d', pale = '#dce5d3';
     g.fillStyle = '#101510'; g.fillRect(0, 0, w, h);
     g.fillStyle = '#c1e970'; g.fillRect(0, 0, 7, h);
     g.fillStyle = lime; g.font = 'bold 17px monospace'; g.fillText('K/CORE', 31, 31);
-    const titles = { pt: { boot:'HARDWARE / ABERTO', cpu:'ZEROCODING / TERMINAL', ram:'FENRIR / SIMULAÇÃO DE PRESSÃO', ssd:'TRAINING APP / LOCAL', display:'ZEROINSIGHT / PIPELINE' }, en: { boot:'HARDWARE / OPEN', cpu:'ZEROCODING / TERMINAL', ram:'FENRIR / PRESSURE SIMULATION', ssd:'TRAINING APP / LOCAL', display:'ZEROINSIGHT / PIPELINE' } };
+    const titles = { pt: { boot:'SISTEMA / ABERTO', cpu:'ZEROCODING / TERMINAL', ram:'FENRIR / OBSERVAÇÃO', ssd:'TRAINING APP / LOCAL', overview:'SISTEMA / VISÃO GERAL' }, en: { boot:'SYSTEM / OPEN', cpu:'ZEROCODING / TERMINAL', ram:'FENRIR / OBSERVATION', ssd:'TRAINING APP / LOCAL', overview:'SYSTEM / OVERVIEW' } };
     g.fillStyle = '#96a58d'; g.font = '13px monospace'; g.fillText(titles[language][mode], 180, 31);
     g.fillStyle = '#26352a'; g.fillRect(28, 48, 965, 1);
     const label = (value: string, x: number, y: number, size = 20, color = pale) => { g.fillStyle = color; g.font = `${size}px monospace`; g.fillText(value, x, y); };
@@ -149,8 +153,8 @@ export function createLaptop(): LaptopParts {
       const rows = [t?'browser':'browser',t?'worker':'worker',t?'serviço':'service',t?'jogo':'game'];
       rows.forEach((name, i) => { const y=251+i*49; label(name.toUpperCase(),57,y,14,'#aec09f'); g.fillStyle=i<2&&pressure>.57?'#805840':'#38493a'; g.fillRect(222,y-16,Math.min(370,72+i*58+pressure*185),13); label(i===1&&pressure>.57?'PSI ↑':'cgroup v2',655,y,13,i===1&&pressure>.57?'#e2a47f':'#8ea08a'); });
       rail(57, 479, 724, 479, pressure > .57 ? '#d79b73' : '#718c65');
-      label(pressure > .57 ? (t?'journal → intervenção':'journal → intervention') : (t?'observação → política gradual':'observe → gradual policy'), 57, 520, 15, pressure > .57 ? '#e2a47f' : pale);
-      label(pressure > .75 ? (t?'RECUPERAÇÃO':'RECOVERY') : 'PSI / SWAP', 760, 520, 14, lime);
+      label(pressure > .57 ? (t?'dry-run → política':'dry-run → policy') : (t?'observação → política gradual':'observe → gradual policy'), 57, 520, 15, pressure > .57 ? '#e2a47f' : pale);
+      label(pressure > .75 ? (t?'SIMULAÇÃO':'SIMULATION') : 'PSI / SWAP', 760, 520, 14, lime);
     } else if (mode === 'ssd') {
       label(t ? 'ESTADO LOCAL / SQLITE' : 'LOCAL STATE / SQLITE', 48, 97, 19, lime);
       label('SESSION_ID       SET_ID        UPDATED', 55, 146, 13, '#a5ba9b');
@@ -165,22 +169,18 @@ export function createLaptop(): LaptopParts {
       label(t?'exportar → validar → restaurar':'export → validate → restore', 53, 450, 16, pale);
       label(t?'rede: opcional':'network: optional', 53, 493, 13, '#879886');
     } else {
-      label(t ? 'BRIEF → ESTRUTURA → SAÍDA' : 'BRIEF → STRUCTURE → OUTPUT', 47, 94, 17, lime);
-      const phases = t ? ['BRIEF','ESTRUTURA','DIREÇÃO','GERAÇÃO','ASSET'] : ['BRIEF','STRUCTURE','DIRECTION','GENERATION','ASSET'];
-      phases.forEach((s, i) => {
-        const x = 48 + i * 190, y=147;
-        label(`0${i+1}`,x,y,12,'#82927a'); label(s,x,y+29,13,i===4?lime:pale);
-        g.fillStyle=['#344437','#40503d','#49513c','#596142','#829550'][i]; g.fillRect(x,y+50,150,102);
-        if(i===0){g.fillStyle='#c6cbb2';g.fillRect(x+13,y+66,81,5);g.fillRect(x+13,y+79,119,3);g.fillRect(x+13,y+91,105,3);}
-        if(i===1){g.fillStyle='#a7ba98';for(let k=0;k<4;k++)g.fillRect(x+15+k*27,y+66,17,66);}
-        if(i===2){g.fillStyle='#aab98b';g.fillRect(x+14,y+64,56,76);g.fillStyle='#747f60';g.fillRect(x+80,y+64,56,76);}
-        if(i===3){g.strokeStyle='#c2d57d';g.lineWidth=2;g.strokeRect(x+17,y+65,116,74);g.beginPath();g.moveTo(x+18,y+130);g.lineTo(x+60,y+92);g.lineTo(x+83,y+111);g.lineTo(x+130,y+75);g.stroke();}
-        if(i===4){g.fillStyle='#d4dfb3';g.fillRect(x+14,y+65,122,74);g.fillStyle='#546844';g.fillRect(x+78,y+65,58,74);}
-        if(i<4) rail(x+151,y+105,x+178,y+105,dim);
+      label(t ? 'TRÊS PROJETOS / UM FIO CONDUTOR' : 'THREE PROJECTS / ONE THREAD', 47, 94, 17, lime);
+      const stages = t ? ['BACKEND','SISTEMA','ESTADO','RECUPERAÇÃO'] : ['BACKEND','SYSTEM','STATE','RECOVERY'];
+      stages.forEach((s, i) => {
+        const x = 57 + i * 228, y = 177;
+        label('0' + (i + 1), x, y, 13, '#82927a');
+        label(s, x, y + 34, 17, i === 3 ? lime : pale);
+        g.fillStyle = i === 3 ? '#546844' : '#26352a';
+        g.fillRect(x, y + 58, 166, 7);
+        if (i < 3) rail(x + 170, y + 61, x + 205, y + 61, dim);
       });
-      label(t?'PNG  /  MANIFEST  /  HTML DE REVISÃO':'PNG  /  MANIFEST  /  REVIEW HTML', 51, 375, 15);
-      label(t?'cada etapa preserva as decisões anteriores':'each stage carries previous decisions forward',51,419,13,'#9cae98');
-      label('PYTHON  /  FASTAPI  /  REACT',51,500,13,lime);
+      label(t ? 'CONTEXTO  /  PERSISTÊNCIA  /  CONTROLE' : 'CONTEXT  /  PERSISTENCE  /  CONTROL', 57, 373, 16, '#9cae98');
+      label('PYTHON  /  RUST  /  EXPO', 57, 500, 13, lime);
     }
     screenTexture.needsUpdate = true;
   }
@@ -283,7 +283,7 @@ export function createLaptop(): LaptopParts {
     line(cpu,[new THREE.Vector3(x,.11,.37),new THREE.Vector3(x,.11,.3),new THREE.Vector3(x*.62,.11,.24)],i%3===0?'#b28a54':'#718768',.88);
   }
   for(const x of [-.39,-.26,.26,.39])for(const z of [-.3,.3])box(cpu,'processor decoupling capacitor',[.07,.055,.07],[x,.13,z],chip,.015);
-  box(cpu,'nickel plated heat spreader',[.73,.115,.59],[0,.172,0],metal,.07);
+  box(cpu,'nickel plated heat spreader',[.73,.115,.59],[0,.172,0],cpuHeatSpreader,.07);
   box(cpu,'heat spreader etched mark',[.28,.004,.018],[0,.232,-.19],graphite,.004);
   box(cpu,'heat spreader etched code',[.16,.004,.012],[0,.232,-.15],shellEdge,.003);
   box(cpu,'heat spreader index',[.065,.006,.045],[.28,.232,.19],copper,.01);
@@ -305,7 +305,7 @@ export function createLaptop(): LaptopParts {
     const profile=new THREE.Shape();
     profile.moveTo(-.91,-.21);profile.lineTo(.91,-.21);profile.lineTo(.91,.21);profile.lineTo(.105,.21);profile.lineTo(.105,.135);profile.lineTo(-.105,.135);profile.lineTo(-.105,.21);profile.lineTo(-.91,.21);profile.closePath();
     const pcbGeometry=new THREE.ExtrudeGeometry(profile,{depth:.1,bevelEnabled:true,bevelSegments:1,steps:1,bevelSize:.012,bevelThickness:.008});
-    const pcb=new THREE.Mesh(pcbGeometry,board);pcb.name=`keyed DIMM substrate ${module+1}`;pcb.rotation.x=Math.PI/2;pcb.position.y=.05;moduleGroup.add(pcb);
+    const pcb=new THREE.Mesh(pcbGeometry,dimmBoard);pcb.name=`keyed DIMM substrate ${module+1}`;pcb.rotation.x=Math.PI/2;pcb.position.y=.05;moduleGroup.add(pcb);
     for(let i=0;i<26;i++){
       const x=-.83+i*.066;
       if(Math.abs(x)<.13)continue;
@@ -313,7 +313,7 @@ export function createLaptop(): LaptopParts {
     }
     for(let i=0;i<8;i++){
       const x=-.74+i*.21;
-      box(moduleGroup,'DRAM package',[.16,.072,.145],[x,.093,-.035],chip,.018);
+      box(moduleGroup,'DRAM package',[.16,.072,.145],[x,.093,-.035],dimmChip,.018);
       box(moduleGroup,'DRAM package mark',[.065,.003,.012],[x,.131,-.035],shellEdge,.002);
       for(const zSide of [-.12,.055])box(moduleGroup,'package solder pads',[.04,.012,.018],[x,.056,zSide],copper,.003);
     }
@@ -321,8 +321,8 @@ export function createLaptop(): LaptopParts {
   }
 
   const ssd = new THREE.Group(); ssd.name='SSD / Training App persistence'; physical.add(ssd); ssd.position.set(.56,-.045,.81);
-  const drive=box(ssd,'M.2 2280 NVMe PCB',[2.24,.07,.45],[0,.035,0],boardEdge,.035);
-  outline(ssd,drive.geometry,new THREE.Vector3(0,.035,0),'#9aab87');
+  const drive=box(ssd,'M.2 2280 NVMe PCB',[2.24,.07,.45],[0,.035,0],ssdBoard,.035);
+  outline(ssd,drive.geometry,new THREE.Vector3(0,.035,0),'#c4ee70');
   for(let i=0;i<25;i++){
     if(i===11||i===12)continue;
     box(ssd,'M.2 gold edge finger',[.018,.012,.025],[-1.134,.044,-.18+i*.015],solder,.002);
