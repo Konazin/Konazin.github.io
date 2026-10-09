@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#0c100e" />
   <link rel="icon" type="image/png" sizes="128x128" href="./src/assets/kona-favicon.png" />
-  <meta name="description" content="Miguel Sousa (Kona): software, sistemas Linux e IA aplicada. Quatro projetos vistos através dos componentes de uma máquina." />
+  <meta name="description" content="Miguel Sousa (Kona): backend, sistemas Linux e IA aplicada. Três projetos em uma narrativa interativa." />
   <meta property="og:title" content="Kona — Do sinal ao sistema" />
   <meta property="og:description" content="Uma desmontagem interativa de projetos de software, sistemas e IA aplicada." />
   <meta property="og:type" content="website" />
@@ -14,10 +14,10 @@
 <body>
   <a class="skip-link" href="#projetos" data-i18n="skip">Pular para a navegação de projetos</a>
   <header class="topbar">
-    <a class="wordmark" href="#inicio" aria-label="Kona — Alone and Unafraid, início" data-i18n-aria="home"><img src="./src/assets/kona-mark.webp" alt="" width="512" height="512" fetchpriority="high" decoding="async" /></a>
+    <a class="wordmark" href="#inicio" aria-label="Kona — Alone and Unafraid, início" data-i18n-aria="home"><img src="./src/assets/kona-mark.webp" alt="" width="512" height="512" fetchpriority="high" decoding="async" /><span class="wordmark-label" aria-hidden="true">KONA</span></a>
     <nav class="social-nav" aria-label="Links externos" data-i18n-aria="externalLinks">
-      <a href="https://github.com/Konazin" target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a>
-      <a href="https://www.linkedin.com/in/miguelkona/" target="_blank" rel="noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
+      <a href="https://github.com/Konazin" target="_blank" rel="noreferrer" aria-label="GitHub (abre em nova aba)" data-i18n-aria="githubExternal">GitHub <span aria-hidden="true">↗</span></a>
+      <a href="https://www.linkedin.com/in/miguelkona/" target="_blank" rel="noreferrer" aria-label="LinkedIn (abre em nova aba)" data-i18n-aria="linkedinExternal">LinkedIn <span aria-hidden="true">↗</span></a>
     </nav>
     <div class="language" role="group" aria-label="Idioma" data-i18n-aria="language">
       <button type="button" data-lang="pt" aria-pressed="true">PT</button><span aria-hidden="true">/</span><button type="button" data-lang="en" aria-pressed="false">EN</button>
@@ -27,53 +27,41 @@
     <section class="experience" id="inicio" data-phase="hero" aria-labelledby="hero-title">
       <div class="hero-type"><p class="hero-signature" data-i18n="identity">MIGUEL SOUSA / SOFTWARE E SISTEMAS</p><h1 id="hero-title"><span data-i18n="titleA">EU CONSTRUO</span><span data-i18n="titleB">SOFTWARE OLHANDO</span><span data-i18n="titleC">PARA O QUE ACONTECE</span><span data-i18n="titleD">POR BAIXO DA INTERFACE.</span></h1></div>
       <div class="scene" aria-hidden="true"><canvas id="world"></canvas><div id="scene-fallback" class="scene-fallback" hidden><svg viewBox="0 0 900 640"><path d="M187 120 672 50 836 340 318 409Z" fill="#252d27" stroke="#8b9586" stroke-width="4"/><path d="M222 138 660 82 784 326 331 377Z" fill="#102017"/><path d="M316 410 836 341 686 532 101 554Z" fill="#343a34" stroke="#8b9586" stroke-width="4"/><path d="M101 554 686 532 790 560 205 584Z" fill="#191d19"/><path d="M290 444 733 398M275 470 712 424M257 494 693 451" stroke="#71836e" stroke-width="6"/><path d="M370 464 493 452" stroke="#c1e970" stroke-width="6"/></svg></div></div>
-      <div class="hero-front"><p data-i18n="heroIntro">Tenho interesse em sistemas onde contexto, estado, persistência e execução precisam continuar compreensíveis quando as partes começam a interagir.</p><p class="hero-disciplines" data-i18n="domain">SOFTWARE / LINUX / IA APLICADA</p></div>
+      <div class="hero-front"><p data-i18n="heroIntro">Desenvolvo software para sistemas em que estado, persistência e execução precisam continuar compreensíveis.</p><p class="hero-disciplines" data-i18n="domain">SOFTWARE / LINUX / IA APLICADA</p><a class="hero-project-cta" href="#cpu-project" data-jump="cpu" data-i18n="heroCta">VER PROJETOS</a></div>
       <div class="scene-index" aria-hidden="true"><span>K/CORE</span><i><b id="stage-progress"></b></i><span id="stage-label">00 / EXTERIOR</span></div>
-      <nav class="chapter-jump" id="chapter-nav" aria-label="Ir para um projeto" data-i18n-aria="chapterNav"><a href="#cpu-project" data-jump="cpu">CPU</a><a href="#ram-project" data-jump="ram">RAM</a><a href="#ssd-project" data-jump="ssd">SSD</a><a href="#display-project" data-jump="display">DISPLAY</a></nav>
+      <nav class="chapter-jump" id="chapter-nav" tabindex="-1" aria-label="Ir para um projeto" data-i18n-aria="chapterNav"><a href="#cpu-project" data-jump="cpu">ZeroCoding</a><a href="#ram-project" data-jump="ram">Fenrir</a><a href="#ssd-project" data-jump="ssd">Training App</a></nav>
       <button type="button" class="scroll-cue" data-i18n="scroll">ROLE PARA ACOMPANHAR A MÁQUINA ↓</button>
       <svg class="anchor-lines" id="anchor-lines" aria-hidden="true"><path id="anchor-path"></path></svg>
       <div class="cpu-flow" aria-hidden="true"><span>MODEL</span><span>CONTEXT</span><span>TOOLS</span><span>SESSION</span></div>
       <div class="ram-pressure" aria-hidden="true"><span class="pressure-heading" data-i18n="pressureHeading">SIMULAÇÃO / PRESSÃO DE MEMÓRIA</span><div class="process-lanes"><b>GAME</b><b>WORKER</b><b>BROWSER</b><b>SERVICE</b></div><div class="pressure-track"><i id="pressure-fill"></i></div><span id="pressure-state" data-i18n="pressureObserve">OBSERVAR → POLÍTICA → RECUPERAR</span></div>
       <div class="ssd-flow" aria-hidden="true"><span>LOCAL DATA</span><span>SQLITE</span><span>SESSION</span><span>BACKUP</span><span>RECOVERY</span></div>
-      <div class="display-flow" aria-hidden="true"><span>BRIEF</span><span>STRUCTURE</span><span>VISUAL DIRECTION</span><span>GENERATION</span><span>ASSET</span></div>
       <p class="system-heading" data-i18n="systemHeading" aria-hidden="true">O comportamento aparece nas relações entre as partes.</p>
       <div class="system-sequence" data-i18n="systemSequence" aria-hidden="true">HARDWARE <b>→</b> SIGNAL <b>→</b> STATE <b>→</b> SOFTWARE</div>
-      <div class="project-readouts" id="projetos" aria-live="polite">
+      <div class="project-readouts" id="projetos" tabindex="-1" role="region" aria-label="Projetos" data-i18n-aria="projectsRegion" aria-live="polite">
         <article class="project-detail" id="cpu-project" data-project="cpu">
           <p class="part-label" data-i18n="cpuPart">CPU / EXECUÇÃO</p><h2>ZeroCoding</h2>
-          <p class="project-lead" data-i18n="cpuLead">Um assistente de programação no terminal em que contexto, ferramentas e estado de sessão permanecem explícitos.</p>
-          <p class="project-description" data-i18n="cpuDescription">O projeto conecta modelos locais e APIs compatíveis a contexto selecionado pelo usuário, ferramentas para inspecionar código e sessões que podem ser retomadas. A parte importante não é apenas chamar um modelo, mas manter claro o que ele sabe, o que pode fazer e em qual estado a sessão está.</p>
-          <dl class="project-spec"><div><dt>RUNTIME</dt><dd data-i18n="cpuRuntime">Python / terminal</dd></div><div><dt>MODEL</dt><dd data-i18n="cpuModel">Ollama / OpenAI-compatible</dd></div><div><dt>CONTEXT</dt><dd data-i18n="cpuContext">selecionado pelo usuário</dd></div><div><dt>TOOLS</dt><dd data-i18n="cpuTools">read / tree / grep</dd></div><div><dt>STATE</dt><dd data-i18n="cpuState">sessões retomáveis</dd></div></dl>
-          <p class="project-note" data-i18n="cpuNote">Execução depende do contexto que chega até ela.</p>
-          <a class="repo-link" href="https://github.com/Konazin/ZeroCoding" target="_blank" rel="noreferrer"><span data-i18n="repo">VER CÓDIGO</span><span aria-hidden="true">↗</span></a>
+          <p class="project-lead" data-i18n="cpuLead">Assistente de programação experimental para terminal, com contexto explícito e sessões locais.</p>
+          <p class="project-description" data-i18n="cpuDescription">MVP em Python com provedores locais Ollama e APIs compatíveis, habilidades Markdown e comandos para ler e buscar no projeto. Arquivos não entram no contexto automaticamente; edição, shell e ciclos autônomos ainda estão fora do escopo.</p>
+          <dl class="project-spec"><div><dt>RUNTIME</dt><dd data-i18n="cpuRuntime">Python / Rich TUI</dd></div><div><dt>MODEL</dt><dd data-i18n="cpuModel">Ollama / APIs compatíveis</dd></div><div><dt>CONTEXT</dt><dd data-i18n="cpuContext">adicionado pela pessoa</dd></div><div><dt>TOOLS</dt><dd data-i18n="cpuTools">read / tree / grep</dd></div><div><dt>STATE</dt><dd data-i18n="cpuState">sessões locais</dd></div></dl>
+          <a class="repo-link" href="https://github.com/Konazin/ZeroCoding" target="_blank" rel="noreferrer" aria-label="Abrir o repositório ZeroCoding no GitHub (nova aba)" data-i18n-aria="cpuRepoLink"><span data-i18n="repo">VER CÓDIGO</span><span aria-hidden="true">↗</span></a>
         </article>
         <article class="project-detail" id="ram-project" data-project="ram">
           <p class="part-label" data-i18n="ramPart">RAM / PRESSÃO DE MEMÓRIA</p><h2>Fenrir</h2>
-          <p class="project-lead" data-i18n="ramLead">Um daemon Linux que observa pressão de memória antes de decidir se deve intervir.</p>
-          <p class="project-description" data-i18n="ramDescription">O sistema acompanha memória, swap e PSI e aplica políticas graduais sobre workloads usando cgroup v2. Simulação, opt-ins independentes, journal e rollback mantêm cada intervenção observável e reversível.</p>
-          <dl class="project-spec"><div><dt>RUNTIME</dt><dd data-i18n="ramRuntime">Rust / Linux</dd></div><div><dt>SIGNALS</dt><dd data-i18n="ramSignals">memory / swap / PSI</dd></div><div><dt>CONTROL</dt><dd data-i18n="ramControl">cgroup v2</dd></div><div><dt>POLICY</dt><dd data-i18n="ramPolicy">gradual / dry-run</dd></div><div><dt>RECOVERY</dt><dd data-i18n="ramRecovery">journal / rollback</dd></div></dl>
-          <p class="project-note" data-i18n="ramNote">O problema não é apenas quanto de memória está sendo usado, mas como o sistema chega até esse estado.</p>
-          <a class="repo-link" href="https://github.com/Konazin/Fenrir" target="_blank" rel="noreferrer"><span data-i18n="repo">VER CÓDIGO</span><span aria-hidden="true">↗</span></a>
+          <p class="project-lead" data-i18n="ramLead">Daemon Linux para observar pressão de memória e simular políticas reversíveis por sessão.</p>
+          <p class="project-description" data-i18n="ramDescription">Observação e simulação são o padrão; mudanças exigem opt-ins independentes. O controle experimental grava apenas memory.low por sessão, com journal e rollback. Não encerra processos, congela tarefas nem ajusta sysctls.</p>
+          <dl class="project-spec"><div><dt>RUNTIME</dt><dd data-i18n="ramRuntime">Rust / Linux</dd></div><div><dt>SIGNALS</dt><dd data-i18n="ramSignals">memory / swap / PSI</dd></div><div><dt>CONTROL</dt><dd data-i18n="ramControl">cgroup v2</dd></div><div><dt>POLICY</dt><dd data-i18n="ramPolicy">observe / dry-run</dd></div><div><dt>RECOVERY</dt><dd data-i18n="ramRecovery">journal / rollback</dd></div></dl>
+          <a class="repo-link" href="https://github.com/Konazin/Fenrir" target="_blank" rel="noreferrer" aria-label="Abrir o repositório Fenrir no GitHub (nova aba)" data-i18n-aria="ramRepoLink"><span data-i18n="repo">VER CÓDIGO</span><span aria-hidden="true">↗</span></a>
         </article>
         <article class="project-detail" id="ssd-project" data-project="ssd">
           <p class="part-label" data-i18n="ssdPart">SSD / PERSISTÊNCIA</p><h2>Training App</h2>
-          <p class="project-lead" data-i18n="ssdLead">Aplicação mobile em que sessões e histórico continuam disponíveis sem depender da rede.</p>
-          <p class="project-description" data-i18n="ssdDescription">SQLite mantém os dados do produto localmente. Exportação, validação e restauração de backup fazem parte do mesmo modelo de persistência, em vez de serem tratados como recursos separados adicionados depois.</p>
+          <p class="project-lead" data-i18n="ssdLead">App mobile local-first para treinos, com sessões e histórico disponíveis offline.</p>
+          <p class="project-description" data-i18n="ssdDescription">O app Expo/React Native guarda os dados no dispositivo com SQLite e inclui exportação, validação e restauração de backups. API Java/PostgreSQL e cliente web existem como componentes opcionais, fora do runtime mobile padrão.</p>
           <dl class="project-spec"><div><dt>RUNTIME</dt><dd data-i18n="ssdRuntime">Expo / React Native</dd></div><div><dt>STORAGE</dt><dd data-i18n="ssdStorage">SQLite</dd></div><div><dt>STATE</dt><dd data-i18n="ssdState">sessões / histórico</dd></div><div><dt>NETWORK</dt><dd data-i18n="ssdNetwork">não obrigatório</dd></div><div><dt>RECOVERY</dt><dd data-i18n="ssdRecovery">backup validado</dd></div></dl>
-          <p class="project-note" data-i18n="ssdNote">Persistência só fica interessante quando o estado precisa sobreviver ao uso real.</p>
-          <a class="repo-link" href="https://github.com/Konazin/training-app" target="_blank" rel="noreferrer"><span data-i18n="repo">VER CÓDIGO</span><span aria-hidden="true">↗</span></a>
-        </article>
-        <article class="project-detail" id="display-project" data-project="display">
-          <p class="part-label" data-i18n="displayPart">DISPLAY / PIPELINE VISUAL</p><h2>ZeroInsight</h2>
-          <p class="project-lead" data-i18n="displayLead">Um fluxo que transforma briefing e contexto de marca em uma sequência visual reproduzível.</p>
-          <p class="project-description" data-i18n="displayDescription">O processo separa estrutura, direção visual e geração para que cada execução preserve decisões anteriores e produza assets que possam ser revisados. O objetivo não é apenas gerar uma imagem, mas deixar o caminho até ela explícito.</p>
-          <dl class="project-spec"><div><dt>INPUT</dt><dd data-i18n="displayInput">brief / brand context</dd></div><div><dt>STRUCTURE</dt><dd data-i18n="displayStructure">slide sequence</dd></div><div><dt>DIRECTION</dt><dd data-i18n="displayDirection">visual specification</dd></div><div><dt>OUTPUT</dt><dd data-i18n="displayOutput">PNG / manifest / HTML</dd></div><div><dt>STACK</dt><dd data-i18n="displayStack">Python / FastAPI / React</dd></div></dl>
-          <p class="project-note" data-i18n="displayNote">Uma saída visual é mais útil quando também é possível reconstruir as decisões que produziram ela.</p>
-          <a class="repo-link" href="https://github.com/Konazin/ZeroInsight" target="_blank" rel="noreferrer"><span data-i18n="repo">VER CÓDIGO</span><span aria-hidden="true">↗</span></a>
+          <a class="repo-link" href="https://github.com/Konazin/training-app" target="_blank" rel="noreferrer" aria-label="Abrir o repositório Training App no GitHub (nova aba)" data-i18n-aria="ssdRepoLink"><span data-i18n="repo">VER CÓDIGO</span><span aria-hidden="true">↗</span></a>
         </article>
       </div>
     </section>
-    <section class="system-close" aria-labelledby="close-title"><p class="close-breadcrumb">K/CORE <span>→</span> MIGUEL SOUSA</p><h2 id="close-title" data-i18n="closeTitle">Meu trabalho costuma começar onde a interface deixa de explicar o sistema.</h2><p data-i18n="closeCopy">Software, sistemas Linux e IA aplicada. Projetos diferentes, geralmente guiados pelas mesmas perguntas sobre estado, controle, persistência e comportamento.</p><div class="close-links"><a href="https://github.com/Konazin" target="_blank" rel="noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/miguelkona/" target="_blank" rel="noreferrer">LinkedIn ↗</a><a href="https://konazin.github.io/" target="_blank" rel="noreferrer" data-i18n="currentSite">Site atual ↗</a></div><footer>MIGUEL SOUSA / KONA</footer></section>
+    <section class="system-close" aria-labelledby="close-title"><p class="close-breadcrumb">K/CORE <span>→</span> MIGUEL SOUSA</p><h2 id="close-title" data-i18n="closeTitle">Meu trabalho costuma começar onde a interface deixa de explicar o sistema.</h2><p data-i18n="closeCopy">Software, sistemas Linux e IA aplicada. Projetos diferentes, geralmente guiados pelas mesmas perguntas sobre estado, controle, persistência e comportamento.</p><div class="close-links"><a href="https://github.com/Konazin" target="_blank" rel="noreferrer" aria-label="GitHub (abre em nova aba)" data-i18n-aria="githubExternal">GitHub ↗</a><a href="https://www.linkedin.com/in/miguelkona/" target="_blank" rel="noreferrer" aria-label="FALAR NO LINKEDIN (abre em nova aba)" data-i18n-aria="footerLinkedIn" data-i18n="contactLinkedIn">FALAR NO LINKEDIN ↗</a></div><footer>MIGUEL SOUSA / KONA</footer></section>
   </main>
   <noscript><style>.project-detail{display:block!important}</style></noscript>
   <script type="module" src="/src/main.ts"></script>
