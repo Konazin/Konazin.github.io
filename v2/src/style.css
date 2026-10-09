@@ -108,3 +108,10 @@ body{min-width:0}
   .ssd-flow span:after{content:' →'}
   .ssd-flow span:last-child:after{content:''}
 }
+
+/* Keep the headline in its own column so it no longer covers the laptop display. */
+@media(min-width:701px){
+  .hero-type{left:4vw;right:auto;width:min(36vw,455px)}
+  .hero-signature{margin-left:0}
+  .hero-type h1{font-size:clamp(1.8rem,2.7vw,2.8rem);line-height:.92;letter-spacing:-.075em}
+}

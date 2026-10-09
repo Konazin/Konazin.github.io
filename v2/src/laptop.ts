@@ -7,13 +7,13 @@ const shellEdge = material('#5a5f54', .34, .62);
 const graphite = material('#171a17', .5, .24);
 const keycap = material('#353a33', .5, .28);
 const keyLegend = new THREE.MeshBasicMaterial({ color: '#a4aa97' });
-const board = material('#23372d', .63, .22);
-const boardEdge = material('#405442', .48, .31);
-const dimmBoard = material('#5f8058', .5, .28);
+const board = material('#41624c', .63, .22);
+const boardEdge = material('#668065', .48, .31);
+const dimmBoard = material('#779d66', .5, .28);
 const dimmChip = material('#b5c99b', .4, .24);
-const ssdBoard = material('#426849', .46, .32);
-const chip = material('#101410', .42, .3);
-const packageMat = material('#263128', .46, .3);
+const ssdBoard = material('#5a8b5a', .46, .32);
+const chip = material('#202a20', .42, .3);
+const packageMat = material('#39483a', .46, .3);
 const metal = material('#969b8d', .27, .74);
 const cpuHeatSpreader = material('#c8cec2', .24, .55);
 const copper = material('#b28a54', .3, .72);
@@ -197,7 +197,7 @@ export function createLaptop(): LaptopParts {
   const motherboard = new THREE.Group(); motherboard.name = 'motherboard / system architecture'; physical.add(motherboard);
   const boardGeometry = new RoundedBoxGeometry(4.04, .15, 2.36, 3, .11);
   const boardMesh = new THREE.Mesh(boardGeometry, board); boardMesh.name = 'motherboard substrate'; boardMesh.position.set(0,-.12,-.04); motherboard.add(boardMesh);
-  outline(motherboard, boardGeometry, new THREE.Vector3(0,-.12,-.04), '#81916e');
+  outline(motherboard, boardGeometry, new THREE.Vector3(0,-.12,-.04), '#a9c883');
   // Routed buses follow the component zones rather than repeating decorative parallel lines.
   const traceY = -.034;
   const routes = [
@@ -217,7 +217,7 @@ export function createLaptop(): LaptopParts {
     [[-.25,traceY,.24],[-.45,traceY,.47],[-.76,traceY,.47]],
     [[.3,traceY,-.32],[.58,traceY,-.55],[.91,traceY,-.55]]
   ];
-  routes.forEach((route,i)=>line(motherboard,route.map(([x,y,z])=>new THREE.Vector3(x,y,z)),i%4===0?'#b28a54':'#627e5b',i%4===0?.8:.72));
+  routes.forEach((route,i)=>line(motherboard,route.map(([x,y,z])=>new THREE.Vector3(x,y,z)),i%4===0?'#c4a060':'#8ba27d',i%4===0?.84:.84));
   const vias = new THREE.InstancedMesh(new THREE.CylinderGeometry(.024,.024,.012,10),copper,58);
   vias.name='plated motherboard vias'; const viaTransform=new THREE.Object3D();
   for(let i=0;i<58;i++){const x=-1.82+(i%14)*.27,z=-1.01+Math.floor(i/14)*.47;viaTransform.position.set(x,-.03,z);viaTransform.scale.setScalar(i%5===0?1.35:1);viaTransform.updateMatrix();vias.setMatrixAt(i,viaTransform.matrix);}
