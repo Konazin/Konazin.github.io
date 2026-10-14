@@ -8,22 +8,22 @@ gsap.registerPlugin(ScrollTrigger);
 
 const copy = {
   pt: {
-    skip:'Pular para a navegação de projetos', skipStatic:'Pular para os projetos', externalLinks:'Links externos', githubExternal:'GitHub (abre em nova aba)', linkedinExternal:'LinkedIn (abre em nova aba)', footerLinkedIn:'Falar no LinkedIn (abre em nova aba)', language:'Idioma', home:'Kona — Alone and Unafraid, início', chapterNav:'Ir para um projeto', projectsRegion:'Projetos', domain:'BACKEND / SISTEMAS / IA APLICADA',
-    identity:'MIGUEL SOUSA / BACKEND & SISTEMAS', titleA:'EU CONSTRUO', titleB:'SOFTWARE OLHANDO', titleC:'PARA O QUE ACONTECE', titleD:'POR BAIXO DA INTERFACE.', heroIntro:'Desenvolvo software com foco em backend e sistemas: APIs, persistência, Linux e IA aplicada quando o problema pede.', heroCta:'VER PROJETOS', scroll:'ROLE PARA ACOMPANHAR A MÁQUINA ↓',
+    skip:'Pular para a navegação de projetos', skipStatic:'Pular para os projetos', externalLinks:'Links externos', githubExternal:'GitHub (abre em nova aba)', linkedinExternal:'LinkedIn (abre em nova aba)', footerLinkedIn:'Falar no LinkedIn (abre em nova aba)', language:'Idioma', home:'Kona — início', chapterNav:'Ir para um projeto', projectsRegion:'Projetos', domain:'BACKEND / SISTEMAS / IA APLICADA',
+    identity:'MIGUEL SOUSA / BACKEND & SISTEMAS', titleA:'Backend e sistemas', titleB:'que continuam', titleC:'compreensíveis', titleD:'quando algo falha.', heroIntro:'Desenvolvo software com foco em backend e sistemas: APIs, persistência, Linux e IA aplicada a problemas reais.', heroCta:'VER PROJETOS', scroll:'3 PROJETOS ↓',
     pressureHeading:'OBSERVAÇÃO / PRESSÃO DE MEMÓRIA', pressureObserve:'OBSERVAR → SIMULAR → RECUPERAR', pressureHigh:'SIMULAÇÃO / INTERVENÇÃO BLOQUEADA POR PADRÃO', pressureSafe:'MODO OBSERVAÇÃO / SEM ALTERAÇÃO',
-    cpuPart:'CPU / EXECUÇÃO', cpuLead:'Assistente de programação experimental para terminal, com contexto explícito e sessões locais.', cpuDescription:'MVP em Python com Ollama local e APIs compatíveis, habilidades Markdown, sessões locais e comandos para ler e buscar no projeto. Arquivos não são carregados automaticamente; edição, shell e ciclos autônomos ainda não estão implementados.', cpuRuntime:'Python / Rich TUI', cpuModel:'Ollama / APIs compatíveis', cpuContext:'adicionado pela pessoa', cpuTools:'read / tree / grep', cpuState:'sessões locais',
-    ramPart:'RAM / PRESSÃO DE MEMÓRIA', ramLead:'Daemon Linux para observar pressão de memória e simular políticas reversíveis por sessão.', ramDescription:'Observação e simulação são o padrão; mudanças exigem opt-ins independentes. O controle experimental altera apenas memory.low por sessão, com journal e rollback; não encerra ou congela processos nem ajusta sysctls.', ramRuntime:'Rust / Linux', ramSignals:'memory / swap / PSI', ramControl:'cgroup v2', ramPolicy:'observe / dry-run', ramRecovery:'journal / rollback',
+    cpuPart:'CPU / EXECUÇÃO', cpuLead:'Assistente de programação experimental para terminal, com contexto explícito e sessões locais.', cpuDescription:'MVP em Python com Ollama local e APIs compatíveis, habilidades Markdown, sessões locais e comandos para ler e buscar no projeto. Arquivos só entram no contexto quando o usuário escolhe. Escopo atual: leitura e busca; edição e execução estão no roadmap.', cpuRuntime:'Python / Rich TUI', cpuModel:'Ollama / APIs compatíveis', cpuContext:'definido pelo usuário', cpuTools:'read / tree / grep', cpuState:'sessões locais',
+    ramPart:'RAM / PRESSÃO DE MEMÓRIA', ramLead:'Daemon Linux para observar pressão de memória e simular políticas reversíveis por sessão.', ramDescription:'Observação e simulação são o padrão; mudanças exigem opt-ins independentes. Nunca encerra processos: o controle experimental só ajusta memory.low por sessão, com journal e rollback.', ramRuntime:'Rust / Linux', ramSignals:'memory / swap / PSI', ramControl:'cgroup v2', ramPolicy:'observe / dry-run', ramRecovery:'journal / rollback',
     ssdPart:'SSD / PERSISTÊNCIA', ssdLead:'App mobile local-first para treinos, com sessões e histórico disponíveis offline.', ssdDescription:'App Expo/React Native com SQLite no dispositivo, sessões e histórico offline, além de exportação, validação e restauração de backups. API Java/PostgreSQL e cliente web são opcionais, fora do runtime mobile padrão.', ssdRuntime:'Expo / React Native', ssdStorage:'SQLite local', ssdState:'sessões / histórico', ssdNetwork:'não exigida', ssdRecovery:'backup validado',
-    repo:'VER CÓDIGO', cpuRepoLink:'Abrir o repositório ZeroCoding no GitHub (nova aba)', ramRepoLink:'Abrir o repositório Fenrir no GitHub (nova aba)', ssdRepoLink:'Abrir o repositório Training App no GitHub (nova aba)', contactLinkedIn:'FALAR NO LINKEDIN ↗', systemHeading:'Três projetos, um fio condutor: sistemas compreensíveis.', systemSequence:'BACKEND <b>→</b> SISTEMA <b>→</b> ESTADO <b>→</b> RECUPERAÇÃO', closeTitle:'Backend, Linux e aplicações completas.', closeCopy:'Foco em backend e sistemas, com interfaces web e mobile quando o produto pede. Cada projeto explora contexto, estado, persistência ou controle.'
+    repo:'VER CÓDIGO', cpuRepoLink:'Abrir o repositório ZeroCoding no GitHub (nova aba)', ramRepoLink:'Abrir o repositório Fenrir no GitHub (nova aba)', ssdRepoLink:'Abrir o repositório Training App no GitHub (nova aba)', contactLinkedIn:'FALAR NO LINKEDIN ↗', systemHeading:'Em comum: estado explícito, controle e recuperação.', systemSequence:'PYTHON <b>·</b> RUST <b>·</b> TYPESCRIPT <b>·</b> LINUX', closeTitle:'Vamos conversar sobre backend, sistemas ou IA.', closeCopy:'Foco em backend e sistemas, com interfaces web e mobile quando o produto pede. Cada projeto explora contexto, estado, persistência ou controle.'
   },
   en: {
-    skip:'Skip to project navigation', skipStatic:'Skip to projects', externalLinks:'External links', githubExternal:'GitHub (opens in a new tab)', linkedinExternal:'LinkedIn (opens in a new tab)', footerLinkedIn:'Contact on LinkedIn (opens in a new tab)', language:'Language', home:'Kona — Alone and Unafraid, home', chapterNav:'Jump to a project', projectsRegion:'Projects', domain:'BACKEND / SYSTEMS / APPLIED AI',
-    identity:'MIGUEL SOUSA / BACKEND & SYSTEMS', titleA:'I BUILD', titleB:'SOFTWARE BY LOOKING', titleC:'AT WHAT HAPPENS', titleD:'BENEATH THE INTERFACE.', heroIntro:'I build software focused on backend and systems: APIs, persistence, Linux, and applied AI where it fits.', heroCta:'VIEW PROJECTS', scroll:'SCROLL TO FOLLOW THE MACHINE ↓',
+    skip:'Skip to project navigation', skipStatic:'Skip to projects', externalLinks:'External links', githubExternal:'GitHub (opens in a new tab)', linkedinExternal:'LinkedIn (opens in a new tab)', footerLinkedIn:'Contact on LinkedIn (opens in a new tab)', language:'Language', home:'Kona — home', chapterNav:'Jump to a project', projectsRegion:'Projects', domain:'BACKEND / SYSTEMS / APPLIED AI',
+    identity:'MIGUEL SOUSA / BACKEND & SYSTEMS', titleA:'Backend and systems', titleB:'that stay', titleC:'understandable', titleD:'when things fail.', heroIntro:'I build software focused on backend and systems: APIs, persistence, Linux, and AI applied to real problems.', heroCta:'VIEW PROJECTS', scroll:'3 PROJECTS ↓',
     pressureHeading:'OBSERVATION / MEMORY PRESSURE', pressureObserve:'OBSERVE → SIMULATE → RECOVER', pressureHigh:'SIMULATION / INTERVENTION DISABLED BY DEFAULT', pressureSafe:'OBSERVE MODE / NO MUTATION',
-    cpuPart:'CPU / EXECUTION', cpuLead:'An experimental terminal coding assistant with explicit context and local sessions.', cpuDescription:'A Python MVP with local Ollama and compatible APIs, Markdown skills, local sessions, and project read/search commands. Files are not loaded automatically; editing, shell commands, and autonomous loops are not implemented.', cpuRuntime:'Python / Rich TUI', cpuModel:'Ollama / compatible APIs', cpuContext:'explicitly added', cpuTools:'read / tree / grep', cpuState:'local sessions',
-    ramPart:'RAM / MEMORY PRESSURE', ramLead:'A Linux daemon for observing memory pressure and simulating reversible per-session policies.', ramDescription:'Observation and simulation are defaults; changes require independent opt-ins. Experimental control only changes per-session memory.low, with a journal and rollback; it does not kill or freeze processes or change sysctls.', ramRuntime:'Rust / Linux', ramSignals:'memory / swap / PSI', ramControl:'cgroup v2', ramPolicy:'observe / dry-run', ramRecovery:'journal / rollback',
+    cpuPart:'CPU / EXECUTION', cpuLead:'An experimental terminal coding assistant with explicit context and local sessions.', cpuDescription:'A Python MVP with local Ollama and compatible APIs, Markdown skills, local sessions, and project read/search commands. Files enter the context only when the user picks them. Current scope: reading and search; editing and execution are on the roadmap.', cpuRuntime:'Python / Rich TUI', cpuModel:'Ollama / compatible APIs', cpuContext:'user-defined', cpuTools:'read / tree / grep', cpuState:'local sessions',
+    ramPart:'RAM / MEMORY PRESSURE', ramLead:'A Linux daemon for observing memory pressure and simulating reversible per-session policies.', ramDescription:'Observation and simulation are the defaults; changes require independent opt-ins. It never kills processes: experimental control only adjusts per-session memory.low, with a journal and rollback.', ramRuntime:'Rust / Linux', ramSignals:'memory / swap / PSI', ramControl:'cgroup v2', ramPolicy:'observe / dry-run', ramRecovery:'journal / rollback',
     ssdPart:'SSD / PERSISTENCE', ssdLead:'A local-first training app with sessions and history available offline.', ssdDescription:'An Expo/React Native app with on-device SQLite, offline sessions and history, and backup export, validation, and restore. The Java/PostgreSQL API and web client are optional and outside the standard mobile runtime.', ssdRuntime:'Expo / React Native', ssdStorage:'on-device SQLite', ssdState:'sessions / history', ssdNetwork:'not required', ssdRecovery:'validated backup',
-    repo:'VIEW CODE', cpuRepoLink:'Open the ZeroCoding repository on GitHub (new tab)', ramRepoLink:'Open the Fenrir repository on GitHub (new tab)', ssdRepoLink:'Open the Training App repository on GitHub (new tab)', contactLinkedIn:'CONTACT ON LINKEDIN ↗', systemHeading:'Three projects, one thread: systems that stay understandable.', systemSequence:'BACKEND <b>→</b> SYSTEM <b>→</b> STATE <b>→</b> RECOVERY', closeTitle:'Backend, Linux, and complete applications.', closeCopy:'Focused on backend and systems, with web and mobile interfaces when the product calls for them. Each project explores context, state, persistence, or control.'
+    repo:'VIEW CODE', cpuRepoLink:'Open the ZeroCoding repository on GitHub (new tab)', ramRepoLink:'Open the Fenrir repository on GitHub (new tab)', ssdRepoLink:'Open the Training App repository on GitHub (new tab)', contactLinkedIn:'CONTACT ON LINKEDIN ↗', systemHeading:'In common: explicit state, control, and recovery.', systemSequence:'PYTHON <b>·</b> RUST <b>·</b> TYPESCRIPT <b>·</b> LINUX', closeTitle:'Let’s talk about backend, systems, or AI.', closeCopy:'Focused on backend and systems, with web and mobile interfaces when the product calls for them. Each project explores context, state, persistence, or control.'
   }
 } as const;
 type Language = keyof typeof copy;
@@ -55,8 +55,8 @@ function translate(next: Language) {
   document.querySelectorAll<HTMLElement>('[data-i18n-aria]').forEach(element => { const key = element.dataset.i18nAria as keyof typeof copy.pt; element.setAttribute('aria-label', copy[next][key]); });
   document.querySelectorAll<HTMLButtonElement>('[data-lang]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.lang === next)));
   if(staticStory) document.querySelector<HTMLElement>('.skip-link')!.textContent = copy[next].skipStatic;
-  document.title = next === 'pt' ? 'Kona — Do sinal ao sistema' : 'Kona — From signal to system';
-  document.querySelector('meta[name="description"]')?.setAttribute('content', next === 'pt' ? 'Miguel Sousa (Kona): software, sistemas Linux e IA aplicada.' : 'Miguel Sousa (Kona): software, Linux systems, and applied AI.');
+  document.title = next === 'pt' ? 'Miguel Sousa (Kona) — Backend & Sistemas' : 'Miguel Sousa (Kona) — Backend & Systems';
+  document.querySelector('meta[name="description"]')?.setAttribute('content', next === 'pt' ? 'Miguel Sousa (Kona): backend, sistemas Linux e IA aplicada.' : 'Miguel Sousa (Kona): backend, Linux systems, and applied AI.');
   document.querySelector('meta[property="og:title"]')?.setAttribute('content', document.title);
   document.querySelector('meta[property="og:description"]')?.setAttribute('content', next === 'pt' ? 'Uma desmontagem interativa de projetos de software, sistemas e IA aplicada.' : 'An interactive teardown of software, systems, and applied AI projects.');
   stageLabel.textContent = labels[next][phase];
@@ -119,14 +119,51 @@ if (renderer) {
   let currentProgress = 0;
   let lastScreen: Phase | '' = '';
   let finalPose: { camera:THREE.Vector3; target:THREE.Vector3; rootY:number; cpuY:number; ramX:number; ssdY:number } | undefined;
+  // On narrow screens the notebook is framed inside the free band between the top bar and the copy of each scene.
+  const MOBILE_FOV = 34;
+  const fitBox = new THREE.Box3(), fitSphere = new THREE.Sphere(), fitDir = new THREE.Vector3(0, 5, 13).normalize(), fitCorner = new THREE.Vector3();
+  const topbar = document.querySelector<HTMLElement>('.topbar')!, heroType = document.querySelector<HTMLElement>('.hero-type')!;
+  const chapterNav = document.querySelector<HTMLElement>('#chapter-nav')!, systemHeading = document.querySelector<HTMLElement>('.system-heading')!, systemSequence = document.querySelector<HTMLElement>('.system-sequence')!;
+  let fitBand: { top:number; bottom:number } | undefined;
+  function mobileBand() {
+    const top = topbar.getBoundingClientRect().bottom + 8;
+    if (phase === 'hero') return { top, bottom: heroType.getBoundingClientRect().top - 8 };
+    if (phase === 'system') return { top: systemHeading.getBoundingClientRect().bottom + 12, bottom: systemSequence.getBoundingClientRect().top - 12 };
+    const panel = document.querySelector<HTMLElement>(`.project-detail[data-project="${phase}"]`)!;
+    return { top: chapterNav.getBoundingClientRect().bottom + 8, bottom: panel.getBoundingClientRect().top - 8 };
+  }
+  function projectedBounds() {
+    camera.updateMatrixWorld(); let minX = 1, maxX = -1, minY = 1, maxY = -1;
+    for (let i = 0; i < 8; i++) {
+      fitCorner.set(i & 1 ? fitBox.max.x : fitBox.min.x, i & 2 ? fitBox.max.y : fitBox.min.y, i & 4 ? fitBox.max.z : fitBox.min.z).project(camera);
+      minX = Math.min(minX, fitCorner.x); maxX = Math.max(maxX, fitCorner.x); minY = Math.min(minY, fitCorner.y); maxY = Math.max(maxY, fitCorner.y);
+    }
+    return { minX, maxX, minY, maxY };
+  }
+  function fitMobile(ease: number) {
+    if (fitBox.isEmpty()) return;
+    const view = canvas.getBoundingClientRect(), w = view.width || innerWidth, h = view.height || innerHeight;
+    const band = mobileBand(), next = { top: band.top - view.top, bottom: band.bottom - view.top };
+    if (!fitBand || ease >= 1) fitBand = next; else { fitBand.top += (next.top - fitBand.top) * ease; fitBand.bottom += (next.bottom - fitBand.bottom) * ease; }
+    const bandHeight = Math.max(140, fitBand.bottom - fitBand.top), widthShare = .9, heightShare = bandHeight / h;
+    fitBox.getBoundingSphere(fitSphere); camera.clearViewOffset();
+    let distance = fitSphere.radius / Math.sin(THREE.MathUtils.degToRad(camera.fov) * heightShare / 2);
+    const place = () => { camera.position.copy(fitSphere.center).addScaledVector(fitDir, distance); camera.lookAt(fitSphere.center); };
+    place(); let b = projectedBounds();
+    distance *= Math.max((b.maxX - b.minX) / 2 / widthShare, (b.maxY - b.minY) / 2 / heightShare);
+    place(); b = projectedBounds();
+    const centerX = ((b.minX + b.maxX) / 2 * .5 + .5) * w, centerY = (-(b.minY + b.maxY) / 2 * .5 + .5) * h;
+    camera.setViewOffset(w, h, centerX - w / 2, centerY - (fitBand.top + bandHeight / 2), w, h);
+  }
   function update(p: number) {
     currentProgress = p;
     let i = 0; while (i < keys.length-2 && p > keys[i+1].p) i++;
     const a = keys[i], b = keys[i+1], t = smooth((p-a.p)/(b.p-a.p));
     const cp = [0,0,0], ct = [0,0,0], rp = [0,0,0]; vec(cp,a.pos,b.pos,t); vec(ct,a.at,b.at,t); vec(rp,a.root,b.root,t);
-    camera.position.set(cp[0],mobile.matches?5.4:cp[1],mobile.matches?13.5:cp[2]); target.set(ct[0],mobile.matches?.4:ct[1],ct[2]); camera.lookAt(target);
-    camera.fov = lerp(a.fov,b.fov,t) + (mobile.matches ? 13 : 0); camera.updateProjectionMatrix();
-    laptop.root.position.set(mobile.matches?0:rp[0],mobile.matches?rp[1]+2.4:rp[1],rp[2]); laptop.root.rotation.y=lerp(a.yaw,b.yaw,t); laptop.root.scale.setScalar(lerp(a.scale,b.scale,t)*(mobile.matches?.72:lerp(1.25,1.08,smooth(p/.18))));
+    if(mobile.matches){ camera.fov=MOBILE_FOV; }
+    else { camera.clearViewOffset(); camera.position.set(cp[0],cp[1],cp[2]); target.set(ct[0],ct[1],ct[2]); camera.lookAt(target); camera.fov = lerp(a.fov,b.fov,t); }
+    camera.updateProjectionMatrix();
+    laptop.root.position.set(mobile.matches?0:rp[0],rp[1],rp[2]); laptop.root.rotation.y=lerp(a.yaw,b.yaw,t); laptop.root.scale.setScalar(mobile.matches?1:lerp(a.scale,b.scale,t)*lerp(1.25,1.08,smooth(p/.18)));
     const open = smooth((p-.09)/.11);
     const interior = windowed(p,.18,.24,.74,.80);
     laptop.deck.position.set(0,.65*open+1.65*interior,.24*open); laptop.bottom.position.set(0,-.12*open,.02*open);
@@ -152,6 +189,7 @@ if (renderer) {
     laptop.lid.position.set(0,.22+.68*open+1.65*interior,-1.68-.18*interior);
     const next: Phase = p<.23?'hero':p<.42?'cpu':p<.58?'ram':p<.78?'ssd':'system';
     if(next!==phase) setPhase(next);
+    if(mobile.matches){ fitBox.setFromObject(laptop.root); fitMobile(running?0:1); }
     if(next!==lastScreen || next==='ram') { laptop.setScreen(next==='hero'?'boot':next==='system'?'overview':next, pressure, language); lastScreen=next; }
     progress.style.transform=`scaleX(${p})`;
     if(next==='cpu' || next==='ram' || next==='ssd') {
@@ -171,10 +209,11 @@ if (renderer) {
   function draw(){
     if(currentProgress>=.84&&finalPose){
       const drift=Math.sin(performance.now()*.00038)*.012;
-      camera.position.copy(finalPose.camera).add(new THREE.Vector3(drift*.7,drift*.4,0));camera.lookAt(finalPose.target);
+      if(!mobile.matches){camera.position.copy(finalPose.camera).add(new THREE.Vector3(drift*.7,drift*.4,0));camera.lookAt(finalPose.target);}
       laptop.root.position.y=finalPose.rootY+drift*.16;laptop.root.rotation.x=drift*.025;
       laptop.cpu.position.y=finalPose.cpuY+drift;laptop.ram.position.x=finalPose.ramX+drift*.55;laptop.ssd.position.y=finalPose.ssdY-drift*.7;
     }
+    if(mobile.matches) fitMobile(.18);
     renderer!.render(scene,camera); if(running) raf=requestAnimationFrame(draw);
   }
   function renderWhileVisible(visible:boolean){
