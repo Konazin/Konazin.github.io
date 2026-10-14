@@ -119,14 +119,51 @@ if (renderer) {
   let currentProgress = 0;
   let lastScreen: Phase | '' = '';
   let finalPose: { camera:THREE.Vector3; target:THREE.Vector3; rootY:number; cpuY:number; ramX:number; ssdY:number } | undefined;
+  // On narrow screens the notebook is framed inside the free band between the top bar and the copy of each scene.
+  const MOBILE_FOV = 34;
+  const fitBox = new THREE.Box3(), fitSphere = new THREE.Sphere(), fitDir = new THREE.Vector3(0, 5, 13).normalize(), fitCorner = new THREE.Vector3();
+  const topbar = document.querySelector<HTMLElement>('.topbar')!, heroType = document.querySelector<HTMLElement>('.hero-type')!;
+  const chapterNav = document.querySelector<HTMLElement>('#chapter-nav')!, systemHeading = document.querySelector<HTMLElement>('.system-heading')!, systemSequence = document.querySelector<HTMLElement>('.system-sequence')!;
+  let fitBand: { top:number; bottom:number } | undefined;
+  function mobileBand() {
+    const top = topbar.getBoundingClientRect().bottom + 8;
+    if (phase === 'hero') return { top, bottom: heroType.getBoundingClientRect().top - 8 };
+    if (phase === 'system') return { top: systemHeading.getBoundingClientRect().bottom + 12, bottom: systemSequence.getBoundingClientRect().top - 12 };
+    const panel = document.querySelector<HTMLElement>(`.project-detail[data-project="${phase}"]`)!;
+    return { top: chapterNav.getBoundingClientRect().bottom + 8, bottom: panel.getBoundingClientRect().top - 8 };
+  }
+  function projectedBounds() {
+    camera.updateMatrixWorld(); let minX = 1, maxX = -1, minY = 1, maxY = -1;
+    for (let i = 0; i < 8; i++) {
+      fitCorner.set(i & 1 ? fitBox.max.x : fitBox.min.x, i & 2 ? fitBox.max.y : fitBox.min.y, i & 4 ? fitBox.max.z : fitBox.min.z).project(camera);
+      minX = Math.min(minX, fitCorner.x); maxX = Math.max(maxX, fitCorner.x); minY = Math.min(minY, fitCorner.y); maxY = Math.max(maxY, fitCorner.y);
+    }
+    return { minX, maxX, minY, maxY };
+  }
+  function fitMobile(ease: number) {
+    if (fitBox.isEmpty()) return;
+    const view = canvas.getBoundingClientRect(), w = view.width || innerWidth, h = view.height || innerHeight;
+    const band = mobileBand(), next = { top: band.top - view.top, bottom: band.bottom - view.top };
+    if (!fitBand || ease >= 1) fitBand = next; else { fitBand.top += (next.top - fitBand.top) * ease; fitBand.bottom += (next.bottom - fitBand.bottom) * ease; }
+    const bandHeight = Math.max(140, fitBand.bottom - fitBand.top), widthShare = .9, heightShare = bandHeight / h;
+    fitBox.getBoundingSphere(fitSphere); camera.clearViewOffset();
+    let distance = fitSphere.radius / Math.sin(THREE.MathUtils.degToRad(camera.fov) * heightShare / 2);
+    const place = () => { camera.position.copy(fitSphere.center).addScaledVector(fitDir, distance); camera.lookAt(fitSphere.center); };
+    place(); let b = projectedBounds();
+    distance *= Math.max((b.maxX - b.minX) / 2 / widthShare, (b.maxY - b.minY) / 2 / heightShare);
+    place(); b = projectedBounds();
+    const centerX = ((b.minX + b.maxX) / 2 * .5 + .5) * w, centerY = (-(b.minY + b.maxY) / 2 * .5 + .5) * h;
+    camera.setViewOffset(w, h, centerX - w / 2, centerY - (fitBand.top + bandHeight / 2), w, h);
+  }
   function update(p: number) {
     currentProgress = p;
     let i = 0; while (i < keys.length-2 && p > keys[i+1].p) i++;
     const a = keys[i], b = keys[i+1], t = smooth((p-a.p)/(b.p-a.p));
     const cp = [0,0,0], ct = [0,0,0], rp = [0,0,0]; vec(cp,a.pos,b.pos,t); vec(ct,a.at,b.at,t); vec(rp,a.root,b.root,t);
-    camera.position.set(cp[0],mobile.matches?5.4:cp[1],mobile.matches?13.5:cp[2]); target.set(ct[0],mobile.matches?.4:ct[1],ct[2]); camera.lookAt(target);
-    camera.fov = lerp(a.fov,b.fov,t) + (mobile.matches ? 13 : 0); camera.updateProjectionMatrix();
-    laptop.root.position.set(mobile.matches?0:rp[0],mobile.matches?rp[1]+2.4:rp[1],rp[2]); laptop.root.rotation.y=lerp(a.yaw,b.yaw,t); laptop.root.scale.setScalar(lerp(a.scale,b.scale,t)*(mobile.matches?.72:lerp(1.25,1.08,smooth(p/.18))));
+    if(mobile.matches){ camera.fov=MOBILE_FOV; }
+    else { camera.clearViewOffset(); camera.position.set(cp[0],cp[1],cp[2]); target.set(ct[0],ct[1],ct[2]); camera.lookAt(target); camera.fov = lerp(a.fov,b.fov,t); }
+    camera.updateProjectionMatrix();
+    laptop.root.position.set(mobile.matches?0:rp[0],rp[1],rp[2]); laptop.root.rotation.y=lerp(a.yaw,b.yaw,t); laptop.root.scale.setScalar(mobile.matches?1:lerp(a.scale,b.scale,t)*lerp(1.25,1.08,smooth(p/.18)));
     const open = smooth((p-.09)/.11);
     const interior = windowed(p,.18,.24,.74,.80);
     laptop.deck.position.set(0,.65*open+1.65*interior,.24*open); laptop.bottom.position.set(0,-.12*open,.02*open);
@@ -152,6 +189,7 @@ if (renderer) {
     laptop.lid.position.set(0,.22+.68*open+1.65*interior,-1.68-.18*interior);
     const next: Phase = p<.23?'hero':p<.42?'cpu':p<.58?'ram':p<.78?'ssd':'system';
     if(next!==phase) setPhase(next);
+    if(mobile.matches){ fitBox.setFromObject(laptop.root); fitMobile(running?0:1); }
     if(next!==lastScreen || next==='ram') { laptop.setScreen(next==='hero'?'boot':next==='system'?'overview':next, pressure, language); lastScreen=next; }
     progress.style.transform=`scaleX(${p})`;
     if(next==='cpu' || next==='ram' || next==='ssd') {
@@ -171,10 +209,11 @@ if (renderer) {
   function draw(){
     if(currentProgress>=.84&&finalPose){
       const drift=Math.sin(performance.now()*.00038)*.012;
-      camera.position.copy(finalPose.camera).add(new THREE.Vector3(drift*.7,drift*.4,0));camera.lookAt(finalPose.target);
+      if(!mobile.matches){camera.position.copy(finalPose.camera).add(new THREE.Vector3(drift*.7,drift*.4,0));camera.lookAt(finalPose.target);}
       laptop.root.position.y=finalPose.rootY+drift*.16;laptop.root.rotation.x=drift*.025;
       laptop.cpu.position.y=finalPose.cpuY+drift;laptop.ram.position.x=finalPose.ramX+drift*.55;laptop.ssd.position.y=finalPose.ssdY-drift*.7;
     }
+    if(mobile.matches) fitMobile(.18);
     renderer!.render(scene,camera); if(running) raf=requestAnimationFrame(draw);
   }
   function renderWhileVisible(visible:boolean){
