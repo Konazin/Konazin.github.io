@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 
+/** Same family as the page; the texture is redrawn once the font has loaded (see setScreen's `force`). */
+const MONO = "'JetBrains Mono', ui-monospace, Consolas, monospace";
 const material = (color: string, roughness = 0.68, metalness = 0.2) => new THREE.MeshStandardMaterial({ color, roughness, metalness });
 const shell = material('#30342e', .36, .55);
 const shellEdge = material('#5a5f54', .34, .62);
@@ -46,7 +48,7 @@ export type LaptopParts = {
   root: THREE.Group; physical: THREE.Group; lid: THREE.Group; deck: THREE.Group; bottom: THREE.Group;
   battery: THREE.Group; motherboard: THREE.Group; cpu: THREE.Group; ram: THREE.Group; ssd: THREE.Group; cooling: THREE.Group;
   cpuTraces: THREE.Group; memoryTraffic: THREE.Group; storageRecords: THREE.Group;
-  setScreen: (mode: 'boot' | 'cpu' | 'ram' | 'ssd' | 'overview', pressure?: number, language?: 'pt' | 'en') => void;
+  setScreen: (mode: 'boot' | 'cpu' | 'ram' | 'ssd' | 'overview', pressure?: number, language?: 'pt' | 'en', force?: boolean) => void;
   setHighlight: (active: ReadonlyArray<'cpu' | 'ram' | 'ssd'>) => void;
 };
 
@@ -110,23 +112,24 @@ export function createLaptop(): LaptopParts {
   box(lid, 'beveled display lid', [5.5, 3.34, .16], [0, 1.72, 0], shell, .16);
   box(lid, 'inner display bezel', [5.14, 2.99, .035], [0, 1.72, .093], graphite, .11);
   box(lid, 'anti-glare display glass', [4.91, 2.77, .018], [0, 1.72, .12], material('#111711', .18, .08), .075);
-  const screenCanvas = document.createElement('canvas'); screenCanvas.width = 1024; screenCanvas.height = 576;
+  const screenCanvas = document.createElement('canvas'); screenCanvas.width = 2048; screenCanvas.height = 1152; // drawn at 2x so the text stays crisp when the screen fills a 1080p monitor
   const screenContext = screenCanvas.getContext('2d')!;
   const screenTexture = new THREE.CanvasTexture(screenCanvas);
-  screenTexture.colorSpace = THREE.SRGBColorSpace;
+  screenTexture.colorSpace = THREE.SRGBColorSpace; screenTexture.anisotropy = 16; // the screen is almost always seen at an angle
   const screen = new THREE.Mesh(new THREE.PlaneGeometry(4.88, 2.74), new THREE.MeshBasicMaterial({ map: screenTexture, toneMapped: false }));
   screen.name = 'project-specific live display'; screen.position.set(0, 1.72, .141); lid.add(screen);
   let lastScreen = '';
-  function setScreen(mode: 'boot' | 'cpu' | 'ram' | 'ssd' | 'overview', pressure = 0, language: 'pt' | 'en' = 'pt') {
-    const signature = `${mode}:${Math.round(pressure * 8)}:${language}`; if (signature === lastScreen) return; lastScreen = signature;
+  function setScreen(mode: 'boot' | 'cpu' | 'ram' | 'ssd' | 'overview', pressure = 0, language: 'pt' | 'en' = 'pt', force = false) {
+    const signature = `${mode}:${Math.round(pressure * 8)}:${language}`; if (signature === lastScreen && !force) return; lastScreen = signature;
     const g = screenContext, w = 1024, h = 576, lime = '#bfeb55', pale = '#dce5d3';
+    g.setTransform(2, 0, 0, 2, 0, 0);
     g.fillStyle = '#101510'; g.fillRect(0, 0, w, h);
     g.fillStyle = '#c1e970'; g.fillRect(0, 0, 7, h);
-    g.fillStyle = lime; g.font = 'bold 17px monospace'; g.fillText('K/CORE', 31, 31);
+    g.fillStyle = lime; g.font = `700 19px ${MONO}`; g.fillText('K/CORE', 31, 31);
     const titles = { pt: { boot:'SISTEMA / ABERTO', cpu:'ZEROCODING / TERMINAL', ram:'FENRIR / OBSERVAÇÃO', ssd:'TRAINING APP / LOCAL', overview:'SISTEMA / VISÃO GERAL' }, en: { boot:'SYSTEM / OPEN', cpu:'ZEROCODING / TERMINAL', ram:'FENRIR / OBSERVATION', ssd:'TRAINING APP / LOCAL', overview:'SYSTEM / OVERVIEW' } };
-    g.fillStyle = '#96a58d'; g.font = '13px monospace'; g.fillText(titles[language][mode], 180, 31);
+    g.fillStyle = '#96a58d'; g.font = `400 15px ${MONO}`; g.fillText(titles[language][mode], 180, 31);
     g.fillStyle = '#26352a'; g.fillRect(28, 48, 965, 1);
-    const label = (value: string, x: number, y: number, size = 20, color = pale) => { g.fillStyle = color; g.font = `${size}px monospace`; g.fillText(value, x, y); };
+    const label = (value: string, x: number, y: number, size = 20, color = pale) => { g.fillStyle = color; g.font = `${size >= 30 ? 700 : 500} ${Math.round(size * 1.14)}px ${MONO}`; g.fillText(value, x, y); }; // ~14% larger than the layout grid: the screen is small on the page
     const rail = (x1: number, y1: number, x2: number, y2: number, color = lime) => { g.strokeStyle = color; g.lineWidth = 2; g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y1); g.lineTo(x2, y2); g.stroke(); };
     const t = language === 'pt';
     if (mode === 'boot') {
@@ -233,7 +236,7 @@ export function createLaptop(): LaptopParts {
   socketPads.count=socketIndex; motherboard.add(socketPads);
   for(const x of [-.61,.61]) box(motherboard,'CPU retention rail',[.075,.075,.94],[x,.047,socketCenterZ],metal,.018);
   for(const z of [socketCenterZ-.47,socketCenterZ+.47]) box(motherboard,'CPU retention bridge',[1.21,.055,.065],[0,.047,z],shellEdge,.018);
-  const latch=cylinder(motherboard,'socket retention cam',.035,.22,[-.69,.06,socketCenterZ],metal); latch.rotation.z=Math.PI/2;
+  const latch=cylinder(motherboard,'socket retention cam',.035,.22,[.35,.06,.44],metal); latch.rotation.z=Math.PI/2; // front edge of the socket, clear of the memory modules
   for(let phase=0;phase<4;phase++){
     const x=-.91+phase*.18,z=.53;
     box(motherboard,`VRM choke ${phase+1}`,[.15,.13,.17],[x,.015,z],graphite,.02);
@@ -245,24 +248,24 @@ export function createLaptop(): LaptopParts {
     const cap=new THREE.Mesh(new THREE.CylinderGeometry(.035,.035,.085,10),solder);cap.position.set(-1.68+i*.11,-.005,.98);motherboard.add(cap);
   }
   // Edge I/O, display flex, M.2 socket and a small wireless daughterboard.
-  for(const [x,z] of [[-1.68,-.82],[-1.72,-.42],[1.72,-.42],[1.61,.98]] as [number,number][]){
+  for(const [x,z] of [[-1.68,.45],[-1.68,.72],[1.7,-.82],[1.72,1.06]] as [number,number][]){
     box(motherboard,'shielded board connector',[.28,.11,.17],[x,-.005,z],graphite,.018);
     for(let i=0;i<5;i++)box(motherboard,'connector contact',[.025,.012,.045],[x-.08+i*.04,.054,z+.035],copper,.005);
   }
-  const antennaCable=new THREE.CatmullRomCurve3([new THREE.Vector3(1.35,-.015,.91),new THREE.Vector3(1.55,.012,.77),new THREE.Vector3(1.42,.012,.54),new THREE.Vector3(1.65,.012,.36)]);
+  const antennaCable=new THREE.CatmullRomCurve3([new THREE.Vector3(1.35,-.015,.91),new THREE.Vector3(1.55,.012,.77),new THREE.Vector3(1.42,.012,.64),new THREE.Vector3(1.65,.012,.52)]);
   motherboard.add(new THREE.Mesh(new THREE.TubeGeometry(antennaCable,24,.018,6,false),shellEdge));
   box(motherboard,'wireless daughterboard',[.54,.055,.31],[1.49,-.005,.82],boardEdge,.025);
   box(motherboard,'wireless controller',[.22,.065,.18],[1.49,.035,.82],chip,.02);
-  box(motherboard,'M.2 edge socket',[.18,.085,.52],[-.57,-.006,.81],graphite,.02);
-  for(let i=0;i<10;i++)box(motherboard,'M.2 socket contact',[.035,.014,.025],[-.65+i*.018,.042,.81],solder,.004);
-  const standoff=new THREE.Mesh(new THREE.CylinderGeometry(.075,.075,.04,16),metal);standoff.position.set(1.58,-.006,.81);motherboard.add(standoff);
+  box(motherboard,'M.2 edge socket',[.18,.085,.52],[-.57,-.006,.85],graphite,.02);
+  for(let i=0;i<10;i++)box(motherboard,'M.2 socket contact',[.035,.014,.025],[-.65+i*.018,.042,.85],solder,.004);
+  const standoff=new THREE.Mesh(new THREE.CylinderGeometry(.075,.075,.04,16),metal);standoff.position.set(.72,-.006,.85);motherboard.add(standoff);
   for(const x of [-.98,.98]){
     box(motherboard,'display cable header',[.42,.075,.17],[x,-.005,-1.03],graphite,.018);
     for(let i=0;i<8;i++)box(motherboard,'display header pin',[.018,.035,.018],[x-.14+i*.04,.045,-1.03],copper,.003);
   }
   for(const x of [-.98,.98]){
     const cable=new THREE.CatmullRomCurve3([new THREE.Vector3(x,-.03,-1.02),new THREE.Vector3(x*1.12,-.01,-1.19),new THREE.Vector3(x*1.2,.005,-1.42),new THREE.Vector3(x*1.27,.02,-1.56)]);
-    const flex=new THREE.Mesh(new THREE.TubeGeometry(cable,24,.026,6,false),graphite);flex.name='display hinge flex cable';physical.add(flex);
+    const flex=new THREE.Mesh(new THREE.TubeGeometry(cable,24,.026,6,false),graphite);flex.name='display hinge flex cable';motherboard.add(flex);
   }
 
   const cpu = new THREE.Group(); cpu.name = 'CPU / ZeroCoding'; physical.add(cpu); cpu.position.set(0,-.015,socketCenterZ);
@@ -287,19 +290,19 @@ export function createLaptop(): LaptopParts {
   box(cpu,'heat spreader index',[.065,.006,.045],[.28,.232,.19],copper,.01);
 
   const battery = new THREE.Group(); battery.name='battery / local-first power'; physical.add(battery);
-  box(battery,'battery shell',[3.55,.3,.73],[0,-.15,1.15],graphite,.09);
-  for (let i=0;i<5;i++) box(battery,`battery cell seam ${i+1}`,[.025,.2,.61],[-1.42+i*.71,-.12,1.15],shellEdge,.008);
-  const batteryLed = new THREE.Mesh(new THREE.SphereGeometry(.035,10,8),green); batteryLed.position.set(1.55,.02,1.15); battery.add(batteryLed);
+  box(battery,'battery shell',[3.55,.3,.6],[0,-.15,1.46],graphite,.09);
+  for (let i=0;i<5;i++) box(battery,`battery cell seam ${i+1}`,[.025,.2,.48],[-1.42+i*.71,-.12,1.46],shellEdge,.008);
+  const batteryLed = new THREE.Mesh(new THREE.SphereGeometry(.035,10,8),green); batteryLed.position.set(1.55,.02,1.46); battery.add(batteryLed);
 
   const ram = new THREE.Group(); ram.name='RAM / Fenrir memory pressure'; physical.add(ram);
   for (let module=0;module<2;module++) {
-    const z=-.82+module*.62;
-    box(motherboard,`SO-DIMM socket ${module+1}`,[1.96,.085,.18],[-.57,-.006,z+.205],graphite,.018);
-    for(let clip of [-.99,.99]){
-      box(motherboard,'SO-DIMM retention clip',[.075,.1,.11],[-.57+clip,.005,z+.205],shellEdge,.018);
-      box(motherboard,'slot guide',[.09,.045,.065],[-.57+clip,.052,z+.205],metal,.012);
+    const z=-.60+module*.58;
+    box(motherboard,`SO-DIMM socket ${module+1}`,[1.28,.085,.18],[-1.3,-.006,z+.205],graphite,.018);
+    for(let clip of [-.65,.65]){
+      box(motherboard,'SO-DIMM retention clip',[.075,.1,.11],[-1.3+clip,.005,z+.205],shellEdge,.018);
+      box(motherboard,'slot guide',[.09,.045,.065],[-1.3+clip,.052,z+.205],metal,.012);
     }
-    const moduleGroup=new THREE.Group();moduleGroup.name=`SO-DIMM ${module+1}`;moduleGroup.position.set(-.57,0,z);ram.add(moduleGroup);
+    const moduleGroup=new THREE.Group();moduleGroup.name=`SO-DIMM ${module+1}`;moduleGroup.position.set(-1.3,0,z);moduleGroup.scale.x=.66;ram.add(moduleGroup);
     const profile=new THREE.Shape();
     profile.moveTo(-.91,-.21);profile.lineTo(.91,-.21);profile.lineTo(.91,.21);profile.lineTo(.105,.21);profile.lineTo(.105,.135);profile.lineTo(-.105,.135);profile.lineTo(-.105,.21);profile.lineTo(-.91,.21);profile.closePath();
     const pcbGeometry=new THREE.ExtrudeGeometry(profile,{depth:.1,bevelEnabled:true,bevelSegments:1,steps:1,bevelSize:.012,bevelThickness:.008});
@@ -318,7 +321,7 @@ export function createLaptop(): LaptopParts {
     for(let i=0;i<5;i++)line(moduleGroup,[new THREE.Vector3(-.84+i*.42,.055,-.17),new THREE.Vector3(-.65+i*.32,.055,-.17),new THREE.Vector3(-.55+i*.28,.055,-.12)],'#77916c',.85);
   }
 
-  const ssd = new THREE.Group(); ssd.name='SSD / Training App persistence'; physical.add(ssd); ssd.position.set(.56,-.045,.81);
+  const ssd = new THREE.Group(); ssd.name='SSD / Training App persistence'; physical.add(ssd); ssd.position.set(.11,-.045,.85);
   const drive=box(ssd,'M.2 2280 NVMe PCB',[2.24,.07,.45],[0,.035,0],ssdBoard,.035);
   outline(ssd,drive.geometry,new THREE.Vector3(0,.035,0),'#c4ee70');
   for(let i=0;i<25;i++){
@@ -338,6 +341,8 @@ export function createLaptop(): LaptopParts {
   const retentionScrew=new THREE.Mesh(new THREE.CylinderGeometry(.042,.042,.025,12),metal);retentionScrew.position.set(1.02,.075,0);ssd.add(retentionScrew);
   line(ssd,[new THREE.Vector3(-.85,.076,-.1),new THREE.Vector3(-.35,.076,-.1),new THREE.Vector3(-.12,.076,.11),new THREE.Vector3(.47,.076,.11)],'#a78754',.92);
 
+  const ssdBody=new THREE.Group(); ssdBody.name='M.2 2280 module (80 mm)'; [...ssd.children].forEach(child=>ssdBody.add(child)); ssdBody.scale.x=.6; ssd.add(ssdBody);
+
   const cooling = new THREE.Group(); cooling.name='thermal module'; physical.add(cooling);
   box(cooling,'blower lower shroud',[1.22,.095,1.02],[1.48,-.04,-.08],graphite,.12);
   const fanBase=new THREE.Mesh(new THREE.CylinderGeometry(.49,.49,.11,40),chip);fanBase.name='horizontal centrifugal blower housing';fanBase.position.set(1.48,.015,-.08);cooling.add(fanBase);
@@ -351,10 +356,10 @@ export function createLaptop(): LaptopParts {
   }
   const fanHub=new THREE.Mesh(new THREE.CylinderGeometry(.145,.145,.12,24),metal);fanHub.name='blower motor hub';fanHub.position.set(1.48,.105,-.08);cooling.add(fanHub);
   const hubCap=new THREE.Mesh(new THREE.CylinderGeometry(.09,.09,.014,20),shellEdge);hubCap.position.set(1.48,.17,-.08);cooling.add(hubCap);
-  const pipeA=cylinder(cooling,'copper heat pipe A',.045,1.86,[.47,.055,-.08],copper);pipeA.rotation.z=Math.PI/2;pipeA.rotation.y=.025;
-  const pipeB=cylinder(cooling,'copper heat pipe B',.032,1.63,[.56,.037,.13],solder);pipeB.rotation.z=Math.PI/2;pipeB.rotation.y=.025;
-  box(cooling,'fin-stack plenum',[.24,.13,.84],[-.49,.025,-.08],graphite,.025);
-  for(let i=0;i<11;i++)box(cooling,'copper radiator fin',[.024,.13,.8],[-.69+i*.042,.045,-.08],metal,.006);
+  const pipeA=cylinder(cooling,'copper heat pipe A',.045,.78,[1.01,.055,-.08],copper);pipeA.rotation.z=Math.PI/2;pipeA.rotation.y=.025;
+  const pipeB=cylinder(cooling,'copper heat pipe B',.032,.78,[1.01,.037,.13],solder);pipeB.rotation.z=Math.PI/2;pipeB.rotation.y=.025;
+  box(cooling,'fin-stack plenum',[.24,.13,.84],[.76,.025,-.08],graphite,.025);
+  for(let i=0;i<5;i++)box(cooling,'copper radiator fin',[.024,.13,.8],[.68+i*.042,.045,-.08],metal,.006);
 
   const cpuTraces = new THREE.Group(); cpuTraces.name = 'processor traces becoming an agent flow'; physical.add(cpuTraces);
   const traceMaterial = new THREE.LineBasicMaterial({ color: '#c4ee48', transparent: true, opacity: .9 });
@@ -376,11 +381,11 @@ export function createLaptop(): LaptopParts {
   cpuTraces.visible = false;
   const memoryTraffic = new THREE.Group(); memoryTraffic.name = 'processes contest memory lanes'; ram.add(memoryTraffic);
   for (let i = 0; i < 18; i++) {
-    const module=i<9?0:1, slot=i%9, z=-.82+module*.62;
-    box(memoryTraffic,`resident page ${i+1}`,[.075,.045,.11],[-1.27+slot*.17,.16,z],i>12?copper:green,.008);
+    const module=i<9?0:1, slot=i%9, z=-.60+module*.58;
+    box(memoryTraffic,`resident page ${i+1}`,[.075,.045,.11],[-1.84+slot*.133,.16,z],i>12?copper:green,.008);
   }
   memoryTraffic.visible = false;
-  const storageRecords = new THREE.Group(); storageRecords.name = 'persistent blocks from SSD'; ssd.add(storageRecords);
+  const storageRecords = new THREE.Group(); storageRecords.name = 'persistent blocks from SSD'; ssdBody.add(storageRecords);
   for (let i = 0; i < 5; i++) {
     box(storageRecords,`SQLite record ${i+1}`,[.12,.025,.28],[-.7+i*.32,.2,.11],i===4?green:metal,.01);
     box(storageRecords,`record index ${i+1}`,[.025,.025,.035],[-.7+i*.32,.2,-.08],i===4?copper:shellEdge,.006);
@@ -396,4 +401,24 @@ export function createLaptop(): LaptopParts {
   }
   const setHighlight = (active: ReadonlyArray<'cpu' | 'ram' | 'ssd'>) => { (Object.keys(highlights) as Array<keyof typeof highlights>).forEach(k => { highlights[k].visible = active.includes(k); }); };
   return {root,physical,lid,deck,bottom,battery,motherboard,cpu,ram,ssd,cooling,cpuTraces,memoryTraffic,storageRecords,setScreen,setHighlight};
+}
+
+export type Pose = { open: number; interior: number; cpu: number; ram: number; ssd: number };
+/** Single source of truth for where every part sits (0–1 amounts); the page and the collision check both use it. */
+export function poseLaptop(l: LaptopParts, { open, interior, cpu, ram, ssd }: Pose) {
+  const boardX = -.15 * open, boardY = .45 * interior - .12 * open;
+  l.deck.position.set(0, .65 * open + 1.65 * interior, .24 * open); l.bottom.position.set(0, -.12 * open, .02 * open);
+  l.battery.position.set(0, -.34 * open, 0); l.motherboard.position.set(boardX, boardY, 0);
+  l.cooling.position.set(boardX, boardY + .045, 0); // stays seated on the board: it used to slide sideways and sink into it
+  l.lid.position.set(0, .22 + .68 * open + 1.65 * interior, -1.68 - .18 * interior);
+  // Each part is pulled out toward the viewer so it clears the keyboard deck.
+  l.cpu.position.set(boardX, boardY - .015 + .95 * cpu, -.12 + 3.12 * cpu); l.cpu.scale.setScalar(1 + .65 * cpu);
+  l.cpuTraces.visible = false; // the decorative bus lines crossed the blower, so they stay off
+  const mix = (a: number, b: number, t: number) => a + (b - a) * t;
+  // The modules sit left of the CPU; their centre is steered to the middle of the screen while they are pulled out.
+  const ramScale = 1 + .65 * ram; l.ram.scale.setScalar(ramScale);
+  l.ram.position.set(boardX + mix(-1.3, -.25, ram) + 1.3 * ramScale, boardY + .95 * ram, mix(-.31, 2.7, ram) + .31 * ramScale);
+  l.memoryTraffic.visible = ram > .12;
+  l.ssd.position.set(boardX + .11 - .11 * ssd, boardY - .045 + .95 * ssd, .85 + 2.16 * ssd); l.ssd.scale.setScalar(1 + .65 * ssd);
+  l.storageRecords.visible = ssd > .1;
 }
