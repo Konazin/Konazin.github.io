@@ -47,6 +47,7 @@ export type LaptopParts = {
   battery: THREE.Group; motherboard: THREE.Group; cpu: THREE.Group; ram: THREE.Group; ssd: THREE.Group; cooling: THREE.Group;
   cpuTraces: THREE.Group; memoryTraffic: THREE.Group; storageRecords: THREE.Group;
   setScreen: (mode: 'boot' | 'cpu' | 'ram' | 'ssd' | 'overview', pressure?: number, language?: 'pt' | 'en') => void;
+  setHighlight: (active: ReadonlyArray<'cpu' | 'ram' | 'ssd'>) => void;
 };
 
 export function createLaptop(): LaptopParts {
@@ -118,7 +119,7 @@ export function createLaptop(): LaptopParts {
   let lastScreen = '';
   function setScreen(mode: 'boot' | 'cpu' | 'ram' | 'ssd' | 'overview', pressure = 0, language: 'pt' | 'en' = 'pt') {
     const signature = `${mode}:${Math.round(pressure * 8)}:${language}`; if (signature === lastScreen) return; lastScreen = signature;
-    const g = screenContext, w = 1024, h = 576, lime = '#bfeb55', dim = '#61705d', pale = '#dce5d3';
+    const g = screenContext, w = 1024, h = 576, lime = '#bfeb55', pale = '#dce5d3';
     g.fillStyle = '#101510'; g.fillRect(0, 0, w, h);
     g.fillStyle = '#c1e970'; g.fillRect(0, 0, 7, h);
     g.fillStyle = lime; g.font = 'bold 17px monospace'; g.fillText('K/CORE', 31, 31);
@@ -169,18 +170,15 @@ export function createLaptop(): LaptopParts {
       label(t?'exportar → validar → restaurar':'export → validate → restore', 53, 450, 16, pale);
       label(t?'rede: opcional':'network: optional', 53, 493, 13, '#879886');
     } else {
-      label(t ? 'TRÊS PROJETOS / UM FIO CONDUTOR' : 'THREE PROJECTS / ONE THREAD', 47, 94, 17, lime);
-      const stages = t ? ['BACKEND','SISTEMA','ESTADO','RECUPERAÇÃO'] : ['BACKEND','SYSTEM','STATE','RECOVERY'];
-      stages.forEach((s, i) => {
-        const x = 57 + i * 228, y = 177;
-        label('0' + (i + 1), x, y, 13, '#82927a');
-        label(s, x, y + 34, 17, i === 3 ? lime : pale);
-        g.fillStyle = i === 3 ? '#546844' : '#26352a';
-        g.fillRect(x, y + 58, 166, 7);
-        if (i < 3) rail(x + 170, y + 61, x + 205, y + 61, dim);
+      label(t ? '3 PEÇAS / 3 PROJETOS' : '3 PARTS / 3 PROJECTS', 47, 94, 22, lime);
+      label(t ? 'clique numa peça para abrir o capítulo' : 'pick a part to open its chapter', 50, 140, 15, '#9cae98');
+      const cards: [string, string][] = [['01  CPU', 'ZeroCoding'], ['02  RAM', 'Fenrir'], ['03  SSD', 'Training App']];
+      cards.forEach(([tag, name], i) => {
+        const x = 53 + i * 315;
+        g.fillStyle = '#18211a'; g.fillRect(x, 190, 285, 170);
+        g.strokeStyle = i === 0 ? lime : '#2a3a2c'; g.lineWidth = 2; g.strokeRect(x, 190, 285, 170);
+        label(tag, x + 22, 232, 15, lime); label(name, x + 22, 320, 26, pale);
       });
-      label(t ? 'CONTEXTO  /  PERSISTÊNCIA  /  CONTROLE' : 'CONTEXT  /  PERSISTENCE  /  CONTROL', 57, 373, 16, '#9cae98');
-      label('PYTHON  /  RUST  /  EXPO', 57, 500, 13, lime);
     }
     screenTexture.needsUpdate = true;
   }
@@ -388,5 +386,14 @@ export function createLaptop(): LaptopParts {
     box(storageRecords,`record index ${i+1}`,[.025,.025,.035],[-.7+i*.32,.2,-.08],i===4?copper:shellEdge,.006);
   }
   storageRecords.visible = false;
-  return {root,physical,lid,deck,bottom,battery,motherboard,cpu,ram,ssd,cooling,cpuTraces,memoryTraffic,storageRecords,setScreen};
+
+  // Lime wireframes around the three project parts; toggled per scene so the active part reads at a glance.
+  const highlights: Record<'cpu' | 'ram' | 'ssd', THREE.LineSegments> = {} as never;
+  for (const [key, group] of [['cpu', cpu], ['ram', ram], ['ssd', ssd]] as const) {
+    const bounds = new THREE.Box3().setFromObject(group), size = bounds.getSize(new THREE.Vector3()), center = bounds.getCenter(new THREE.Vector3()).sub(group.position);
+    const frame = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(size.x + .06, size.y + .06, size.z + .06)), new THREE.LineBasicMaterial({ color: '#c4ee48', transparent: true, opacity: .95 }));
+    frame.name = `${key} highlight`; frame.position.copy(center); frame.visible = false; group.add(frame); highlights[key] = frame;
+  }
+  const setHighlight = (active: ReadonlyArray<'cpu' | 'ram' | 'ssd'>) => { (Object.keys(highlights) as Array<keyof typeof highlights>).forEach(k => { highlights[k].visible = active.includes(k); }); };
+  return {root,physical,lid,deck,bottom,battery,motherboard,cpu,ram,ssd,cooling,cpuTraces,memoryTraffic,storageRecords,setScreen,setHighlight};
 }

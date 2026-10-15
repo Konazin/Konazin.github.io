@@ -4,66 +4,197 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#0c100e" />
+  <title>Miguel Sousa (Kona) — Desenvolvimento de Software &amp; Backend</title>
+  <meta name="description" content="Miguel Sousa (Kona): desenvolvimento de software com base forte em backend, Linux, APIs e segurança." />
+  <link rel="canonical" href="https://konazin.github.io/" />
   <link rel="icon" type="image/png" sizes="128x128" href="./src/assets/kona-favicon.png" />
-  <meta name="description" content="Miguel Sousa (Kona): backend, sistemas Linux e IA aplicada." />
-  <meta property="og:title" content="Miguel Sousa (Kona) — Backend &amp; Sistemas" />
-  <meta property="og:description" content="Uma desmontagem interativa de projetos de software, sistemas e IA aplicada." />
+  <link rel="manifest" href="./site.webmanifest" />
   <meta property="og:type" content="website" />
-  <title>Miguel Sousa (Kona) — Backend &amp; Sistemas</title>
+  <meta property="og:url" content="https://konazin.github.io/" />
+  <meta property="og:title" content="Miguel Sousa (Kona) — Desenvolvimento de Software &amp; Backend" />
+  <meta property="og:description" content="Desenvolvimento de software com base forte em backend, Linux, APIs e segurança." />
+  <meta property="og:image" content="https://konazin.github.io/og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
 </head>
 <body>
-  <a class="skip-link" href="#projetos" data-i18n="skip">Pular para a navegação de projetos</a>
+  <a class="skip-link" href="#mapa" data-jump="map" data-i18n="skip">Pular para o conteúdo</a>
   <header class="topbar">
-    <a class="wordmark" href="#inicio" aria-label="Kona — início" data-i18n-aria="home"><img src="./src/assets/kona-mark.webp" alt="" width="512" height="512" fetchpriority="high" decoding="async" /><span class="wordmark-label" aria-hidden="true">KONA</span></a>
-    <nav class="social-nav" aria-label="Links externos" data-i18n-aria="externalLinks">
-      <a href="https://github.com/Konazin" target="_blank" rel="noreferrer" aria-label="GitHub (abre em nova aba)" data-i18n-aria="githubExternal">GitHub <span aria-hidden="true">↗</span></a>
-      <a href="https://www.linkedin.com/in/miguelkona/" target="_blank" rel="noreferrer" aria-label="LinkedIn (abre em nova aba)" data-i18n-aria="linkedinExternal">LinkedIn <span aria-hidden="true">↗</span></a>
+    <a class="wordmark" href="#inicio" data-jump="hero" aria-label="Kona — início" data-i18n-aria="home"><img src="./src/assets/kona-mark.webp" alt="" width="40" height="40" decoding="async" /><span aria-hidden="true">KONA</span></a>
+    <nav class="main-nav" aria-label="Navegação principal" data-i18n-aria="primaryNav">
+      <a href="#mapa" data-jump="map"><span>01</span> <span data-i18n="navProjects">Projetos</span></a>
+      <a href="#sobre"><span>05</span> <span data-i18n="navAbout">Sobre</span></a>
+      <a href="#contato"><span>06</span> <span data-i18n="navContact">Contato</span></a>
     </nav>
-    <div class="language" role="group" aria-label="Idioma" data-i18n-aria="language">
-      <button type="button" data-lang="pt" aria-pressed="true">PT</button><span aria-hidden="true">/</span><button type="button" data-lang="en" aria-pressed="false">EN</button>
+    <div class="top-actions">
+      <a class="ext" href="https://github.com/Konazin" target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+      <a class="ext" href="https://www.linkedin.com/in/miguelkona/" target="_blank" rel="noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
+      <div class="language" role="group" aria-label="Idioma"><button type="button" data-lang="pt" aria-pressed="true">PT</button><span aria-hidden="true">/</span><button type="button" data-lang="en" aria-pressed="false">EN</button></div>
+      <a class="btn btn-ghost btn-sm" href="./cv.pdf" data-cv hidden data-i18n="cvButton">BAIXAR CV ↓</a>
     </div>
   </header>
   <main>
-    <section class="experience" id="inicio" data-phase="hero" aria-labelledby="hero-title">
-      <div class="hero-type"><p class="hero-signature" data-i18n="identity">MIGUEL SOUSA / BACKEND &amp; SISTEMAS</p><h1 id="hero-title"><span data-i18n="titleA">Backend e sistemas</span> <span data-i18n="titleB">que continuam</span> <span data-i18n="titleC">compreensíveis</span> <span data-i18n="titleD">quando algo falha.</span></h1></div>
+    <section class="experience" id="inicio" data-phase="hero" aria-label="Portfólio">
       <div class="scene" aria-hidden="true"><canvas id="world"></canvas><div id="scene-fallback" class="scene-fallback" hidden><svg viewBox="0 0 900 640"><path d="M187 120 672 50 836 340 318 409Z" fill="#252d27" stroke="#8b9586" stroke-width="4"/><path d="M222 138 660 82 784 326 331 377Z" fill="#102017"/><path d="M316 410 836 341 686 532 101 554Z" fill="#343a34" stroke="#8b9586" stroke-width="4"/><path d="M101 554 686 532 790 560 205 584Z" fill="#191d19"/><path d="M290 444 733 398M275 470 712 424M257 494 693 451" stroke="#71836e" stroke-width="6"/><path d="M370 464 493 452" stroke="#c1e970" stroke-width="6"/></svg></div></div>
-      <div class="hero-front"><p data-i18n="heroIntro">Desenvolvo software com foco em backend e sistemas: APIs, persistência, Linux e IA aplicada a problemas reais.</p><p class="hero-disciplines" data-i18n="domain">BACKEND / SISTEMAS / IA APLICADA</p><a class="hero-project-cta" href="#cpu-project" data-jump="cpu" data-i18n="heroCta">VER PROJETOS</a></div>
-      <div class="scene-index" aria-hidden="true"><span>K/CORE</span><i><b id="stage-progress"></b></i><span id="stage-label">00 / EXTERIOR</span></div>
-      <nav class="chapter-jump" id="chapter-nav" tabindex="-1" aria-label="Ir para um projeto" data-i18n-aria="chapterNav"><a href="#cpu-project" data-jump="cpu">ZeroCoding</a><a href="#ram-project" data-jump="ram">Fenrir</a><a href="#ssd-project" data-jump="ssd">Training App</a></nav>
-      <button type="button" class="scroll-cue" data-i18n="scroll">3 PROJETOS ↓</button>
-      <svg class="anchor-lines" id="anchor-lines" aria-hidden="true"><path id="anchor-path"></path></svg>
-      <div class="cpu-flow" aria-hidden="true"><span>MODEL</span><span>CONTEXT</span><span>TOOLS</span><span>SESSION</span></div>
-      <div class="ram-pressure" aria-hidden="true"><span class="pressure-heading" data-i18n="pressureHeading">SIMULAÇÃO / PRESSÃO DE MEMÓRIA</span><div class="process-lanes"><b>GAME</b><b>WORKER</b><b>BROWSER</b><b>SERVICE</b></div><div class="pressure-track"><i id="pressure-fill"></i></div><span id="pressure-state" data-i18n="pressureObserve">OBSERVAR → POLÍTICA → RECUPERAR</span></div>
-      <div class="ssd-flow" aria-hidden="true"><span>LOCAL DATA</span><span>SQLITE</span><span>SESSION</span><span>BACKUP</span><span>RECOVERY</span></div>
-      <p class="system-heading" data-i18n="systemHeading" aria-hidden="true">Em comum: estado explícito, controle e recuperação.</p>
-      <div class="system-sequence" data-i18n="systemSequence" aria-hidden="true">PYTHON <b>·</b> RUST <b>·</b> TYPESCRIPT <b>·</b> LINUX</div>
-      <div class="project-readouts" id="projetos" tabindex="-1" role="region" aria-label="Projetos" data-i18n-aria="projectsRegion" aria-live="polite">
-        <article class="project-detail" id="cpu-project" data-project="cpu">
-          <p class="part-label" data-i18n="cpuPart">CPU / EXECUÇÃO</p><h2>ZeroCoding</h2>
-          <p class="project-lead" data-i18n="cpuLead">Assistente de programação experimental para terminal, com contexto explícito e sessões locais.</p>
-          <p class="project-description" data-i18n="cpuDescription">MVP em Python com Ollama local e APIs compatíveis, habilidades Markdown, sessões locais e comandos para ler e buscar no projeto. Arquivos só entram no contexto quando o usuário escolhe. Escopo atual: leitura e busca; edição e execução estão no roadmap.</p>
-          <dl class="project-spec"><div><dt>RUNTIME</dt><dd data-i18n="cpuRuntime">Python / Rich TUI</dd></div><div><dt>MODEL</dt><dd data-i18n="cpuModel">Ollama / APIs compatíveis</dd></div><div><dt>CONTEXT</dt><dd data-i18n="cpuContext">definido pelo usuário</dd></div><div><dt>TOOLS</dt><dd data-i18n="cpuTools">read / tree / grep</dd></div><div><dt>STATE</dt><dd data-i18n="cpuState">sessões locais</dd></div></dl>
-          <a class="repo-link" href="https://github.com/Konazin/ZeroCoding" target="_blank" rel="noreferrer" aria-label="Abrir o repositório ZeroCoding no GitHub (nova aba)" data-i18n-aria="cpuRepoLink"><span data-i18n="repo">VER CÓDIGO</span><span aria-hidden="true">↗</span></a>
-        </article>
-        <article class="project-detail" id="ram-project" data-project="ram">
-          <p class="part-label" data-i18n="ramPart">RAM / PRESSÃO DE MEMÓRIA</p><h2>Fenrir</h2>
-          <p class="project-lead" data-i18n="ramLead">Daemon Linux para observar pressão de memória e simular políticas reversíveis por sessão.</p>
-          <p class="project-description" data-i18n="ramDescription">Observação e simulação são o padrão; mudanças exigem opt-ins independentes. Nunca encerra processos: o controle experimental só ajusta memory.low por sessão, com journal e rollback.</p>
-          <dl class="project-spec"><div><dt>RUNTIME</dt><dd data-i18n="ramRuntime">Rust / Linux</dd></div><div><dt>SIGNALS</dt><dd data-i18n="ramSignals">memory / swap / PSI</dd></div><div><dt>CONTROL</dt><dd data-i18n="ramControl">cgroup v2</dd></div><div><dt>POLICY</dt><dd data-i18n="ramPolicy">observe / dry-run</dd></div><div><dt>RECOVERY</dt><dd data-i18n="ramRecovery">journal / rollback</dd></div></dl>
-          <a class="repo-link" href="https://github.com/Konazin/Fenrir" target="_blank" rel="noreferrer" aria-label="Abrir o repositório Fenrir no GitHub (nova aba)" data-i18n-aria="ramRepoLink"><span data-i18n="repo">VER CÓDIGO</span><span aria-hidden="true">↗</span></a>
-        </article>
-        <article class="project-detail" id="ssd-project" data-project="ssd">
-          <p class="part-label" data-i18n="ssdPart">SSD / PERSISTÊNCIA</p><h2>Training App</h2>
-          <p class="project-lead" data-i18n="ssdLead">App mobile local-first para treinos, com sessões e histórico disponíveis offline.</p>
-          <p class="project-description" data-i18n="ssdDescription">O app Expo/React Native guarda os dados no dispositivo com SQLite e inclui exportação, validação e restauração de backups. API Java/PostgreSQL e cliente web existem como componentes opcionais, fora do runtime mobile padrão.</p>
-          <dl class="project-spec"><div><dt>RUNTIME</dt><dd data-i18n="ssdRuntime">Expo / React Native</dd></div><div><dt>STORAGE</dt><dd data-i18n="ssdStorage">SQLite</dd></div><div><dt>STATE</dt><dd data-i18n="ssdState">sessões / histórico</dd></div><div><dt>NETWORK</dt><dd data-i18n="ssdNetwork">não obrigatório</dd></div><div><dt>RECOVERY</dt><dd data-i18n="ssdRecovery">backup validado</dd></div></dl>
-          <a class="repo-link" href="https://github.com/Konazin/training-app" target="_blank" rel="noreferrer" aria-label="Abrir o repositório Training App no GitHub (nova aba)" data-i18n-aria="ssdRepoLink"><span data-i18n="repo">VER CÓDIGO</span><span aria-hidden="true">↗</span></a>
-        </article>
+      <div class="grid-lines" aria-hidden="true"></div>
+
+      <div class="ui ui-hero" data-ui="hero">
+        <div class="hero-copy">
+          <p class="eyebrow" data-i18n="heroEyebrow">MIGUEL SOUSA — DESENVOLVIMENTO DE SOFTWARE · BACKEND</p>
+          <h1 id="hero-title" data-i18n="heroTitle">Desenvolvimento de software com base forte em backend.</h1>
+          <p class="hero-sub" data-i18n="heroSub">Backend e sistemas que continuam compreensíveis quando algo falha.</p>
+        </div>
+        <div class="hero-intro">
+          <p data-i18n="heroIntro">Estudante técnico de TI no IMD/UFRN e estagiário de TI. Linux, Python, APIs e automação, com QA e segurança como diferencial.</p>
+          <div class="actions"><a class="btn btn-primary" href="#mapa" data-jump="map" data-i18n="heroOpen">ABRIR A MÁQUINA ↓</a><a class="btn btn-ghost" href="#contato" data-i18n="heroContact">CONTATO</a></div>
+        </div>
+        <nav class="parts-index" aria-label="Projetos" data-i18n-aria="pillsLabel">
+          <p class="label" data-i18n="partsTitle">DENTRO DA MÁQUINA</p>
+          <a href="#cpu-project" data-jump="cpu"><span class="n">01</span><span><small>CPU</small><b>ZeroCoding</b></span></a>
+          <a href="#ram-project" data-jump="ram"><span class="n">02</span><span><small>RAM</small><b>Fenrir</b></span></a>
+          <a href="#ssd-project" data-jump="ssd"><span class="n">03</span><span><small>SSD</small><b>Training App</b></span></a>
+        </nav>
+        <nav class="chapter-nav" aria-label="Capítulos" data-i18n-aria="chapterNav"><a href="#mapa" data-jump="map">MAPA →</a></nav>
+      </div>
+
+      <div class="ui ui-map" id="mapa" data-ui="map">
+        <div class="map-copy">
+          <p class="kicker" data-i18n="mapKicker">01 / MAPA DA MÁQUINA</p>
+          <h2 data-i18n="mapTitle">Três peças.<br>Três projetos.</h2>
+          <p class="map-intro" data-i18n="mapIntro">Clique numa peça para abrir o capítulo — ou continue rolando.</p>
+        </div>
+        <div class="map-list">
+          <a class="callout" id="callout-cpu" href="#cpu-project" data-jump="cpu"><p class="kicker"><span>02</span> CPU / EXECUÇÃO</p><b>ZeroCoding</b><span class="callout-text" data-i18n="cpuLead"></span><span class="callout-cta" data-i18n="openChapter">ABRIR CAPÍTULO →</span></a>
+          <a class="callout" id="callout-ram" href="#ram-project" data-jump="ram"><p class="kicker"><span>03</span> RAM / MEMÓRIA</p><b>Fenrir</b><span class="callout-text" data-i18n="ramLead"></span><span class="callout-cta" data-i18n="openChapter">ABRIR CAPÍTULO →</span></a>
+          <a class="callout" id="callout-ssd" href="#ssd-project" data-jump="ssd"><p class="kicker"><span>04</span> SSD / PERSISTÊNCIA</p><b>Training App</b><span class="callout-text" data-i18n="ssdLead"></span><span class="callout-cta" data-i18n="openChapter">ABRIR CAPÍTULO →</span></a>
+        </div>
+        <nav class="chapter-nav" aria-label="Capítulos" data-i18n-aria="chapterNav"><a href="#inicio" data-jump="hero">← EXTERIOR</a><a href="#cpu-project" data-jump="cpu">ZEROCODING →</a></nav>
+      </div>
+
+      <article class="ui ui-chapter" id="cpu-project" data-ui="cpu" data-project="cpu">
+        <nav class="chapter-pills" aria-label="Projetos" data-i18n-aria="pillsLabel"><a href="#cpu-project" data-jump="cpu" aria-current="location"><span>02</span> ZeroCoding</a><a href="#ram-project" data-jump="ram"><span>03</span> Fenrir</a><a href="#ssd-project" data-jump="ssd"><span>04</span> Training App</a></nav>
+        <div class="chapter-sheet">
+          <div class="chapter-copy">
+            <p class="kicker"><span>02</span> <span data-i18n="cpuPart"></span></p>
+            <h2>ZeroCoding</h2>
+            <p class="lead" data-i18n="cpuLead"></p>
+            <p class="desc" data-i18n="cpuDescription"></p>
+            <ul class="tags"><li>Python</li><li>Ollama</li><li>Rich TUI</li><li>CLI</li></ul>
+            <div class="actions">
+              <a class="btn btn-primary" href="https://github.com/Konazin/ZeroCoding" target="_blank" rel="noreferrer" data-i18n-aria="cpuRepoLink"><span data-i18n="repo">VER CÓDIGO</span> <span aria-hidden="true">↗</span></a>
+              <a class="btn btn-ghost" href="#ram-project" data-jump="ram" data-i18n="nextChapter">PRÓXIMO →</a>
+            </div>
+          </div>
+          <div class="spec-column">
+            <dl class="spec-sheet"><dt class="spec-title" data-i18n="specTitle">FICHA TÉCNICA</dt><div><dt>RUNTIME</dt><dd data-i18n="cpuRuntime"></dd></div><div><dt>MODEL</dt><dd data-i18n="cpuModel"></dd></div><div><dt>CONTEXT</dt><dd data-i18n="cpuContext"></dd></div><div><dt>TOOLS</dt><dd data-i18n="cpuTools"></dd></div><div><dt>STATE</dt><dd data-i18n="cpuState"></dd></div></dl>
+            <div class="viz-card viz-cpu"><p class="viz-title" data-i18n="cpuVizTitle"></p><ol class="flow"><li>MODEL</li><li>CONTEXT</li><li>TOOLS</li><li>SESSION</li></ol></div>
+          </div>
+        </div>
+        <nav class="chapter-nav" aria-label="Capítulos" data-i18n-aria="chapterNav"><a href="#mapa" data-jump="map">← MAPA</a><a href="#ram-project" data-jump="ram">FENRIR →</a></nav>
+      </article>
+
+      <article class="ui ui-chapter" data-accent="amber" id="ram-project" data-ui="ram" data-project="ram">
+        <nav class="chapter-pills" aria-label="Projetos" data-i18n-aria="pillsLabel"><a href="#cpu-project" data-jump="cpu"><span>02</span> ZeroCoding</a><a href="#ram-project" data-jump="ram" aria-current="location"><span>03</span> Fenrir</a><a href="#ssd-project" data-jump="ssd"><span>04</span> Training App</a></nav>
+        <div class="chapter-sheet">
+          <div class="chapter-copy">
+            <p class="kicker"><span>03</span> <span data-i18n="ramPart"></span></p>
+            <h2>Fenrir</h2>
+            <p class="lead" data-i18n="ramLead"></p>
+            <p class="desc" data-i18n="ramDescription"></p>
+            <ul class="tags"><li>Rust</li><li>Linux</li><li>cgroup v2</li><li>PSI</li></ul>
+            <div class="actions">
+              <a class="btn btn-primary" href="https://github.com/Konazin/Fenrir" target="_blank" rel="noreferrer" data-i18n-aria="ramRepoLink"><span data-i18n="repo">VER CÓDIGO</span> <span aria-hidden="true">↗</span></a>
+              <a class="btn btn-ghost" href="#ssd-project" data-jump="ssd" data-i18n="nextChapter">PRÓXIMO →</a>
+            </div>
+          </div>
+          <div class="spec-column">
+            <dl class="spec-sheet"><dt class="spec-title" data-i18n="specTitle">FICHA TÉCNICA</dt><div><dt>RUNTIME</dt><dd data-i18n="ramRuntime"></dd></div><div><dt>SIGNALS</dt><dd data-i18n="ramSignals"></dd></div><div><dt>CONTROL</dt><dd data-i18n="ramControl"></dd></div><div><dt>POLICY</dt><dd data-i18n="ramPolicy"></dd></div><div><dt>RECOVERY</dt><dd data-i18n="ramRecovery"></dd></div></dl>
+            <div class="viz-card viz-ram"><p class="viz-title" data-i18n="ramVizTitle"></p><div class="process-lanes"><b>GAME</b><b>WORKER</b><b>BROWSER</b><b>SERVICE</b></div><div class="pressure-track"><i id="pressure-fill"></i></div><p class="pressure-state" id="pressure-state" data-i18n="pressureObserve">OBSERVAR → SIMULAR → RECUPERAR</p></div>
+          </div>
+        </div>
+        <nav class="chapter-nav" aria-label="Capítulos" data-i18n-aria="chapterNav"><a href="#cpu-project" data-jump="cpu">← ZEROCODING</a><a href="#ssd-project" data-jump="ssd">TRAINING APP →</a></nav>
+      </article>
+
+      <article class="ui ui-chapter" id="ssd-project" data-ui="ssd" data-project="ssd">
+        <nav class="chapter-pills" aria-label="Projetos" data-i18n-aria="pillsLabel"><a href="#cpu-project" data-jump="cpu"><span>02</span> ZeroCoding</a><a href="#ram-project" data-jump="ram"><span>03</span> Fenrir</a><a href="#ssd-project" data-jump="ssd" aria-current="location"><span>04</span> Training App</a></nav>
+        <div class="chapter-sheet">
+          <div class="chapter-copy">
+            <p class="kicker"><span>04</span> <span data-i18n="ssdPart"></span></p>
+            <h2>Training App</h2>
+            <p class="lead" data-i18n="ssdLead"></p>
+            <p class="desc" data-i18n="ssdDescription"></p>
+            <ul class="tags"><li>React Native</li><li>Expo</li><li>SQLite</li></ul>
+            <div class="actions">
+              <a class="btn btn-primary" href="https://github.com/Konazin/training-app" target="_blank" rel="noreferrer" data-i18n-aria="ssdRepoLink"><span data-i18n="repo">VER CÓDIGO</span> <span aria-hidden="true">↗</span></a>
+              <a class="btn btn-ghost" href="#sobre" data-i18n="nextChapter">PRÓXIMO →</a>
+            </div>
+          </div>
+          <div class="spec-column">
+            <dl class="spec-sheet"><dt class="spec-title" data-i18n="specTitle">FICHA TÉCNICA</dt><div><dt>RUNTIME</dt><dd data-i18n="ssdRuntime"></dd></div><div><dt>STORAGE</dt><dd data-i18n="ssdStorage"></dd></div><div><dt>STATE</dt><dd data-i18n="ssdState"></dd></div><div><dt>NETWORK</dt><dd data-i18n="ssdNetwork"></dd></div><div><dt>RECOVERY</dt><dd data-i18n="ssdRecovery"></dd></div></dl>
+            <div class="viz-card viz-ssd"><p class="viz-title" data-i18n="ssdVizTitle"></p><ol class="flow"><li>LOCAL DATA</li><li>SQLITE</li><li>BACKUP</li><li>RECOVERY</li></ol></div>
+          </div>
+        </div>
+        <nav class="chapter-nav" aria-label="Capítulos" data-i18n-aria="chapterNav"><a href="#ram-project" data-jump="ram">← FENRIR</a><a href="#sobre" data-i18n="nextAbout">SOBRE →</a></nav>
+      </article>
+
+      <svg class="anchor-lines" id="anchor-lines" aria-hidden="true"><path id="anchor-cpu"></path><path id="anchor-ram"></path><path id="anchor-ssd"></path></svg>
+      <div class="progress" aria-hidden="true"><ol class="progress-rail"><li>00</li><li>01</li><li>02</li><li>03</li><li>04</li><li>05</li><li>06</li></ol><span id="stage-label">00 / EXTERIOR</span></div>
+    </section>
+
+    <section class="about" id="sobre" aria-labelledby="about-title">
+      <div class="wrap">
+        <p class="kicker" data-i18n="aboutKicker">05 / SOBRE</p>
+        <div class="about-head">
+          <h2 id="about-title" data-i18n="aboutTitle">Desenvolvedor em formação, com base em backend, Linux e segurança.</h2>
+          <div class="bio"><p data-i18n="aboutBio1"></p><p data-i18n="aboutBio2"></p></div>
+        </div>
+        <ul class="principles">
+          <li><span>01</span><h3 data-i18n="p1Title"></h3><p data-i18n="p1Body"></p></li>
+          <li><span>02</span><h3 data-i18n="p2Title"></h3><p data-i18n="p2Body"></p></li>
+          <li><span>03</span><h3 data-i18n="p3Title"></h3><p data-i18n="p3Body"></p></li>
+        </ul>
+        <div class="about-cols">
+          <div>
+            <h3 class="label" data-i18n="expTitle">EXPERIÊNCIA</h3>
+            <article class="entry"><h4 data-i18n="exp1Role"></h4><p class="meta" data-i18n="exp1Meta"></p><p data-i18n="exp1Desc"></p></article>
+            <article class="entry"><h4 data-i18n="exp2Role"></h4><p class="meta" data-i18n="exp2Meta"></p><p data-i18n="exp2Desc"></p></article>
+          </div>
+          <div>
+            <h3 class="label" data-i18n="eduTitle">FORMAÇÃO E CERTIFICAÇÕES</h3>
+            <ul class="plain"><li data-i18n="edu1"></li><li data-i18n="edu2"></li><li data-i18n="edu3"></li></ul>
+            <h3 class="label" data-i18n="langTitle">IDIOMAS</h3>
+            <ul class="plain"><li data-i18n="lang1"></li><li data-i18n="lang2"></li></ul>
+          </div>
+        </div>
+        <h3 class="label" data-i18n="skillsTitle">HABILIDADES</h3>
+        <div class="skills">
+          <div><p class="lvl" data-i18n="lvl1"></p><p data-i18n="lvl1Items"></p></div>
+          <div><p class="lvl" data-i18n="lvl2"></p><p data-i18n="lvl2Items"></p></div>
+          <div><p class="lvl" data-i18n="lvl3"></p><p data-i18n="lvl3Items"></p></div>
+          <div><p class="lvl" data-i18n="lvl4"></p><p data-i18n="lvl4Items"></p></div>
+        </div>
+        <h3 class="label" data-i18n="moreTitle">OUTROS PROJETOS</h3>
+        <ul class="more"><li data-i18n="more1"></li><li data-i18n="more2"></li><li data-i18n="more3"></li></ul>
       </div>
     </section>
-    <section class="system-close" aria-labelledby="close-title"><p class="close-breadcrumb">K/CORE <span>→</span> MIGUEL SOUSA</p><h2 id="close-title" data-i18n="closeTitle">Vamos conversar sobre backend, sistemas ou IA.</h2><p data-i18n="closeCopy">Foco em backend e sistemas, com interfaces web e mobile quando o produto pede. Cada projeto explora contexto, estado, persistência ou controle.</p><div class="close-links"><a href="https://github.com/Konazin" target="_blank" rel="noreferrer" aria-label="GitHub (abre em nova aba)" data-i18n-aria="githubExternal">GitHub ↗</a><a href="https://www.linkedin.com/in/miguelkona/" target="_blank" rel="noreferrer" aria-label="FALAR NO LINKEDIN (abre em nova aba)" data-i18n-aria="footerLinkedIn" data-i18n="contactLinkedIn">FALAR NO LINKEDIN ↗</a></div><footer>MIGUEL SOUSA / KONA</footer></section>
+
+    <section class="contact" id="contato" aria-labelledby="contact-title">
+      <div class="wrap contact-grid">
+        <div class="contact-copy">
+          <p class="kicker" data-i18n="contactKicker">06 / CONTATO</p>
+          <h2 id="contact-title" data-i18n="contactTitle">Vamos conversar sobre backend, sistemas ou IA.</h2>
+          <p data-i18n="contactCopy">Se você trabalha com software, sistemas ou IA, me chame por aqui.</p>
+          <div class="actions">
+            <a class="btn btn-primary" href="https://www.linkedin.com/in/miguelkona/" target="_blank" rel="noreferrer" data-i18n="contactLinkedIn">FALAR NO LINKEDIN ↗</a>
+            <a class="btn btn-ghost" href="https://github.com/Konazin" target="_blank" rel="noreferrer">GITHUB ↗</a>
+            <a class="btn btn-ghost" href="mailto:m4caun4@gmail.com" data-i18n="contactEmail">E-MAIL</a>
+            <a class="btn btn-ghost" href="./cv.pdf" data-cv hidden data-i18n="cvButton">BAIXAR CV ↓</a>
+          </div>
+        </div>
+        <figure class="contact-scene" aria-hidden="true"><canvas id="contact-canvas"></canvas><figcaption data-i18n="contactClosed">SESSÃO ENCERRADA · K/CORE</figcaption></figure>
+      </div>
+      <footer class="wrap site-footer"><span data-i18n="footerRights">© 2026 MIGUEL SOUSA (KONA)</span><span>K/CORE → HARDWARE · SIGNAL · STATE · SOFTWARE</span><a href="#inicio" data-jump="hero" data-i18n="footerTop">VOLTAR AO TOPO ↑</a></footer>
+    </section>
   </main>
-  <noscript><style>.project-detail{display:block!important}</style></noscript>
   <script type="module" src="/src/main.ts"></script>
 </body>
 </html>
