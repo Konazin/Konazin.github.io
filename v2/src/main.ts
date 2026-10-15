@@ -7,7 +7,7 @@ import '@fontsource/space-grotesk/latin-700.css';
 import '@fontsource/jetbrains-mono/latin-400.css';
 import '@fontsource/jetbrains-mono/latin-500.css';
 import '@fontsource/jetbrains-mono/latin-700.css';
-import { createLaptop } from './laptop';
+import { createLaptop, poseLaptop } from './laptop';
 import { copy } from './copy';
 import './style.css';
 
@@ -100,6 +100,8 @@ else {
   catch { fallbackMode(); }
 }
 
+/** Render at least 1.5x on desktop: a 1080p monitor (dpr 1) otherwise shows the model and the screen text soft. */
+const renderRatio = () => (mobile.matches ? Math.min(devicePixelRatio, 1.5) : Math.min(Math.max(devicePixelRatio, 1.5), 2));
 const smooth = (v: number) => { const x = Math.max(0, Math.min(1, v)); return x * x * (3 - 2 * x); };
 const windowed = (p: number, a: number, b: number, c: number, d: number) => smooth((p - a) / (b - a)) * (1 - smooth((p - c) / (d - c)));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -182,7 +184,7 @@ if (renderer) {
 
   const partRef: Record<Part, { object: THREE.Object3D; local: THREE.Vector3 }> = {
     cpu: { object: laptop.cpu, local: new THREE.Vector3(0, .17, 0) },
-    ram: { object: laptop.ram, local: new THREE.Vector3(-.57, .1, -.5) },
+    ram: { object: laptop.ram, local: new THREE.Vector3(-1.3, .1, -.31) },
     ssd: { object: laptop.ssd, local: new THREE.Vector3(0, .12, 0) }
   };
   const probe = new THREE.Vector3();
@@ -208,19 +210,10 @@ if (renderer) {
     currentProgress = p;
     const open = smooth((p - .02) / .12), interior = smooth((p - .06) / .13);
     const cpuLift = windowed(p, .31, .39, .51, .57), ramLift = windowed(p, .57, .65, .71, .77), ssdLift = smooth((p - .77) / .08);
-    const boardX = -.15 * open, boardY = .45 * interior - .12 * open;
     laptop.root.rotation.y = yawAt(p);
-    laptop.deck.position.set(0, .65 * open + 1.65 * interior, .24 * open); laptop.bottom.position.set(0, -.12 * open, .02 * open);
-    laptop.battery.position.set(0, -.2 * open, .2 * open); laptop.motherboard.position.set(boardX, boardY, 0);
-    laptop.cooling.position.set(1.15 * open, .3 * interior - .12 * open, -.2 * open);
-    laptop.lid.position.set(0, .22 + .68 * open + 1.65 * interior, -1.68 - .18 * interior);
-    // Each part is pulled out toward the viewer so it clears the keyboard deck.
-    laptop.cpu.position.set(boardX, boardY - .015 + .95 * cpuLift, -.12 + 3.12 * cpuLift); laptop.cpu.scale.setScalar(1 + .65 * cpuLift);
-    laptop.cpuTraces.visible = cpuLift > .2; laptop.cpuTraces.position.set(boardX, boardY, 0);
-    laptop.ram.position.set(boardX, boardY + .95 * ramLift, 3.05 * ramLift); laptop.ram.scale.setScalar(1 + .65 * ramLift);
-    laptop.memoryTraffic.visible = ramLift > .12;
+    poseLaptop(laptop, { open, interior, cpu: cpuLift, ram: ramLift, ssd: ssdLift });
     pressureNow = p > .6 && p < .74 ? Math.sin((p - .6) / .14 * Math.PI) : 0;
-    laptop.memoryTraffic.scale.y = 1 + pressureNow * 3.3; laptop.memoryTraffic.position.y = pressureNow * .18;
+    { const grow = 1 + pressureNow * 3.3; laptop.memoryTraffic.scale.y = grow; laptop.memoryTraffic.position.y = .1375 * (1 - grow); } // grow upward from the chips
     pressureFill.style.transform = `scaleX(${Math.max(.12, pressureNow)})`;
     experience.style.setProperty('--pressure', pressureNow.toFixed(2));
     const pressureMode = pressureNow > .57 ? 'high' : 'controlled';
@@ -228,8 +221,6 @@ if (renderer) {
       experience.dataset.pressure = pressureMode;
       pressureState.textContent = (copy[language] as Record<string, string>)[pressureMode === 'high' ? 'pressureHigh' : 'pressureSafe'];
     }
-    laptop.ssd.position.set(boardX + .56 - .56 * ssdLift, boardY - .045 + .95 * ssdLift, .81 + 2.2 * ssdLift); laptop.ssd.scale.setScalar(1 + .65 * ssdLift);
-    laptop.storageRecords.visible = ssdLift > .1;
 
     let index = 0; PHASE_AT.forEach((at, i) => { if (p >= at) index = i; });
     const next = PHASES[index];
@@ -242,7 +233,7 @@ if (renderer) {
 
   function resize() {
     const w = canvas.clientWidth || innerWidth, h = canvas.clientHeight || innerHeight;
-    gl.setPixelRatio(Math.min(devicePixelRatio, mobile.matches ? 1.25 : 1.5)); gl.setSize(w, h, false);
+    gl.setPixelRatio(renderRatio()); gl.setSize(w, h, false);
     camera.aspect = w / h; fitBand = undefined; update(currentProgress); fit(1); updateAnchors();
   }
   let raf = 0, running = false;
@@ -257,7 +248,8 @@ if (renderer) {
   setPhase('hero'); resize(); canvas.style.opacity = '1';
   canvas.addEventListener('webglcontextlost', event => { event.preventDefault(); renderWhileVisible(false); fallbackMode(); });
   addEventListener('resize', resize, { passive: true }); mobile.addEventListener('change', resize);
-  if (document.fonts) document.fonts.ready.then(() => { fitBand = undefined; fit(1); });
+  // The notebook screen is a canvas texture: redraw it once the page fonts are really available.
+  if (document.fonts) Promise.all(['400', '500', '700'].map(w => document.fonts.load(`${w} 16px "JetBrains Mono"`))).then(() => { laptop.setScreen(screenMode(phase), pressureNow, language, true); fitBand = undefined; fit(1); });
 
   if (!staticStory) {
     // rAF already pauses in hidden tabs, so visibility in the viewport is the only condition to render.
@@ -294,12 +286,14 @@ function initContact() {
   const laptop = createLaptop(); laptop.root.rotation.y = -.55; scene.add(laptop.root);
   camera.position.set(0, 6.4, 12.5); camera.lookAt(0, .7, 0);
   let closed = 0, running = false, raf = 0;
-  const apply = () => { laptop.lid.rotation.x = lerp(-.08, 1.545, closed); laptop.lid.position.y = lerp(.22, .42, closed); };
-  const resizeContact = () => { const w = contactCanvas.clientWidth || 600, h = contactCanvas.clientHeight || 420; gl.setPixelRatio(Math.min(devicePixelRatio, 1.5)); gl.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); };
+  // The closed lid rests on the keycaps (y .47) instead of hovering above them.
+  const apply = () => { laptop.lid.rotation.x = lerp(-.08, 1.545, closed); laptop.lid.position.y = lerp(.22, .47, closed); };
+  const resizeContact = () => { const w = contactCanvas.clientWidth || 600, h = contactCanvas.clientHeight || 420; gl.setPixelRatio(renderRatio()); gl.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); };
   const frame = () => { apply(); gl.render(scene, camera); if (running) raf = requestAnimationFrame(frame); };
   resizeContact(); addEventListener('resize', resizeContact, { passive: true });
   new IntersectionObserver(entries => { const entry = entries[entries.length - 1]; if (entry.isIntersecting && !running) { running = true; frame(); } else if (!entry.isIntersecting && running) { running = false; cancelAnimationFrame(raf); } }).observe(contactCanvas);
-  ScrollTrigger.create({ trigger: '#contato', start: 'top 75%', end: 'top 20%', scrub: true, onUpdate: self => { closed = smooth(self.progress); } });
+  // Ends when the section's bottom meets the viewport bottom, which the last section always reaches (a fixed 'top 20%' never completed on tall screens).
+  ScrollTrigger.create({ trigger: '#contato', start: 'top 85%', end: 'bottom bottom', scrub: true, onUpdate: self => { closed = smooth(Math.min(1, self.progress * 1.15)); } });
   contactCanvas.addEventListener('webglcontextlost', event => { event.preventDefault(); running = false; contactCanvas.hidden = true; });
 }
 initContact();
