@@ -1,0 +1,9 @@
+{
+  "name": "Miguel Sousa (Kona) — Desenvolvimento de Software & Backend",
+  "short_name": "Kona",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0c100e",
+  "theme_color": "#0c100e",
+  "icons": [{ "src": "./icon-128.png", "sizes": "128x128", "type": "image/png" }]
+}

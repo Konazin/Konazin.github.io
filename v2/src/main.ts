@@ -1,254 +1,305 @@
 import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import '@fontsource/space-grotesk/latin-400.css';
+import '@fontsource/space-grotesk/latin-500.css';
+import '@fontsource/space-grotesk/latin-700.css';
+import '@fontsource/jetbrains-mono/latin-400.css';
+import '@fontsource/jetbrains-mono/latin-500.css';
+import '@fontsource/jetbrains-mono/latin-700.css';
 import { createLaptop } from './laptop';
+import { copy } from './copy';
 import './style.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const copy = {
-  pt: {
-    skip:'Pular para a navegação de projetos', skipStatic:'Pular para os projetos', externalLinks:'Links externos', githubExternal:'GitHub (abre em nova aba)', linkedinExternal:'LinkedIn (abre em nova aba)', footerLinkedIn:'Falar no LinkedIn (abre em nova aba)', language:'Idioma', home:'Kona — início', chapterNav:'Ir para um projeto', projectsRegion:'Projetos', domain:'BACKEND / SISTEMAS / IA APLICADA',
-    identity:'MIGUEL SOUSA / BACKEND & SISTEMAS', titleA:'Backend e sistemas', titleB:'que continuam', titleC:'compreensíveis', titleD:'quando algo falha.', heroIntro:'Desenvolvo software com foco em backend e sistemas: APIs, persistência, Linux e IA aplicada a problemas reais.', heroCta:'VER PROJETOS', scroll:'3 PROJETOS ↓',
-    pressureHeading:'OBSERVAÇÃO / PRESSÃO DE MEMÓRIA', pressureObserve:'OBSERVAR → SIMULAR → RECUPERAR', pressureHigh:'SIMULAÇÃO / INTERVENÇÃO BLOQUEADA POR PADRÃO', pressureSafe:'MODO OBSERVAÇÃO / SEM ALTERAÇÃO',
-    cpuPart:'CPU / EXECUÇÃO', cpuLead:'Assistente de programação experimental para terminal, com contexto explícito e sessões locais.', cpuDescription:'MVP em Python com Ollama local e APIs compatíveis, habilidades Markdown, sessões locais e comandos para ler e buscar no projeto. Arquivos só entram no contexto quando o usuário escolhe. Escopo atual: leitura e busca; edição e execução estão no roadmap.', cpuRuntime:'Python / Rich TUI', cpuModel:'Ollama / APIs compatíveis', cpuContext:'definido pelo usuário', cpuTools:'read / tree / grep', cpuState:'sessões locais',
-    ramPart:'RAM / PRESSÃO DE MEMÓRIA', ramLead:'Daemon Linux para observar pressão de memória e simular políticas reversíveis por sessão.', ramDescription:'Observação e simulação são o padrão; mudanças exigem opt-ins independentes. Nunca encerra processos: o controle experimental só ajusta memory.low por sessão, com journal e rollback.', ramRuntime:'Rust / Linux', ramSignals:'memory / swap / PSI', ramControl:'cgroup v2', ramPolicy:'observe / dry-run', ramRecovery:'journal / rollback',
-    ssdPart:'SSD / PERSISTÊNCIA', ssdLead:'App mobile local-first para treinos, com sessões e histórico disponíveis offline.', ssdDescription:'App Expo/React Native com SQLite no dispositivo, sessões e histórico offline, além de exportação, validação e restauração de backups. API Java/PostgreSQL e cliente web são opcionais, fora do runtime mobile padrão.', ssdRuntime:'Expo / React Native', ssdStorage:'SQLite local', ssdState:'sessões / histórico', ssdNetwork:'não exigida', ssdRecovery:'backup validado',
-    repo:'VER CÓDIGO', cpuRepoLink:'Abrir o repositório ZeroCoding no GitHub (nova aba)', ramRepoLink:'Abrir o repositório Fenrir no GitHub (nova aba)', ssdRepoLink:'Abrir o repositório Training App no GitHub (nova aba)', contactLinkedIn:'FALAR NO LINKEDIN ↗', systemHeading:'Em comum: estado explícito, controle e recuperação.', systemSequence:'PYTHON <b>·</b> RUST <b>·</b> TYPESCRIPT <b>·</b> LINUX', closeTitle:'Vamos conversar sobre backend, sistemas ou IA.', closeCopy:'Foco em backend e sistemas, com interfaces web e mobile quando o produto pede. Cada projeto explora contexto, estado, persistência ou controle.'
-  },
-  en: {
-    skip:'Skip to project navigation', skipStatic:'Skip to projects', externalLinks:'External links', githubExternal:'GitHub (opens in a new tab)', linkedinExternal:'LinkedIn (opens in a new tab)', footerLinkedIn:'Contact on LinkedIn (opens in a new tab)', language:'Language', home:'Kona — home', chapterNav:'Jump to a project', projectsRegion:'Projects', domain:'BACKEND / SYSTEMS / APPLIED AI',
-    identity:'MIGUEL SOUSA / BACKEND & SYSTEMS', titleA:'Backend and systems', titleB:'that stay', titleC:'understandable', titleD:'when things fail.', heroIntro:'I build software focused on backend and systems: APIs, persistence, Linux, and AI applied to real problems.', heroCta:'VIEW PROJECTS', scroll:'3 PROJECTS ↓',
-    pressureHeading:'OBSERVATION / MEMORY PRESSURE', pressureObserve:'OBSERVE → SIMULATE → RECOVER', pressureHigh:'SIMULATION / INTERVENTION DISABLED BY DEFAULT', pressureSafe:'OBSERVE MODE / NO MUTATION',
-    cpuPart:'CPU / EXECUTION', cpuLead:'An experimental terminal coding assistant with explicit context and local sessions.', cpuDescription:'A Python MVP with local Ollama and compatible APIs, Markdown skills, local sessions, and project read/search commands. Files enter the context only when the user picks them. Current scope: reading and search; editing and execution are on the roadmap.', cpuRuntime:'Python / Rich TUI', cpuModel:'Ollama / compatible APIs', cpuContext:'user-defined', cpuTools:'read / tree / grep', cpuState:'local sessions',
-    ramPart:'RAM / MEMORY PRESSURE', ramLead:'A Linux daemon for observing memory pressure and simulating reversible per-session policies.', ramDescription:'Observation and simulation are the defaults; changes require independent opt-ins. It never kills processes: experimental control only adjusts per-session memory.low, with a journal and rollback.', ramRuntime:'Rust / Linux', ramSignals:'memory / swap / PSI', ramControl:'cgroup v2', ramPolicy:'observe / dry-run', ramRecovery:'journal / rollback',
-    ssdPart:'SSD / PERSISTENCE', ssdLead:'A local-first training app with sessions and history available offline.', ssdDescription:'An Expo/React Native app with on-device SQLite, offline sessions and history, and backup export, validation, and restore. The Java/PostgreSQL API and web client are optional and outside the standard mobile runtime.', ssdRuntime:'Expo / React Native', ssdStorage:'on-device SQLite', ssdState:'sessions / history', ssdNetwork:'not required', ssdRecovery:'validated backup',
-    repo:'VIEW CODE', cpuRepoLink:'Open the ZeroCoding repository on GitHub (new tab)', ramRepoLink:'Open the Fenrir repository on GitHub (new tab)', ssdRepoLink:'Open the Training App repository on GitHub (new tab)', contactLinkedIn:'CONTACT ON LINKEDIN ↗', systemHeading:'In common: explicit state, control, and recovery.', systemSequence:'PYTHON <b>·</b> RUST <b>·</b> TYPESCRIPT <b>·</b> LINUX', closeTitle:'Let’s talk about backend, systems, or AI.', closeCopy:'Focused on backend and systems, with web and mobile interfaces when the product calls for them. Each project explores context, state, persistence, or control.'
-  }
-} as const;
 type Language = keyof typeof copy;
-type Phase = 'hero' | 'cpu' | 'ram' | 'ssd' | 'system';
+type Phase = 'hero' | 'map' | 'cpu' | 'ram' | 'ssd';
+type Part = 'cpu' | 'ram' | 'ssd';
+type Rect = { l: number; r: number; t: number; b: number };
+
+const PHASES: Phase[] = ['hero', 'map', 'cpu', 'ram', 'ssd'];
+/** Scroll progress (0–1 over the pinned stretch) at which each scene takes over. */
+const PHASE_AT = [0, .17, .37, .57, .77];
+/** Where a jump link parks the scroll inside each scene. */
+const JUMP: Record<Phase, number> = { hero: 0, map: .27, cpu: .47, ram: .67, ssd: .9 };
+const HASH: Record<string, Phase> = { '#inicio': 'hero', '#mapa': 'map', '#cpu-project': 'cpu', '#ram-project': 'ram', '#ssd-project': 'ssd' };
+const STAGE: Record<Language, Record<Phase, string>> = {
+  pt: { hero: '00 / EXTERIOR', map: '01 / MAPA', cpu: '02 / CPU', ram: '03 / RAM', ssd: '04 / SSD' },
+  en: { hero: '00 / EXTERIOR', map: '01 / MAP', cpu: '02 / CPU', ram: '03 / RAM', ssd: '04 / SSD' }
+};
+const META: Record<Language, { title: string; description: string; ogDescription: string }> = {
+  pt: { title: 'Miguel Sousa (Kona) — Desenvolvimento de Software & Backend', description: 'Miguel Sousa (Kona): desenvolvimento de software com base forte em backend, Linux, APIs e segurança.', ogDescription: 'Desenvolvimento de software com base forte em backend, Linux, APIs e segurança.' },
+  en: { title: 'Miguel Sousa (Kona) — Software Development & Backend', description: 'Miguel Sousa (Kona): software development with a strong backend foundation, Linux, APIs, and security.', ogDescription: 'Software development with a strong backend foundation, Linux, APIs, and security.' }
+};
+
+const $ = <T extends HTMLElement>(selector: string) => document.querySelector<T>(selector)!;
 const root = document.documentElement;
 root.classList.remove('no-js'); root.classList.add('has-js');
-const experience = document.querySelector<HTMLElement>('.experience')!;
-const canvas = document.querySelector<HTMLCanvasElement>('#world')!;
-const fallback = document.querySelector<HTMLElement>('#scene-fallback')!;
-const panels = [...document.querySelectorAll<HTMLElement>('.project-detail')];
-const progress = document.querySelector<HTMLElement>('#stage-progress')!;
-const stageLabel = document.querySelector<HTMLElement>('#stage-label')!;
-const pressureFill = document.querySelector<HTMLElement>('#pressure-fill')!;
-const pressureState = document.querySelector<HTMLElement>('#pressure-state')!;
+const experience = $('.experience');
+const canvas = $<HTMLCanvasElement>('#world');
+const topbar = $('.topbar');
+const uis = [...document.querySelectorAll<HTMLElement>('.ui')];
+const railSteps = [...document.querySelectorAll<HTMLElement>('.progress-rail li')];
+const stageLabel = $('#stage-label');
+const pressureFill = $('#pressure-fill');
+const pressureState = $('#pressure-state');
 const anchorSvg = document.querySelector<SVGSVGElement>('#anchor-lines')!;
-const anchorPath = document.querySelector<SVGPathElement>('#anchor-path')!;
+const anchorPaths: Record<Part, SVGPathElement> = { cpu: document.querySelector<SVGPathElement>('#anchor-cpu')!, ram: document.querySelector<SVGPathElement>('#anchor-ram')!, ssd: document.querySelector<SVGPathElement>('#anchor-ssd')! };
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
-const mobile = matchMedia('(max-width: 700px)');
+const mobile = matchMedia('(max-width: 820px)');
+
 let language: Language = 'pt';
 let phase: Phase = 'hero';
 let refreshScreen: (() => void) | undefined;
 let staticStory = reduceMotion.matches || new URLSearchParams(location.search).has('static');
 if (staticStory) root.classList.add('reduced-motion');
-if (!staticStory) document.querySelector<HTMLAnchorElement>('.skip-link')!.href = '#chapter-nav';
-else document.querySelector<HTMLElement>('.skip-link')!.textContent = copy.pt.skipStatic;
+
+const screenMode = (p: Phase) => (p === 'hero' ? 'boot' : p === 'map' ? 'overview' : p);
+
 function translate(next: Language) {
   language = next; root.lang = next === 'pt' ? 'pt-BR' : 'en';
-  document.querySelectorAll<HTMLElement>('[data-i18n]').forEach(element => { const key = element.dataset.i18n as keyof typeof copy.pt; element.innerHTML = copy[next][key]; });
-  document.querySelectorAll<HTMLElement>('[data-i18n-aria]').forEach(element => { const key = element.dataset.i18nAria as keyof typeof copy.pt; element.setAttribute('aria-label', copy[next][key]); });
+  const dict = copy[next] as Record<string, string>;
+  document.querySelectorAll<HTMLElement>('[data-i18n]').forEach(el => { const value = dict[el.dataset.i18n!]; if (value !== undefined) el.innerHTML = value; });
+  document.querySelectorAll<HTMLElement>('[data-i18n-aria]').forEach(el => { const value = dict[el.dataset.i18nAria!]; if (value !== undefined) el.setAttribute('aria-label', value); });
   document.querySelectorAll<HTMLButtonElement>('[data-lang]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.lang === next)));
-  if(staticStory) document.querySelector<HTMLElement>('.skip-link')!.textContent = copy[next].skipStatic;
-  document.title = next === 'pt' ? 'Miguel Sousa (Kona) — Backend & Sistemas' : 'Miguel Sousa (Kona) — Backend & Systems';
-  document.querySelector('meta[name="description"]')?.setAttribute('content', next === 'pt' ? 'Miguel Sousa (Kona): backend, sistemas Linux e IA aplicada.' : 'Miguel Sousa (Kona): backend, Linux systems, and applied AI.');
-  document.querySelector('meta[property="og:title"]')?.setAttribute('content', document.title);
-  document.querySelector('meta[property="og:description"]')?.setAttribute('content', next === 'pt' ? 'Uma desmontagem interativa de projetos de software, sistemas e IA aplicada.' : 'An interactive teardown of software, systems, and applied AI projects.');
-  stageLabel.textContent = labels[next][phase];
-  pressureState.textContent = experience.dataset.pressure === 'high' ? copy[next].pressureHigh : copy[next].pressureSafe;
+  const meta = META[next]; document.title = meta.title;
+  document.querySelector('meta[name="description"]')?.setAttribute('content', meta.description);
+  document.querySelector('meta[property="og:title"]')?.setAttribute('content', meta.title);
+  document.querySelector('meta[property="og:description"]')?.setAttribute('content', meta.ogDescription);
+  stageLabel.textContent = STAGE[next][phase];
+  pressureState.textContent = experience.dataset.pressure === 'high' ? dict.pressureHigh : dict.pressureSafe;
   refreshScreen?.();
 }
 document.querySelectorAll<HTMLButtonElement>('[data-lang]').forEach(button => button.addEventListener('click', () => translate(button.dataset.lang as Language)));
-const labels = {
-  pt: { hero:'00 / EXTERIOR', cpu:'01 / CPU', ram:'02 / RAM', ssd:'03 / SSD', system:'04 / SISTEMA' },
-  en: { hero:'00 / EXTERIOR', cpu:'01 / CPU', ram:'02 / RAM', ssd:'03 / SSD', system:'04 / SYSTEM' }
-} as const;
 translate(language);
+
+// The CV button only appears once a PDF is actually published next to the page.
+fetch('./cv.pdf', { method: 'HEAD' }).then(response => {
+  if (response.ok && !(response.headers.get('content-type') || '').includes('text/html')) document.querySelectorAll('[data-cv]').forEach(el => el.removeAttribute('hidden'));
+}).catch(() => { /* offline or no PDF: keep the button hidden */ });
+
 function setPhase(next: Phase) {
-  if (next === phase && !staticStory) return;
-  phase = next; experience.dataset.phase = next; stageLabel.textContent = labels[language][next];
-  document.querySelectorAll<HTMLAnchorElement>('.chapter-jump [data-jump]').forEach(link => {
-    if(link.dataset.jump===next) link.setAttribute('aria-current','location');
-    else link.removeAttribute('aria-current');
-  });
-  panels.forEach(panel => { const active = staticStory || panel.dataset.project === next; panel.classList.toggle('is-active', active); panel.inert = !active; panel.setAttribute('aria-hidden', String(!active)); });
+  phase = next; experience.dataset.phase = next; stageLabel.textContent = STAGE[language][next];
+  const index = PHASES.indexOf(next);
+  railSteps.forEach((step, i) => { step.classList.toggle('is-done', i <= index); step.classList.toggle('is-current', i === index); });
+  uis.forEach(ui => { const active = staticStory || ui.dataset.ui === next; ui.classList.toggle('is-active', active); ui.inert = !active; });
+  document.querySelectorAll<HTMLAnchorElement>('.chapter-pills a').forEach(link => { if (link.dataset.jump === next) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current'); });
 }
+
 let trigger: ScrollTrigger | undefined;
 const fallbackMode = () => {
-  trigger?.kill();
-  staticStory = true; root.classList.add('reduced-motion', 'no-webgl'); canvas.hidden = true; fallback.hidden = false;
-  const skip=document.querySelector<HTMLAnchorElement>('.skip-link')!; skip.href='#projetos'; skip.textContent=copy[language].skipStatic;
+  trigger?.kill(); staticStory = true; root.classList.add('reduced-motion', 'no-webgl'); canvas.hidden = true;
   setPhase('hero');
 };
+
 let renderer: THREE.WebGLRenderer | undefined;
-if (staticStory) { canvas.hidden = true; fallback.hidden = false; }
+if (staticStory) { canvas.hidden = true; }
 else {
   try { renderer = new THREE.WebGLRenderer({ canvas, antialias: !mobile.matches, alpha: true, powerPreference: 'low-power' }); }
   catch { fallbackMode(); }
 }
-if (renderer) {
-  const scene = new THREE.Scene();
+
+const smooth = (v: number) => { const x = Math.max(0, Math.min(1, v)); return x * x * (3 - 2 * x); };
+const windowed = (p: number, a: number, b: number, c: number, d: number) => smooth((p - a) / (b - a)) * (1 - smooth((p - c) / (d - c)));
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+function addLights(scene: THREE.Scene) {
   scene.add(new THREE.HemisphereLight('#e3e7d7', '#101713', 2.2));
   const key = new THREE.DirectionalLight('#f2f3e6', 3.8); key.position.set(-3, 8, 6); scene.add(key);
   const rim = new THREE.DirectionalLight('#a0b963', 2.2); rim.position.set(5, 5, -4); scene.add(rim);
-  const camera = new THREE.PerspectiveCamera(39, 1, .08, 70);
-  const target = new THREE.Vector3();
+}
+
+if (renderer) {
+  const gl = renderer;
+  const scene = new THREE.Scene(); addLights(scene);
+  const camera = new THREE.PerspectiveCamera(32, 1, .08, 70);
   const laptop = createLaptop(); scene.add(laptop.root);
-  refreshScreen = () => laptop.setScreen(phase==='hero'?'boot':phase==='system'?'overview':phase, 0, language);
-  const keys = [
-    {p:0, pos:[0,5.1,16], at:[0,1.55,0], root:[2.4,-.15,0], yaw:-.18, scale:1.05, fov:43},
-    {p:.18, pos:[0,5.1,16], at:[0,1.55,0], root:[-3.35,-.15,0], yaw:.04, scale:1.05, fov:43},
-    {p:.30, pos:[0,5.1,16], at:[0,1.55,0], root:[-3.35,-.15,0], yaw:-.08, scale:1.05, fov:43},
-    {p:.46, pos:[0,5.1,16], at:[0,1.55,0], root:[2.8,-.15,0], yaw:.12, scale:1.05, fov:43},
-    {p:.62, pos:[0,5.1,16], at:[0,1.55,0], root:[2.8,-.15,0], yaw:-.12, scale:1.05, fov:43},
-    {p:.68, pos:[0,5.1,16], at:[0,1.55,0], root:[2.8,-.15,0], yaw:0, scale:1.05, fov:43},
-    {p:.78, pos:[0,5.1,16], at:[0,1.55,0], root:[0,-.15,0], yaw:0, scale:1.05, fov:43},
-    {p:.88, pos:[0,5.1,16], at:[0,1.55,0], root:[0,-.15,0], yaw:0, scale:1.05, fov:43},
-    {p:1, pos:[0,5.1,16], at:[0,1.55,0], root:[0,-.15,0], yaw:0, scale:1.05, fov:43}
-  ];
-  const smooth = (v: number) => { const x = Math.max(0, Math.min(1, v)); return x*x*(3-2*x); };
-  const windowed = (p: number, a: number, b: number, c: number, d: number) => smooth((p-a)/(b-a)) * (1-smooth((p-c)/(d-c)));
-  const lerp = (a: number, b: number, t: number) => a+(b-a)*t;
-  const vec = (v: number[], a: number[], b: number[], t: number) => { for (let i=0;i<3;i++) v[i]=lerp(a[i],b[i],t); };
-  const projected = new THREE.Vector3();
-  let currentProgress = 0;
-  let lastScreen: Phase | '' = '';
-  let finalPose: { camera:THREE.Vector3; target:THREE.Vector3; rootY:number; cpuY:number; ramX:number; ssdY:number } | undefined;
-  // On narrow screens the notebook is framed inside the free band between the top bar and the copy of each scene.
-  const MOBILE_FOV = 34;
-  const fitBox = new THREE.Box3(), fitSphere = new THREE.Sphere(), fitDir = new THREE.Vector3(0, 5, 13).normalize(), fitCorner = new THREE.Vector3();
-  const topbar = document.querySelector<HTMLElement>('.topbar')!, heroType = document.querySelector<HTMLElement>('.hero-type')!;
-  const chapterNav = document.querySelector<HTMLElement>('#chapter-nav')!, systemHeading = document.querySelector<HTMLElement>('.system-heading')!, systemSequence = document.querySelector<HTMLElement>('.system-sequence')!;
-  let fitBand: { top:number; bottom:number } | undefined;
-  function mobileBand() {
-    const top = topbar.getBoundingClientRect().bottom + 8;
-    if (phase === 'hero') return { top, bottom: heroType.getBoundingClientRect().top - 8 };
-    if (phase === 'system') return { top: systemHeading.getBoundingClientRect().bottom + 12, bottom: systemSequence.getBoundingClientRect().top - 12 };
-    const panel = document.querySelector<HTMLElement>(`.project-detail[data-project="${phase}"]`)!;
-    return { top: chapterNav.getBoundingClientRect().bottom + 8, bottom: panel.getBoundingClientRect().top - 8 };
+  laptop.lid.rotation.x = -.08;
+  refreshScreen = () => laptop.setScreen(screenMode(phase), pressureNow, language);
+
+  const YAW: Array<[number, number]> = [[0, -.42], [.17, -.36], [.37, -.3], [.57, -.22], [.77, -.34], [1, -.34]];
+  const yawAt = (p: number) => { let i = 0; while (i < YAW.length - 2 && p > YAW[i + 1][0]) i++; const [a, ya] = YAW[i], [b, yb] = YAW[i + 1]; return lerp(ya, yb, smooth((p - a) / (b - a))); };
+
+  let currentProgress = 0, pressureNow = 0, lastScreen = '';
+  const fitBox = new THREE.Box3(), tmpBox = new THREE.Box3(), fitSphere = new THREE.Sphere(), corner = new THREE.Vector3();
+  const fitDir = new THREE.Vector3(0, 5, 13).normalize();
+  let fitBand: Rect | undefined;
+
+  /** Bounding box of what is actually visible (hidden helper groups would inflate it). */
+  function measure(obj: THREE.Object3D) {
+    if (!obj.visible) return;
+    const geometry = (obj as THREE.Mesh).geometry as THREE.BufferGeometry | undefined;
+    if (geometry) { if (!geometry.boundingBox) geometry.computeBoundingBox(); tmpBox.copy(geometry.boundingBox!).applyMatrix4(obj.matrixWorld); fitBox.union(tmpBox); }
+    for (const child of obj.children) measure(child);
   }
   function projectedBounds() {
     camera.updateMatrixWorld(); let minX = 1, maxX = -1, minY = 1, maxY = -1;
     for (let i = 0; i < 8; i++) {
-      fitCorner.set(i & 1 ? fitBox.max.x : fitBox.min.x, i & 2 ? fitBox.max.y : fitBox.min.y, i & 4 ? fitBox.max.z : fitBox.min.z).project(camera);
-      minX = Math.min(minX, fitCorner.x); maxX = Math.max(maxX, fitCorner.x); minY = Math.min(minY, fitCorner.y); maxY = Math.max(maxY, fitCorner.y);
+      corner.set(i & 1 ? fitBox.max.x : fitBox.min.x, i & 2 ? fitBox.max.y : fitBox.min.y, i & 4 ? fitBox.max.z : fitBox.min.z).project(camera);
+      minX = Math.min(minX, corner.x); maxX = Math.max(maxX, corner.x); minY = Math.min(minY, corner.y); maxY = Math.max(maxY, corner.y);
     }
     return { minX, maxX, minY, maxY };
   }
-  function fitMobile(ease: number) {
+
+  const rectOf = (selector: string) => document.querySelector<HTMLElement>(selector)!.getBoundingClientRect();
+  /** The free area (viewport px) the notebook may occupy in the current scene: between the copy and the spec column on desktop, between the top controls and the text sheet on mobile. */
+  function freeBand(): Rect {
+    const top = topbar.getBoundingClientRect().bottom;
+    const progressTop = rectOf('.progress').top;
+    if (mobile.matches) {
+      if (phase === 'hero') return { l: 0, r: innerWidth, t: top + 8, b: rectOf('.ui-hero .hero-copy').top - 8 };
+      if (phase === 'map') return { l: 0, r: innerWidth, t: rectOf('.ui-map .map-copy').bottom + 8, b: rectOf('#callout-cpu').top - 8 };
+      return { l: 0, r: innerWidth, t: rectOf(`.ui-chapter[data-ui=${phase}] .chapter-pills`).bottom + 8, b: rectOf(`.ui-chapter[data-ui=${phase}] .chapter-sheet`).top - 8 };
+    }
+    const gap = 24;
+    const lefts = phase === 'hero' ? ['.ui-hero .hero-copy', '.ui-hero .hero-intro'] : phase === 'map' ? ['.ui-map .map-copy', '#callout-cpu'] : [`.ui-chapter[data-ui=${phase}] .chapter-copy`];
+    const rights = phase === 'hero' ? ['.ui-hero .parts-index'] : phase === 'map' ? ['#callout-ram', '#callout-ssd'] : [`.ui-chapter[data-ui=${phase}] .spec-column`];
+    return { l: Math.max(...lefts.map(s => rectOf(s).right)) + gap, r: Math.min(...rights.map(s => rectOf(s).left)) - gap, t: top + 12, b: progressTop - 12 };
+  }
+
+  /** Dolly the camera until the visible model fits the free band, then shift the view so it sits as close to the page centre as the band allows. */
+  function fit(ease: number) {
     if (fitBox.isEmpty()) return;
     const view = canvas.getBoundingClientRect(), w = view.width || innerWidth, h = view.height || innerHeight;
-    const band = mobileBand(), next = { top: band.top - view.top, bottom: band.bottom - view.top };
-    if (!fitBand || ease >= 1) fitBand = next; else { fitBand.top += (next.top - fitBand.top) * ease; fitBand.bottom += (next.bottom - fitBand.bottom) * ease; }
-    const bandHeight = Math.max(140, fitBand.bottom - fitBand.top), widthShare = .9, heightShare = bandHeight / h;
-    fitBox.getBoundingSphere(fitSphere); camera.clearViewOffset();
-    let distance = fitSphere.radius / Math.sin(THREE.MathUtils.degToRad(camera.fov) * heightShare / 2);
-    const place = () => { camera.position.copy(fitSphere.center).addScaledVector(fitDir, distance); camera.lookAt(fitSphere.center); };
-    place(); let b = projectedBounds();
-    distance *= Math.max((b.maxX - b.minX) / 2 / widthShare, (b.maxY - b.minY) / 2 / heightShare);
+    const raw = freeBand(), next: Rect = { l: raw.l - view.left, r: raw.r - view.left, t: raw.t - view.top, b: raw.b - view.top };
+    if (!fitBand || ease >= 1) fitBand = { ...next }; else for (const k of ['l', 'r', 't', 'b'] as const) fitBand[k] += (next[k] - fitBand[k]) * ease;
+    const bandW = Math.max(160, fitBand.r - fitBand.l), bandH = Math.max(140, fitBand.b - fitBand.t);
+    camera.fov = mobile.matches ? 36 : 30; camera.aspect = w / h; camera.clearViewOffset(); camera.updateProjectionMatrix();
+    fitBox.getBoundingSphere(fitSphere);
+    let distance = fitSphere.radius / Math.sin(THREE.MathUtils.degToRad(camera.fov) / 2);
+    const place = () => { camera.position.copy(fitSphere.center).addScaledVector(fitDir, distance); camera.lookAt(fitSphere.center); camera.updateMatrixWorld(); };
+    let b = projectedBounds();
+    for (let i = 0; i < 3; i++) {
+      place(); b = projectedBounds();
+      distance *= Math.max(((b.maxX - b.minX) / 2 * w) / (bandW * .97), ((b.maxY - b.minY) / 2 * h) / (bandH * .96));
+    }
     place(); b = projectedBounds();
-    const centerX = ((b.minX + b.maxX) / 2 * .5 + .5) * w, centerY = (-(b.minY + b.maxY) / 2 * .5 + .5) * h;
-    camera.setViewOffset(w, h, centerX - w / 2, centerY - (fitBand.top + bandHeight / 2), w, h);
+    const modelW = (b.maxX - b.minX) / 2 * w;
+    const cx = ((b.minX + b.maxX) / 2 * .5 + .5) * w, cy = (-(b.minY + b.maxY) / 2 * .5 + .5) * h;
+    const targetX = mobile.matches ? w / 2 : Math.min(Math.max(w / 2, fitBand.l + modelW / 2), fitBand.r - modelW / 2);
+    camera.setViewOffset(w, h, cx - targetX, cy - (fitBand.t + bandH / 2), w, h);
   }
+
+  const partRef: Record<Part, { object: THREE.Object3D; local: THREE.Vector3 }> = {
+    cpu: { object: laptop.cpu, local: new THREE.Vector3(0, .17, 0) },
+    ram: { object: laptop.ram, local: new THREE.Vector3(-.57, .1, -.5) },
+    ssd: { object: laptop.ssd, local: new THREE.Vector3(0, .12, 0) }
+  };
+  const probe = new THREE.Vector3();
+  /** Leader lines from the 3D parts to their callouts (map) or to the spec sheet (chapters). */
+  function updateAnchors() {
+    const view = canvas.getBoundingClientRect(), w = view.width || innerWidth, h = view.height || innerHeight;
+    anchorSvg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+    const draw = (part: Part, target: DOMRect | null) => {
+      const path = anchorPaths[part];
+      if (!target || mobile.matches) { path.style.opacity = '0'; return; }
+      probe.copy(partRef[part].local); partRef[part].object.localToWorld(probe); probe.project(camera);
+      const x = (probe.x * .5 + .5) * w, y = (-probe.y * .5 + .5) * h;
+      const toRight = target.left - view.left > x, ex = (toRight ? target.left : target.right) - view.left, ey = target.top - view.top + Math.min(30, target.height / 2);
+      const dir = toRight ? 1 : -1;
+      path.setAttribute('d', `M${x.toFixed(1)},${y.toFixed(1)} L${(ex - dir * 36).toFixed(1)},${y.toFixed(1)} L${ex.toFixed(1)},${ey.toFixed(1)}`);
+      path.style.opacity = probe.z > 1 ? '0' : '1';
+    };
+    if (phase === 'map') (['cpu', 'ram', 'ssd'] as const).forEach(part => draw(part, rectOf(`#callout-${part}`)));
+    else (['cpu', 'ram', 'ssd'] as const).forEach(part => draw(part, part === phase ? rectOf(`.ui-chapter[data-ui=${part}] .spec-sheet`) : null));
+  }
+
   function update(p: number) {
     currentProgress = p;
-    let i = 0; while (i < keys.length-2 && p > keys[i+1].p) i++;
-    const a = keys[i], b = keys[i+1], t = smooth((p-a.p)/(b.p-a.p));
-    const cp = [0,0,0], ct = [0,0,0], rp = [0,0,0]; vec(cp,a.pos,b.pos,t); vec(ct,a.at,b.at,t); vec(rp,a.root,b.root,t);
-    if(mobile.matches){ camera.fov=MOBILE_FOV; }
-    else { camera.clearViewOffset(); camera.position.set(cp[0],cp[1],cp[2]); target.set(ct[0],ct[1],ct[2]); camera.lookAt(target); camera.fov = lerp(a.fov,b.fov,t); }
-    camera.updateProjectionMatrix();
-    laptop.root.position.set(mobile.matches?0:rp[0],rp[1],rp[2]); laptop.root.rotation.y=lerp(a.yaw,b.yaw,t); laptop.root.scale.setScalar(mobile.matches?1:lerp(a.scale,b.scale,t)*lerp(1.25,1.08,smooth(p/.18)));
-    const open = smooth((p-.09)/.11);
-    const interior = windowed(p,.18,.24,.74,.80);
-    laptop.deck.position.set(0,.65*open+1.65*interior,.24*open); laptop.bottom.position.set(0,-.12*open,.02*open);
-    laptop.battery.position.set(0,-.2*open,.2*open); laptop.motherboard.position.set(-.15*open,.45*interior-.12*open,0);
-    laptop.cooling.position.set(1.15*open,.3*interior-.12*open,-.2*open);
-    const cpu = windowed(p,.18,.29,.35,.44);
-    laptop.cpu.position.set(-.15*cpu,-.015+1.42*cpu,-.12+.3*cpu); laptop.cpu.scale.setScalar(1+.5*cpu);
-    laptop.cpu.rotation.set(-.12*cpu,0,.035*cpu);
-    laptop.cpuTraces.visible = p>.19 && p<.43; laptop.cpuTraces.position.y=.53*cpu;
-    const ram = windowed(p,.36,.47,.52,.62);
-    laptop.ram.position.set(.25*ram,1.55*ram,-.2*ram); laptop.ram.scale.setScalar(1+.5*ram);
-    laptop.memoryTraffic.visible = ram>.12;
-    const pressure = p>.42 && p<.58 ? Math.sin((p-.42)/.16*Math.PI) : 0;
-    laptop.memoryTraffic.scale.y=1+Math.max(0,pressure)*3.3;
-    laptop.memoryTraffic.position.y=pressure*.18;
-    pressureFill.style.transform=`scaleX(${Math.max(.12,pressure)})`;
-    experience.style.setProperty('--pressure',pressure.toFixed(2));
-    const pressureMode = pressure > .57 ? 'high' : 'controlled';
-    if(experience.dataset.pressure !== pressureMode){experience.dataset.pressure=pressureMode;pressureState.textContent=pressureMode==='high'?copy[language].pressureHigh:copy[language].pressureSafe;}
-    const ssd = windowed(p,.55,.65,.70,.80);
-    laptop.ssd.position.set(.56+.25*ssd,-.045+1.48*ssd,.81+.2*ssd); laptop.ssd.rotation.y=-.18*ssd; laptop.ssd.scale.setScalar(1+.4*ssd);
-    laptop.storageRecords.visible=ssd>.1; laptop.storageRecords.position.y=.24*ssd;
-    laptop.lid.position.set(0,.22+.68*open+1.65*interior,-1.68-.18*interior);
-    const next: Phase = p<.23?'hero':p<.42?'cpu':p<.58?'ram':p<.78?'ssd':'system';
-    if(next!==phase) setPhase(next);
-    if(mobile.matches){ fitBox.setFromObject(laptop.root); fitMobile(running?0:1); }
-    if(next!==lastScreen || next==='ram') { laptop.setScreen(next==='hero'?'boot':next==='system'?'overview':next, pressure, language); lastScreen=next; }
-    progress.style.transform=`scaleX(${p})`;
-    if(next==='cpu' || next==='ram' || next==='ssd') {
-      const part = next==='cpu'?laptop.cpu:next==='ram'?laptop.ram:laptop.ssd;
-      part.getWorldPosition(projected); projected.project(camera);
-      const x=(projected.x*.5+.5)*innerWidth, y=(-projected.y*.5+.5)*innerHeight;
-      const panel=document.querySelector<HTMLElement>(`.project-detail[data-project="${next}"]`)!;
-      const rect=panel.getBoundingClientRect(); const endX=rect.left+rect.width*(rect.left>innerWidth/2?.06:.94), endY=rect.top+Math.min(90,rect.height*.2);
-      anchorSvg.setAttribute('viewBox',`0 0 ${innerWidth} ${innerHeight}`);
-      anchorPath.setAttribute('d',`M${x.toFixed(1)},${y.toFixed(1)} L${lerp(x,endX,.55).toFixed(1)},${y.toFixed(1)} L${endX.toFixed(1)},${endY.toFixed(1)}`);
-      anchorSvg.style.opacity=projected.z>1?'0':'1';
-    } else anchorSvg.style.opacity='0';
-    if(p>=.82)finalPose={camera:camera.position.clone(),target:target.clone(),rootY:laptop.root.position.y,cpuY:laptop.cpu.position.y,ramX:laptop.ram.position.x,ssdY:laptop.ssd.position.y};
-  }
-  function resize() { const w=canvas.clientWidth||innerWidth,h=canvas.clientHeight||innerHeight; renderer!.setPixelRatio(Math.min(devicePixelRatio,mobile.matches?1.1:1.5)); renderer!.setSize(w,h,false); camera.aspect=w/h; update(currentProgress); }
-  let raf=0, running=false;
-  function draw(){
-    if(currentProgress>=.84&&finalPose){
-      const drift=Math.sin(performance.now()*.00038)*.012;
-      if(!mobile.matches){camera.position.copy(finalPose.camera).add(new THREE.Vector3(drift*.7,drift*.4,0));camera.lookAt(finalPose.target);}
-      laptop.root.position.y=finalPose.rootY+drift*.16;laptop.root.rotation.x=drift*.025;
-      laptop.cpu.position.y=finalPose.cpuY+drift;laptop.ram.position.x=finalPose.ramX+drift*.55;laptop.ssd.position.y=finalPose.ssdY-drift*.7;
+    const open = smooth((p - .02) / .12), interior = smooth((p - .06) / .13);
+    const cpuLift = windowed(p, .31, .39, .51, .57), ramLift = windowed(p, .57, .65, .71, .77), ssdLift = smooth((p - .77) / .08);
+    const boardX = -.15 * open, boardY = .45 * interior - .12 * open;
+    laptop.root.rotation.y = yawAt(p);
+    laptop.deck.position.set(0, .65 * open + 1.65 * interior, .24 * open); laptop.bottom.position.set(0, -.12 * open, .02 * open);
+    laptop.battery.position.set(0, -.2 * open, .2 * open); laptop.motherboard.position.set(boardX, boardY, 0);
+    laptop.cooling.position.set(1.15 * open, .3 * interior - .12 * open, -.2 * open);
+    laptop.lid.position.set(0, .22 + .68 * open + 1.65 * interior, -1.68 - .18 * interior);
+    // Each part is pulled out toward the viewer so it clears the keyboard deck.
+    laptop.cpu.position.set(boardX, boardY - .015 + .95 * cpuLift, -.12 + 3.12 * cpuLift); laptop.cpu.scale.setScalar(1 + .65 * cpuLift);
+    laptop.cpuTraces.visible = cpuLift > .2; laptop.cpuTraces.position.set(boardX, boardY, 0);
+    laptop.ram.position.set(boardX, boardY + .95 * ramLift, 3.05 * ramLift); laptop.ram.scale.setScalar(1 + .65 * ramLift);
+    laptop.memoryTraffic.visible = ramLift > .12;
+    pressureNow = p > .6 && p < .74 ? Math.sin((p - .6) / .14 * Math.PI) : 0;
+    laptop.memoryTraffic.scale.y = 1 + pressureNow * 3.3; laptop.memoryTraffic.position.y = pressureNow * .18;
+    pressureFill.style.transform = `scaleX(${Math.max(.12, pressureNow)})`;
+    experience.style.setProperty('--pressure', pressureNow.toFixed(2));
+    const pressureMode = pressureNow > .57 ? 'high' : 'controlled';
+    if (experience.dataset.pressure !== pressureMode) {
+      experience.dataset.pressure = pressureMode;
+      pressureState.textContent = (copy[language] as Record<string, string>)[pressureMode === 'high' ? 'pressureHigh' : 'pressureSafe'];
     }
-    if(mobile.matches) fitMobile(.18);
-    renderer!.render(scene,camera); if(running) raf=requestAnimationFrame(draw);
+    laptop.ssd.position.set(boardX + .56 - .56 * ssdLift, boardY - .045 + .95 * ssdLift, .81 + 2.2 * ssdLift); laptop.ssd.scale.setScalar(1 + .65 * ssdLift);
+    laptop.storageRecords.visible = ssdLift > .1;
+
+    let index = 0; PHASE_AT.forEach((at, i) => { if (p >= at) index = i; });
+    const next = PHASES[index];
+    if (next !== phase) setPhase(next);
+    laptop.setHighlight(next === 'map' ? ['cpu', 'ram', 'ssd'] : next === 'hero' ? [] : [next]);
+    const signature = `${next}:${Math.round(pressureNow * 8)}`;
+    if (signature !== lastScreen) { laptop.setScreen(screenMode(next), pressureNow, language); lastScreen = signature; }
+    laptop.root.updateMatrixWorld(true); fitBox.makeEmpty(); measure(laptop.root);
   }
-  function renderWhileVisible(visible:boolean){
-    if(visible && !running){running=true;draw();}
-    else if(!visible && running){running=false;cancelAnimationFrame(raf);}
+
+  function resize() {
+    const w = canvas.clientWidth || innerWidth, h = canvas.clientHeight || innerHeight;
+    gl.setPixelRatio(Math.min(devicePixelRatio, mobile.matches ? 1.25 : 1.5)); gl.setSize(w, h, false);
+    camera.aspect = w / h; fitBand = undefined; update(currentProgress); fit(1); updateAnchors();
   }
-  resize(); canvas.style.opacity='1'; fallback.style.opacity='0';
-  canvas.addEventListener('webglcontextlost', event=>{event.preventDefault(); renderWhileVisible(false); fallbackMode();});
-  addEventListener('resize',resize,{passive:true}); mobile.addEventListener('change',resize);
-  if(!staticStory){
-    const observer=new IntersectionObserver(([entry])=>renderWhileVisible(entry.isIntersecting && !document.hidden));
-    observer.observe(experience);
-    document.addEventListener('visibilitychange',()=>renderWhileVisible(!document.hidden && experience.getBoundingClientRect().bottom>0 && experience.getBoundingClientRect().top<innerHeight));
-    trigger = ScrollTrigger.create({trigger:experience,start:'top top',end:()=>`+=${innerHeight*7.5}`,pin:true,anticipatePin:1,invalidateOnRefresh:true,onUpdate:self=>update(self.progress)});
-    const jumpPoints = {cpu:.31,ram:.50,ssd:.68} as const;
-    const jumpLinks = [...document.querySelectorAll<HTMLAnchorElement>('[data-jump]')];
-    function visitProject(project: keyof typeof jumpPoints, behavior: ScrollBehavior = 'smooth') {
-      const p=jumpPoints[project];
-      scrollTo({top:trigger!.start+(trigger!.end-trigger!.start)*p,behavior});
-    }
-    function restoreLocation() {
-      const link=jumpLinks.find(item=>item.hash===location.hash);
-      if(link){visitProject(link.dataset.jump as keyof typeof jumpPoints);return;}
-      if(!location.hash || location.hash==='#inicio'){scrollTo({top:0,behavior:'smooth'});return;}
-      document.getElementById(location.hash.slice(1))?.scrollIntoView({behavior:'smooth'});
-    }
-    jumpLinks.forEach(link=>link.addEventListener('click',event=>{
+  let raf = 0, running = false;
+  function draw() {
+    fit(.18); updateAnchors(); gl.render(scene, camera);
+    if (running) raf = requestAnimationFrame(draw);
+  }
+  function renderWhileVisible(visible: boolean) {
+    if (visible && !running) { running = true; draw(); }
+    else if (!visible && running) { running = false; cancelAnimationFrame(raf); }
+  }
+  setPhase('hero'); resize(); canvas.style.opacity = '1';
+  canvas.addEventListener('webglcontextlost', event => { event.preventDefault(); renderWhileVisible(false); fallbackMode(); });
+  addEventListener('resize', resize, { passive: true }); mobile.addEventListener('change', resize);
+  if (document.fonts) document.fonts.ready.then(() => { fitBand = undefined; fit(1); });
+
+  if (!staticStory) {
+    // rAF already pauses in hidden tabs, so visibility in the viewport is the only condition to render.
+    new IntersectionObserver(entries => renderWhileVisible(entries[entries.length - 1].isIntersecting)).observe(experience);
+    trigger = ScrollTrigger.create({ trigger: experience, start: 'top top', end: () => `+=${innerHeight * 5}`, pin: true, anticipatePin: 1, invalidateOnRefresh: true, onUpdate: self => update(self.progress) });
+    const visit = (target: Phase, behavior: ScrollBehavior = 'smooth') => scrollTo({ top: trigger!.start + (trigger!.end - trigger!.start) * JUMP[target], behavior });
+    const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-jump]')];
+    links.forEach(link => link.addEventListener('click', event => {
       event.preventDefault();
-      const project=link.dataset.jump as keyof typeof jumpPoints;
-      if(location.hash!==link.hash)history.pushState({portfolioProject:project},'',link.hash);
-      visitProject(project);
+      if (location.hash !== link.hash) history.pushState(null, '', link.hash);
+      visit(link.dataset.jump as Phase);
     }));
-    window.addEventListener('popstate',()=>setTimeout(restoreLocation,0));
-    document.querySelector('.scroll-cue')?.addEventListener('click',()=>scrollTo({top:innerHeight*1.6,behavior:'smooth'}));
+    const restore = () => {
+      const target = HASH[location.hash];
+      if (target) { visit(target); return; }
+      if (!location.hash) { scrollTo({ top: 0, behavior: 'smooth' }); return; }
+      document.getElementById(location.hash.slice(1))?.scrollIntoView({ behavior: 'smooth' });
+    };
+    addEventListener('popstate', () => setTimeout(restore, 0));
     ScrollTrigger.refresh();
-    if(location.hash)requestAnimationFrame(()=>requestAnimationFrame(restoreLocation));
+    if (location.hash) requestAnimationFrame(() => requestAnimationFrame(restore));
   }
 } else setPhase('hero');
+
+/** Closing scene: a second, lightweight renderer where the notebook shuts its lid as the section scrolls in. */
+function initContact() {
+  const contactCanvas = $<HTMLCanvasElement>('#contact-canvas');
+  if (staticStory || !renderer) { contactCanvas.hidden = true; return; }
+  let gl: THREE.WebGLRenderer;
+  try { gl = new THREE.WebGLRenderer({ canvas: contactCanvas, antialias: !mobile.matches, alpha: true, powerPreference: 'low-power' }); }
+  catch { contactCanvas.hidden = true; return; }
+  const scene = new THREE.Scene(); addLights(scene);
+  const camera = new THREE.PerspectiveCamera(30, 600 / 420, .1, 60);
+  const laptop = createLaptop(); laptop.root.rotation.y = -.55; scene.add(laptop.root);
+  camera.position.set(0, 6.4, 12.5); camera.lookAt(0, .7, 0);
+  let closed = 0, running = false, raf = 0;
+  const apply = () => { laptop.lid.rotation.x = lerp(-.08, 1.545, closed); laptop.lid.position.y = lerp(.22, .42, closed); };
+  const resizeContact = () => { const w = contactCanvas.clientWidth || 600, h = contactCanvas.clientHeight || 420; gl.setPixelRatio(Math.min(devicePixelRatio, 1.5)); gl.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); };
+  const frame = () => { apply(); gl.render(scene, camera); if (running) raf = requestAnimationFrame(frame); };
+  resizeContact(); addEventListener('resize', resizeContact, { passive: true });
+  new IntersectionObserver(entries => { const entry = entries[entries.length - 1]; if (entry.isIntersecting && !running) { running = true; frame(); } else if (!entry.isIntersecting && running) { running = false; cancelAnimationFrame(raf); } }).observe(contactCanvas);
+  ScrollTrigger.create({ trigger: '#contato', start: 'top 75%', end: 'top 20%', scrub: true, onUpdate: self => { closed = smooth(self.progress); } });
+  contactCanvas.addEventListener('webglcontextlost', event => { event.preventDefault(); running = false; contactCanvas.hidden = true; });
+}
+initContact();
