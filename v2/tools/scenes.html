@@ -1,0 +1,54 @@
+<!doctype html>
+<meta charset="utf-8"><title>scene renderer (dev tool)</title>
+<style>html,body{margin:0;background:transparent}canvas{display:block}</style>
+<canvas id="c" width="1200" height="800"></canvas>
+<script type="module">
+// Dev tool: renders the real notebook model to transparent images used by the lite (no-WebGL) version of the site.
+// Run through the Vite dev server, driven by tools/render-scenes.mjs.
+import * as THREE from 'three';
+import { createLaptop, poseLaptop } from '/src/laptop.ts';
+
+const smooth = v => { const x = Math.max(0, Math.min(1, v)); return x * x * (3 - 2 * x); };
+const windowed = (p, a, b, c, d) => smooth((p - a) / (b - a)) * (1 - smooth((p - c) / (d - c)));
+const SCENES = {
+  hero: { p: 0, yaw: -.42, screen: 'boot', hi: [] },
+  map: { p: .22, yaw: -.36, screen: 'overview', hi: ['cpu', 'ram', 'ssd'] },
+  cpu: { p: .45, yaw: -.3, screen: 'cpu', hi: ['cpu'] },
+  ram: { p: .68, yaw: -.22, screen: 'ram', hi: ['ram'] },
+  ssd: { p: .92, yaw: -.34, screen: 'ssd', hi: ['ssd'] },
+  contact: { p: 0, yaw: -.55, screen: 'boot', hi: [], closed: true }
+};
+const canvas = document.getElementById('c');
+const gl = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+gl.setPixelRatio(1); gl.setClearColor(0, 0);
+const scene = new THREE.Scene();
+scene.add(new THREE.HemisphereLight('#e3e7d7', '#101713', 2.2));
+const key = new THREE.DirectionalLight('#f2f3e6', 3.8); key.position.set(-3, 8, 6); scene.add(key);
+const rim = new THREE.DirectionalLight('#a0b963', 2.2); rim.position.set(5, 5, -4); scene.add(rim);
+const laptop = createLaptop(); scene.add(laptop.root);
+const camera = new THREE.PerspectiveCamera(30, 1.5, .08, 70);
+
+const box = new THREE.Box3(), tmp = new THREE.Box3();
+function measure(o) {
+  if (!o.visible) return;
+  if (o.geometry) { if (!o.geometry.boundingBox) o.geometry.computeBoundingBox(); tmp.copy(o.geometry.boundingBox).applyMatrix4(o.matrixWorld); box.union(tmp); }
+  o.children.forEach(measure);
+}
+
+window.shot = async (name, language = 'pt') => {
+  const s = SCENES[name], p = s.p;
+  await document.fonts.ready;
+  laptop.root.rotation.y = s.yaw;
+  poseLaptop(laptop, { open: smooth((p - .02) / .12), interior: smooth((p - .06) / .13), cpu: windowed(p, .31, .39, .51, .57), ram: windowed(p, .57, .65, .71, .77), ssd: smooth((p - .77) / .08) });
+  if (s.closed) { laptop.lid.rotation.x = 1.545; laptop.lid.position.y = .47; } else laptop.lid.rotation.x = -.08;
+  laptop.setHighlight(s.hi); laptop.setScreen(s.screen, 0, language, true);
+  laptop.root.updateMatrixWorld(true); box.makeEmpty(); measure(laptop.root);
+  const sphere = box.getBoundingSphere(new THREE.Sphere());
+  const dir = new THREE.Vector3(0, 5, 13).normalize();
+  camera.position.copy(sphere.center).addScaledVector(dir, sphere.radius / Math.sin(THREE.MathUtils.degToRad(camera.fov) / 2) * .74);
+  camera.lookAt(sphere.center); camera.updateMatrixWorld();
+  gl.setSize(1200, 800, false); gl.render(scene, camera);
+  return canvas.toDataURL('image/webp', .86);
+};
+window.ready = true;
+</script>

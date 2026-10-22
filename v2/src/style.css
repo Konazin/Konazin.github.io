@@ -55,7 +55,7 @@ ul,ol{list-style:none}
 .scene{position:absolute;inset:0;z-index:1;pointer-events:none}
 .scene canvas{display:block;width:100%;height:100%;opacity:0;transition:opacity .4s}
 .scene canvas[hidden]{display:none}
-.scene-fallback{display:none}
+.still{display:none}
 .grid-lines{position:absolute;inset:var(--topbar) var(--gutter) 0;z-index:0;pointer-events:none;background:repeating-linear-gradient(90deg,rgba(196,238,112,.045) 0 1px,transparent 1px calc(100%/12))}
 .anchor-lines{position:absolute;inset:0;z-index:4;width:100%;height:100%;pointer-events:none}
 .anchor-lines path{fill:none;stroke:var(--lime);stroke-width:1.25;vector-effect:non-scaling-stroke;opacity:0;transition:opacity .25s}
@@ -176,14 +176,14 @@ ul,ol{list-style:none}
 
 /* No JavaScript, reduced motion or no WebGL: scenes become a plain reading flow */
 :is(.no-js,.reduced-motion) .experience{height:auto;min-height:0;overflow:visible;padding-top:calc(var(--topbar) + 24px)}
-:is(.no-js,.reduced-motion) .scene{position:relative;display:flex;justify-content:center;height:auto}
-:is(.no-js,.reduced-motion) .scene canvas{display:none}
-:is(.no-js,.reduced-motion) .scene-fallback{display:flex;width:min(560px,86vw);margin-inline:auto}
-:is(.no-js,.reduced-motion) .scene-fallback svg{width:100%;height:auto;opacity:.85}
+:is(.no-js,.reduced-motion) .scene{display:none}
+:is(.no-js,.reduced-motion) #contact-canvas{display:none}
+:is(.no-js,.reduced-motion) .still{display:block;width:min(560px,100%);height:auto;margin:0 auto 12px}
 :is(.no-js,.reduced-motion) :is(.grid-lines,.anchor-lines,.progress,.chapter-nav,.chapter-pills,.parts-index){display:none}
 :is(.no-js,.reduced-motion) .ui.ui-map{display:none}
 :is(.no-js,.reduced-motion) .ui{position:relative;inset:auto;display:block;opacity:1;visibility:visible;pointer-events:auto;padding:40px var(--gutter);border-top:1px solid var(--line)}
 :is(.no-js,.reduced-motion) .ui-hero{border-top:0}
+:is(.no-js,.reduced-motion) .ui-hero>*{position:static}
 :is(.no-js,.reduced-motion) .ui :is(.hero-copy,.hero-intro,.chapter-copy,.spec-column){position:static;width:auto;max-width:640px}
 :is(.no-js,.reduced-motion) .hero-intro{margin-top:24px}
 :is(.no-js,.reduced-motion) .chapter-sheet{display:block}
@@ -255,6 +255,7 @@ ul,ol{list-style:none}
 
 /* Print: a plain, black-on-white résumé built from the same content */
 @media print{
+  .still{display:none!important}
   @page{margin:14mm}
   :root{background:#fff;color:#000;--text:#000;--soft:#222;--muted:#333;--quiet:#555;--lime:#1a4d1a;--line:#bbb;--line-2:#999;--surface:#fff;--raised:#fff;--amber:#7a4a22}
   body{background:#fff;color:#000;font-size:10.5pt}

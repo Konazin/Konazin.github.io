@@ -28,3 +28,10 @@ All copy lives in `src/copy.ts` (PT/EN) and is bound to `data-i18n` / `data-i18n
 ## Files served as is (`public/`)
 
 `404.html`, `robots.txt`, `sitemap.xml`, `site.webmanifest`, `og.png` and the icon. To publish a résumé, add `public/cv.pdf`: the "Download CV" buttons stay hidden until that file exists.
+
+## Robustez do 3D (WebGL)
+
+- `src/main.ts` só liga o 3D se o aparelho aguenta: WebGL2 sem `failIfMajorPerformanceCaveat`, GPU que não seja de software (SwiftShader/llvmpipe), sem `saveData` e com um benchmark curto de aquecimento. Caso contrário usa o modo "lite" (mesmo fluxo estático do `prefers-reduced-motion`) com imagens reais do notebook em `public/scenes/`.
+- O render é sob demanda (scroll, resize, troca de tela) e `laptop.ts` funde as malhas rígidas (`mergeRigid`) em poucas dezenas de draw calls.
+- `?lite=1` força o modo lite; `?webgl=1` força o 3D (útil em testes com GPU de software).
+- Para regerar as imagens: `npm run dev` e, em outro terminal, `node tools/render-scenes.mjs <porta>` (precisa do Playwright).
