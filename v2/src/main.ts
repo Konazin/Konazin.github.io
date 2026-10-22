@@ -88,12 +88,29 @@ function setPhase(next: Phase) {
 }
 
 let trigger: ScrollTrigger | undefined;
+let requestRender = () => {};
 const fallbackMode = () => {
   trigger?.kill(); staticStory = true; root.classList.add('reduced-motion', 'no-webgl'); canvas.hidden = true;
   setPhase('hero');
 };
 
+/** Why the 3D scene should not run on this device (null = fine). ?webgl=1 forces it on, ?lite=1 forces it off. */
+function liteReason(): string | null {
+  const query = new URLSearchParams(location.search);
+  if (query.has('lite')) return 'forced';
+  if (query.has('webgl')) return null;
+  if ((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData) return 'save-data';
+  const probe = document.createElement('canvas');
+  const context = probe.getContext('webgl2', { failIfMajorPerformanceCaveat: true }) as WebGL2RenderingContext | null;
+  if (!context) return 'no-webgl2';
+  const info = context.getExtension('WEBGL_debug_renderer_info');
+  const name = info ? String(context.getParameter(info.UNMASKED_RENDERER_WEBGL)) : '';
+  context.getExtension('WEBGL_lose_context')?.loseContext();
+  return /swiftshader|llvmpipe|softpipe|software|basic render/i.test(name) ? 'software-gpu' : null;
+}
+
 let renderer: THREE.WebGLRenderer | undefined;
+if (!staticStory && liteReason()) fallbackMode();
 if (staticStory) { canvas.hidden = true; }
 else {
   try { renderer = new THREE.WebGLRenderer({ canvas, antialias: !mobile.matches, alpha: true, powerPreference: 'low-power' }); }
@@ -117,7 +134,7 @@ if (renderer) {
   const camera = new THREE.PerspectiveCamera(32, 1, .08, 70);
   const laptop = createLaptop(); scene.add(laptop.root);
   laptop.lid.rotation.x = -.08;
-  refreshScreen = () => laptop.setScreen(screenMode(phase), pressureNow, language);
+  refreshScreen = () => { laptop.setScreen(screenMode(phase), pressureNow, language); requestRender(); };
 
   const YAW: Array<[number, number]> = [[0, -.42], [.17, -.36], [.37, -.3], [.57, -.22], [.77, -.34], [1, -.34]];
   const yawAt = (p: number) => { let i = 0; while (i < YAW.length - 2 && p > YAW[i + 1][0]) i++; const [a, ya] = YAW[i], [b, yb] = YAW[i + 1]; return lerp(ya, yb, smooth((p - a) / (b - a))); };
@@ -160,8 +177,8 @@ if (renderer) {
   }
 
   /** Dolly the camera until the visible model fits the free band, then shift the view so it sits as close to the page centre as the band allows. */
-  function fit(ease: number) {
-    if (fitBox.isEmpty()) return;
+  function fit(ease: number): boolean {
+    if (fitBox.isEmpty()) return false;
     const view = canvas.getBoundingClientRect(), w = view.width || innerWidth, h = view.height || innerHeight;
     const raw = freeBand(), next: Rect = { l: raw.l - view.left, r: raw.r - view.left, t: raw.t - view.top, b: raw.b - view.top };
     if (!fitBand || ease >= 1) fitBand = { ...next }; else for (const k of ['l', 'r', 't', 'b'] as const) fitBand[k] += (next[k] - fitBand[k]) * ease;
@@ -180,6 +197,7 @@ if (renderer) {
     const cx = ((b.minX + b.maxX) / 2 * .5 + .5) * w, cy = (-(b.minY + b.maxY) / 2 * .5 + .5) * h;
     const targetX = mobile.matches ? w / 2 : Math.min(Math.max(w / 2, fitBand.l + modelW / 2), fitBand.r - modelW / 2);
     camera.setViewOffset(w, h, cx - targetX, cy - (fitBand.t + bandH / 2), w, h);
+    return (['l', 'r', 't', 'b'] as const).some(k => Math.abs(next[k] - fitBand![k]) > .5);
   }
 
   const partRef: Record<Part, { object: THREE.Object3D; local: THREE.Vector3 }> = {
@@ -229,27 +247,38 @@ if (renderer) {
     const signature = `${next}:${Math.round(pressureNow * 8)}`;
     if (signature !== lastScreen) { laptop.setScreen(screenMode(next), pressureNow, language); lastScreen = signature; }
     laptop.root.updateMatrixWorld(true); fitBox.makeEmpty(); measure(laptop.root);
+    requestRender();
   }
 
   function resize() {
     const w = canvas.clientWidth || innerWidth, h = canvas.clientHeight || innerHeight;
     gl.setPixelRatio(renderRatio()); gl.setSize(w, h, false);
-    camera.aspect = w / h; fitBand = undefined; update(currentProgress); fit(1); updateAnchors();
+    camera.aspect = w / h; fitBand = undefined; update(currentProgress); fit(1); updateAnchors(); requestRender();
   }
-  let raf = 0, running = false;
-  function draw() {
-    fit(.18); updateAnchors(); gl.render(scene, camera);
-    if (running) raf = requestAnimationFrame(draw);
+  // Render on demand: only when something changed (scroll, resize, screen redraw) or the camera is still easing.
+  let raf = 0, onScreen = false;
+  function tick() {
+    raf = 0; if (!onScreen) return;
+    const moving = fit(.18); updateAnchors(); gl.render(scene, camera);
+    if (moving) requestRender();
   }
+  requestRender = () => { if (onScreen && !raf) raf = requestAnimationFrame(tick); };
   function renderWhileVisible(visible: boolean) {
-    if (visible && !running) { running = true; draw(); }
-    else if (!visible && running) { running = false; cancelAnimationFrame(raf); }
+    onScreen = visible;
+    if (visible) requestRender(); else if (raf) { cancelAnimationFrame(raf); raf = 0; }
   }
   setPhase('hero'); resize(); canvas.style.opacity = '1';
   canvas.addEventListener('webglcontextlost', event => { event.preventDefault(); renderWhileVisible(false); fallbackMode(); });
+  if (!new URLSearchParams(location.search).has('webgl')) {
+    // Warm-up benchmark: a GPU that cannot draw a few frames quickly gets the still-image version instead.
+    onScreen = false; const t0 = performance.now(); for (let i = 0; i < 3; i++) { gl.render(scene, camera); gl.getContext().finish(); }
+    const frameMs = (performance.now() - t0) / 3;
+    if (frameMs > 70) { fallbackMode(); gl.dispose(); }
+    else if (frameMs > 28 && renderRatio() > 1) { gl.setPixelRatio(1); gl.setSize(canvas.clientWidth || innerWidth, canvas.clientHeight || innerHeight, false); }
+  }
   addEventListener('resize', resize, { passive: true }); mobile.addEventListener('change', resize);
   // The notebook screen is a canvas texture: redraw it once the page fonts are really available.
-  if (document.fonts) Promise.all(['400', '500', '700'].map(w => document.fonts.load(`${w} 16px "JetBrains Mono"`))).then(() => { laptop.setScreen(screenMode(phase), pressureNow, language, true); fitBand = undefined; fit(1); });
+  if (document.fonts) Promise.all(['400', '500', '700'].map(w => document.fonts.load(`${w} 16px "JetBrains Mono"`))).then(() => { laptop.setScreen(screenMode(phase), pressureNow, language, true); fitBand = undefined; fit(1); requestRender(); });
 
   if (!staticStory) {
     // rAF already pauses in hidden tabs, so visibility in the viewport is the only condition to render.
@@ -285,15 +314,16 @@ function initContact() {
   const camera = new THREE.PerspectiveCamera(30, 600 / 420, .1, 60);
   const laptop = createLaptop(); laptop.root.rotation.y = -.55; scene.add(laptop.root);
   camera.position.set(0, 6.4, 12.5); camera.lookAt(0, .7, 0);
-  let closed = 0, running = false, raf = 0;
+  let closed = 0, visible = false, raf = 0;
   // The closed lid rests on the keycaps (y .47) instead of hovering above them.
   const apply = () => { laptop.lid.rotation.x = lerp(-.08, 1.545, closed); laptop.lid.position.y = lerp(.22, .47, closed); };
-  const resizeContact = () => { const w = contactCanvas.clientWidth || 600, h = contactCanvas.clientHeight || 420; gl.setPixelRatio(renderRatio()); gl.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); };
-  const frame = () => { apply(); gl.render(scene, camera); if (running) raf = requestAnimationFrame(frame); };
+  const resizeContact = () => { const w = contactCanvas.clientWidth || 600, h = contactCanvas.clientHeight || 420; gl.setPixelRatio(renderRatio()); gl.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); request(); };
+  const frame = () => { raf = 0; if (visible) { apply(); gl.render(scene, camera); } };
+  const request = () => { if (visible && !raf) raf = requestAnimationFrame(frame); };
   resizeContact(); addEventListener('resize', resizeContact, { passive: true });
-  new IntersectionObserver(entries => { const entry = entries[entries.length - 1]; if (entry.isIntersecting && !running) { running = true; frame(); } else if (!entry.isIntersecting && running) { running = false; cancelAnimationFrame(raf); } }).observe(contactCanvas);
+  new IntersectionObserver(entries => { visible = entries[entries.length - 1].isIntersecting; if (visible) request(); else if (raf) { cancelAnimationFrame(raf); raf = 0; } }).observe(contactCanvas);
   // Ends when the section's bottom meets the viewport bottom, which the last section always reaches (a fixed 'top 20%' never completed on tall screens).
-  ScrollTrigger.create({ trigger: '#contato', start: 'top 85%', end: 'bottom bottom', scrub: true, onUpdate: self => { closed = smooth(Math.min(1, self.progress * 1.15)); } });
-  contactCanvas.addEventListener('webglcontextlost', event => { event.preventDefault(); running = false; contactCanvas.hidden = true; });
+  ScrollTrigger.create({ trigger: '#contato', start: 'top 85%', end: 'bottom bottom', scrub: true, onUpdate: self => { closed = smooth(Math.min(1, self.progress * 1.15)); request(); } });
+  contactCanvas.addEventListener('webglcontextlost', event => { event.preventDefault(); visible = false; contactCanvas.hidden = true; });
 }
 initContact();

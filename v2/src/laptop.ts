@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
 
 /** Same family as the page; the texture is redrawn once the font has loaded (see setScreen's `force`). */
 const MONO = "'JetBrains Mono', ui-monospace, Consolas, monospace";
@@ -42,6 +43,48 @@ function line(parent: THREE.Object3D, points: THREE.Vector3[], color: THREE.Colo
 function outline(parent: THREE.Object3D, geometry: THREE.BufferGeometry, position: THREE.Vector3, color = '#c4ee48') {
   const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geometry, 22), new THREE.LineBasicMaterial({ color, transparent: true, opacity: .8 }));
   edges.position.copy(position); parent.add(edges); return edges;
+}
+
+
+/**
+ * Collapses the hundreds of tiny meshes and lines of one rigid part into one mesh per material (and one line set per colour).
+ * The notebook was ~450 draw calls per frame, which is what phone GPUs choke on; this brings it down to a few dozen without changing a pixel.
+ * Subtrees in `skip` are animated or toggled on their own and stay untouched.
+ */
+function mergeRigid(group: THREE.Object3D, skip: ReadonlySet<THREE.Object3D>) {
+  group.updateWorldMatrix(true, true);
+  const toGroup = new THREE.Matrix4().copy(group.matrixWorld).invert();
+  const meshes = new Map<THREE.Material, Array<{ object: THREE.Mesh; geometry: THREE.BufferGeometry }>>();
+  const lines = new Map<string, { material: THREE.LineBasicMaterial; objects: THREE.Line[]; positions: number[] }>();
+  const visit = (object: THREE.Object3D) => {
+    if (skip.has(object)) return;
+    const mesh = object as THREE.Mesh, line = object as THREE.Line;
+    if (mesh.isMesh && !(object as THREE.InstancedMesh).isInstancedMesh && !Array.isArray(mesh.material)) {
+      const geometry = mesh.geometry.clone(); geometry.applyMatrix4(new THREE.Matrix4().multiplyMatrices(toGroup, mesh.matrixWorld));
+      const bucket = meshes.get(mesh.material) ?? []; bucket.push({ object: mesh, geometry }); meshes.set(mesh.material, bucket);
+    } else if (line.isLine && !(object as THREE.LineLoop).isLineLoop && !(object as THREE.LineSegments).isLineSegments && (line.material as THREE.LineBasicMaterial).isLineBasicMaterial) {
+      const material = line.material as THREE.LineBasicMaterial, key = `${material.color.getHexString()}:${material.opacity}:${material.transparent}`;
+      const entry = lines.get(key) ?? { material, objects: [], positions: [] }; entry.objects.push(line); lines.set(key, entry);
+      const matrix = new THREE.Matrix4().multiplyMatrices(toGroup, line.matrixWorld), position = line.geometry.getAttribute('position'), a = new THREE.Vector3(), b = new THREE.Vector3();
+      for (let i = 0; i + 1 < position.count; i++) { a.fromBufferAttribute(position, i).applyMatrix4(matrix); b.fromBufferAttribute(position, i + 1).applyMatrix4(matrix); entry.positions.push(a.x, a.y, a.z, b.x, b.y, b.z); }
+    }
+    for (const child of object.children) visit(child);
+  };
+  visit(group);
+  meshes.forEach((entries, material) => {
+    if (entries.length < 2) { entries.forEach(entry => entry.geometry.dispose()); return; }
+    // mergeGeometries refuses to mix indexed and non-indexed geometry (it logs an error), so normalise first.
+    const mixed = entries.some(entry => entry.geometry.index) && entries.some(entry => !entry.geometry.index);
+    const merged = mergeGeometries(entries.map(entry => (mixed && entry.geometry.index ? entry.geometry.toNonIndexed() : entry.geometry)), false);
+    if (!merged) { entries.forEach(entry => entry.geometry.dispose()); return; }
+    const mesh = new THREE.Mesh(merged, material); mesh.name = `${group.name} · merged`; group.add(mesh);
+    entries.forEach(entry => { entry.object.removeFromParent(); entry.geometry.dispose(); entry.object.geometry.dispose(); });
+  });
+  lines.forEach(entry => {
+    const geometry = new THREE.BufferGeometry(); geometry.setAttribute('position', new THREE.Float32BufferAttribute(entry.positions, 3));
+    const set = new THREE.LineSegments(geometry, entry.material); set.name = `${group.name} · merged lines`; group.add(set);
+    entry.objects.forEach(object => { object.removeFromParent(); object.geometry.dispose(); });
+  });
 }
 
 export type LaptopParts = {
@@ -391,6 +434,8 @@ export function createLaptop(): LaptopParts {
     box(storageRecords,`record index ${i+1}`,[.025,.025,.035],[-.7+i*.32,.2,-.08],i===4?copper:shellEdge,.006);
   }
   storageRecords.visible = false;
+
+  for (const part of [bottom, deck, lid, battery, motherboard, cooling, cpu, ram, ssd]) mergeRigid(part, new Set([memoryTraffic, storageRecords]));
 
   // Lime wireframes around the three project parts; toggled per scene so the active part reads at a glance.
   const highlights: Record<'cpu' | 'ram' | 'ssd', THREE.LineSegments> = {} as never;
