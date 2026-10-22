@@ -94,23 +94,8 @@ const fallbackMode = () => {
   setPhase('hero');
 };
 
-/** Why the 3D scene should not run on this device (null = fine). ?webgl=1 forces it on, ?lite=1 forces it off. */
-function liteReason(): string | null {
-  const query = new URLSearchParams(location.search);
-  if (query.has('lite')) return 'forced';
-  if (query.has('webgl')) return null;
-  if ((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData) return 'save-data';
-  const probe = document.createElement('canvas');
-  const context = probe.getContext('webgl2', { failIfMajorPerformanceCaveat: true }) as WebGL2RenderingContext | null;
-  if (!context) return 'no-webgl2';
-  const info = context.getExtension('WEBGL_debug_renderer_info');
-  const name = info ? String(context.getParameter(info.UNMASKED_RENDERER_WEBGL)) : '';
-  context.getExtension('WEBGL_lose_context')?.loseContext();
-  return /swiftshader|llvmpipe|softpipe|software|basic render/i.test(name) ? 'software-gpu' : null;
-}
-
 let renderer: THREE.WebGLRenderer | undefined;
-if (!staticStory && liteReason()) fallbackMode();
+if (!staticStory && new URLSearchParams(location.search).has('lite')) fallbackMode();
 if (staticStory) { canvas.hidden = true; }
 else {
   try { renderer = new THREE.WebGLRenderer({ canvas, antialias: !mobile.matches, alpha: true, powerPreference: 'low-power' }); }
@@ -118,7 +103,9 @@ else {
 }
 
 /** Render at least 1.5x on desktop: a 1080p monitor (dpr 1) otherwise shows the model and the screen text soft. */
-const renderRatio = () => (mobile.matches ? Math.min(devicePixelRatio, 1.5) : Math.min(Math.max(devicePixelRatio, 1.5), 2));
+/** Slow GPUs keep the animated 3D at a lower resolution instead of losing it (set by the warm-up benchmark). */
+let quality = 1;
+const renderRatio = () => Math.max(.5, (mobile.matches ? Math.min(devicePixelRatio, 1.5) : Math.min(Math.max(devicePixelRatio, 1.5), 2)) * quality);
 const smooth = (v: number) => { const x = Math.max(0, Math.min(1, v)); return x * x * (3 - 2 * x); };
 const windowed = (p: number, a: number, b: number, c: number, d: number) => smooth((p - a) / (b - a)) * (1 - smooth((p - c) / (d - c)));
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -269,12 +256,13 @@ if (renderer) {
   }
   setPhase('hero'); resize(); canvas.style.opacity = '1';
   canvas.addEventListener('webglcontextlost', event => { event.preventDefault(); renderWhileVisible(false); fallbackMode(); });
-  if (!new URLSearchParams(location.search).has('webgl')) {
-    // Warm-up benchmark: a GPU that cannot draw a few frames quickly gets the still-image version instead.
-    onScreen = false; const t0 = performance.now(); for (let i = 0; i < 3; i++) { gl.render(scene, camera); gl.getContext().finish(); }
+  {
+    // Warm-up benchmark: slow or software GPUs keep the live 3D, just rendered at a lower resolution.
+    gl.render(scene, camera); gl.getContext().finish(); // first frame pays for shader compilation, so it is not timed
+    const t0 = performance.now(); for (let i = 0; i < 3; i++) { gl.render(scene, camera); gl.getContext().finish(); }
     const frameMs = (performance.now() - t0) / 3;
-    if (frameMs > 70) { fallbackMode(); gl.dispose(); }
-    else if (frameMs > 28 && renderRatio() > 1) { gl.setPixelRatio(1); gl.setSize(canvas.clientWidth || innerWidth, canvas.clientHeight || innerHeight, false); }
+    quality = frameMs > 70 ? .5 : frameMs > 28 ? .7 : 1;
+    if (quality < 1) resize();
   }
   addEventListener('resize', resize, { passive: true }); mobile.addEventListener('change', resize);
   // The notebook screen is a canvas texture: redraw it once the page fonts are really available.
