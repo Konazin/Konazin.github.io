@@ -1,7 +1,7 @@
 <!doctype html>
 <meta charset="utf-8"><title>scene renderer (dev tool)</title>
 <style>html,body{margin:0;background:transparent}canvas{display:block}</style>
-<canvas id="c" width="1200" height="800"></canvas>
+<canvas id="c" width="1800" height="1200"></canvas>
 <script type="module">
 // Dev tool: renders the real notebook model to transparent images used by the lite (no-WebGL) version of the site.
 // Run through the Vite dev server, driven by tools/render-scenes.mjs.
@@ -45,9 +45,9 @@ window.shot = async (name, language = 'pt') => {
   laptop.root.updateMatrixWorld(true); box.makeEmpty(); measure(laptop.root);
   const sphere = box.getBoundingSphere(new THREE.Sphere());
   const dir = new THREE.Vector3(0, 5, 13).normalize();
-  camera.position.copy(sphere.center).addScaledVector(dir, sphere.radius / Math.sin(THREE.MathUtils.degToRad(camera.fov) / 2) * .74);
+  camera.position.copy(sphere.center).addScaledVector(dir, sphere.radius / Math.sin(THREE.MathUtils.degToRad(camera.fov) / 2) * .72);
   camera.lookAt(sphere.center); camera.updateMatrixWorld();
-  gl.setSize(1200, 800, false); gl.render(scene, camera);
+  gl.setSize(1800, 1200, false); gl.render(scene, camera);
   return canvas.toDataURL('image/webp', .86);
 };
 window.ready = true;

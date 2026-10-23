@@ -56,6 +56,12 @@ ul,ol{list-style:none}
 .scene canvas{display:block;width:100%;height:100%;opacity:0;transition:opacity .4s}
 .scene canvas[hidden]{display:none}
 .still{display:none}
+.scene-stills{position:absolute;inset:0;display:none}
+.scene-stills img{position:absolute;left:31%;width:46%;top:8%;height:82%;object-fit:contain;opacity:0}
+.scene-stills img:first-child{opacity:1}
+.lite .scene-stills{display:block}
+.lite #contact-canvas{display:none}
+.lite .contact-scene .still{display:block;width:100%;height:auto}
 .grid-lines{position:absolute;inset:var(--topbar) var(--gutter) 0;z-index:0;pointer-events:none;background:repeating-linear-gradient(90deg,rgba(196,238,112,.045) 0 1px,transparent 1px calc(100%/12))}
 .anchor-lines{position:absolute;inset:0;z-index:4;width:100%;height:100%;pointer-events:none}
 .anchor-lines path{fill:none;stroke:var(--lime);stroke-width:1.25;vector-effect:non-scaling-stroke;opacity:0;transition:opacity .25s}
@@ -198,6 +204,7 @@ ul,ol{list-style:none}
   .wordmark img{width:34px;height:34px}
   .experience{min-height:560px}
   .grid-lines{display:none}
+  .scene-stills img{left:0;width:100%;top:calc(var(--topbar) + 64px);height:calc(44svh - var(--topbar) - 64px)}
   .hero-copy{left:var(--gutter);right:var(--gutter);top:46svh;width:auto}
   .hero-copy h1{font-size:clamp(1.7rem,7.6vw,2.4rem)}
   .eyebrow{font-size:.6rem;margin-bottom:10px}

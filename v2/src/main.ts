@@ -89,17 +89,57 @@ function setPhase(next: Phase) {
 
 let trigger: ScrollTrigger | undefined;
 let requestRender = () => {};
-const fallbackMode = () => {
-  trigger?.kill(); staticStory = true; root.classList.add('reduced-motion', 'no-webgl'); canvas.hidden = true;
-  setPhase('hero');
-};
+/** No usable WebGL: same pinned story, with pre-rendered images of the notebook instead of the canvas. */
+let lite = false, currentProgress = 0;
+const stills = [...document.querySelectorAll<HTMLElement>('.scene-stills img')];
+const enterLite = () => { lite = true; root.classList.add('lite'); canvas.hidden = true; setPhase(phase); };
+
+/** Pinned five-screen story shared by the 3D and the lite versions; jump links, back/forward and deep links park the scroll on a phase. */
+function setupPin(onProgress: (p: number) => void) {
+  trigger = ScrollTrigger.create({ trigger: experience, start: 'top top', end: () => `+=${innerHeight * 5}`, pin: true, anticipatePin: 1, invalidateOnRefresh: true, onUpdate: self => onProgress(self.progress) });
+  const visit = (target: Phase, behavior: ScrollBehavior = 'smooth') => scrollTo({ top: trigger!.start + (trigger!.end - trigger!.start) * JUMP[target], behavior });
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-jump]')];
+  links.forEach(link => link.addEventListener('click', event => {
+    event.preventDefault();
+    if (location.hash !== link.hash) history.pushState(null, '', link.hash);
+    visit(link.dataset.jump as Phase);
+  }));
+  const restore = () => {
+    const target = HASH[location.hash];
+    if (target) { visit(target); return; }
+    if (!location.hash) { scrollTo({ top: 0, behavior: 'smooth' }); return; }
+    document.getElementById(location.hash.slice(1))?.scrollIntoView({ behavior: 'smooth' });
+  };
+  addEventListener('popstate', () => setTimeout(restore, 0));
+  ScrollTrigger.refresh();
+  if (location.hash) requestAnimationFrame(() => requestAnimationFrame(restore));
+}
+
+/** Lite version of update(): phase, pressure readout and the crossfading images, no 3D. */
+function updateLite(p: number) {
+  currentProgress = p;
+  let index = 0; PHASE_AT.forEach((at, i) => { if (p >= at) index = i; });
+  if (PHASES[index] !== phase) setPhase(PHASES[index]);
+  const pressure = p > .6 && p < .74 ? Math.sin((p - .6) / .14 * Math.PI) : 0;
+  pressureFill.style.transform = `scaleX(${Math.max(.12, pressure)})`;
+  experience.style.setProperty('--pressure', pressure.toFixed(2));
+  const mode = pressure > .57 ? 'high' : 'controlled';
+  if (experience.dataset.pressure !== mode) {
+    experience.dataset.pressure = mode;
+    pressureState.textContent = (copy[language] as Record<string, string>)[mode === 'high' ? 'pressureHigh' : 'pressureSafe'];
+  }
+  stills.forEach((img, i) => {
+    const enter = i === 0 ? 1 : smooth((p - PHASE_AT[i] + .03) / .06), leave = i === stills.length - 1 ? 0 : smooth((p - PHASE_AT[i + 1] + .03) / .06);
+    img.style.opacity = (enter * (1 - leave)).toFixed(3);
+  });
+}
 
 let renderer: THREE.WebGLRenderer | undefined;
-if (!staticStory && new URLSearchParams(location.search).has('lite')) fallbackMode();
-if (staticStory) { canvas.hidden = true; }
+if (!staticStory && new URLSearchParams(location.search).has('lite')) enterLite();
+if (staticStory || lite) { canvas.hidden = true; }
 else {
   try { renderer = new THREE.WebGLRenderer({ canvas, antialias: !mobile.matches, alpha: true, powerPreference: 'low-power' }); }
-  catch { fallbackMode(); }
+  catch { enterLite(); }
 }
 
 /** Render at least 1.5x on desktop: a 1080p monitor (dpr 1) otherwise shows the model and the screen text soft. */
@@ -126,7 +166,7 @@ if (renderer) {
   const YAW: Array<[number, number]> = [[0, -.42], [.17, -.36], [.37, -.3], [.57, -.22], [.77, -.34], [1, -.34]];
   const yawAt = (p: number) => { let i = 0; while (i < YAW.length - 2 && p > YAW[i + 1][0]) i++; const [a, ya] = YAW[i], [b, yb] = YAW[i + 1]; return lerp(ya, yb, smooth((p - a) / (b - a))); };
 
-  let currentProgress = 0, pressureNow = 0, lastScreen = '';
+  let pressureNow = 0, lastScreen = '';
   const fitBox = new THREE.Box3(), tmpBox = new THREE.Box3(), fitSphere = new THREE.Sphere(), corner = new THREE.Vector3();
   const fitDir = new THREE.Vector3(0, 5, 13).normalize();
   let fitBand: Rect | undefined;
@@ -255,7 +295,7 @@ if (renderer) {
     if (visible) requestRender(); else if (raf) { cancelAnimationFrame(raf); raf = 0; }
   }
   setPhase('hero'); resize(); canvas.style.opacity = '1';
-  canvas.addEventListener('webglcontextlost', event => { event.preventDefault(); renderWhileVisible(false); fallbackMode(); });
+  canvas.addEventListener('webglcontextlost', event => { event.preventDefault(); renderWhileVisible(false); enterLite(); updateLite(currentProgress); });
   {
     // Warm-up benchmark: slow or software GPUs keep the live 3D, just rendered at a lower resolution.
     gl.render(scene, camera); gl.getContext().finish(); // first frame pays for shader compilation, so it is not timed
@@ -271,25 +311,9 @@ if (renderer) {
   if (!staticStory) {
     // rAF already pauses in hidden tabs, so visibility in the viewport is the only condition to render.
     new IntersectionObserver(entries => renderWhileVisible(entries[entries.length - 1].isIntersecting)).observe(experience);
-    trigger = ScrollTrigger.create({ trigger: experience, start: 'top top', end: () => `+=${innerHeight * 5}`, pin: true, anticipatePin: 1, invalidateOnRefresh: true, onUpdate: self => update(self.progress) });
-    const visit = (target: Phase, behavior: ScrollBehavior = 'smooth') => scrollTo({ top: trigger!.start + (trigger!.end - trigger!.start) * JUMP[target], behavior });
-    const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-jump]')];
-    links.forEach(link => link.addEventListener('click', event => {
-      event.preventDefault();
-      if (location.hash !== link.hash) history.pushState(null, '', link.hash);
-      visit(link.dataset.jump as Phase);
-    }));
-    const restore = () => {
-      const target = HASH[location.hash];
-      if (target) { visit(target); return; }
-      if (!location.hash) { scrollTo({ top: 0, behavior: 'smooth' }); return; }
-      document.getElementById(location.hash.slice(1))?.scrollIntoView({ behavior: 'smooth' });
-    };
-    addEventListener('popstate', () => setTimeout(restore, 0));
-    ScrollTrigger.refresh();
-    if (location.hash) requestAnimationFrame(() => requestAnimationFrame(restore));
+    setupPin(p => (lite ? updateLite(p) : update(p)));
   }
-} else setPhase('hero');
+} else { setPhase('hero'); if (lite && !staticStory) { setupPin(updateLite); updateLite(0); } }
 
 /** Closing scene: a second, lightweight renderer where the notebook shuts its lid as the section scrolls in. */
 function initContact() {

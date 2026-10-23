@@ -31,7 +31,7 @@ All copy lives in `src/copy.ts` (PT/EN) and is bound to `data-i18n` / `data-i18n
 
 ## Robustez do 3D (WebGL)
 
-- O 3D animado roda em qualquer aparelho com WebGL2. Um benchmark curto de aquecimento só reduz a resolução (`quality`) em GPUs lentas ou de software; o modo "lite" (imagens reais do notebook em `public/scenes/`, fluxo estático) fica para quando não há WebGL.
+- O 3D animado roda em qualquer aparelho com WebGL2. Um benchmark curto de aquecimento só reduz a resolução (`quality`) em GPUs lentas ou de software; o modo "lite" fica para quando não há WebGL: mesmo layout pinado, com imagens grandes do notebook (`public/scenes/`) trocando por crossfade conforme o scroll. `prefers-reduced-motion` e `?static=1` usam o fluxo estático.
 - O render é sob demanda (scroll, resize, troca de tela) e `laptop.ts` funde as malhas rígidas (`mergeRigid`) em poucas dezenas de draw calls.
 - `?lite=1` força o modo lite.
 - Para regerar as imagens: `npm run dev` e, em outro terminal, `node tools/render-scenes.mjs <porta>` (precisa do Playwright).
